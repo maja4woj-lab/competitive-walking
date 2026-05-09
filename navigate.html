@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nawigacja</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; background: #f0f4f0; }
+
+        #map { height: 55vh; width: 100%; }
+
+        #btnPowrot {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        #panel-dol {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        #instrukcja-box {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 4px solid #4CAF50;
+            font-size: 16px;
+            font-weight: 500;
+            color: #222;
+        }
+
+        .statystyki {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat {
+            background: white;
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stat-wartosc {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2d5a27;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        #btnStart {
+            padding: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        #btnStart:hover { background: #45a049; }
+        #btnStart.stop { background: #f44336; }
+        #btnStart.stop:hover { background: #d32f2f; }
+
+        #dystans-pozostal {
+            text-align: center;
+            color: #888;
+            font-size: 13px;
+            .przyciski-waypoint {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.btn-tak {
+    padding: 16px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-nie {
+    padding: 16px;
+    background: #f44336;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-tak:disabled, .btn-nie:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <button id="btnPowrot" onclick="window.location.href='menu.html'">← Menu</button>
+
+    <div id="panel-dol">
+        <div id="instrukcja-box">🚶 Naciśnij Start żeby rozpocząć nawigację</div>
+
+        <div class="statystyki">
+            <div class="stat">
+                <div class="stat-wartosc" id="czas">00:00</div>
+                <div class="stat-label">Czas</div>
+            </div>
+            <div class="stat">
+                <div class="stat-wartosc" id="predkosc">0.0</div>
+                <div class="stat-label">km/h</div>
+            </div>
+            <div class="stat">
+                <div class="stat-wartosc" id="dystans">0.0</div>
+                <div class="stat-label">km</div>
+            </div>
+        </div>
+
+        <div id="dystans-pozostal">Wybierz cel na mapie żeby rozpocząć</div>
+
+        <div class="przyciski-waypoint">
+    <button class="btn-tak" id="btnTak" onclick="dodajWaypoint('tak')" disabled>
+        ✅ TAK
+    </button>
+    <button class="btn-nie" id="btnNie" onclick="dodajWaypoint('nie')" disabled>
+        ❌ NIE
+    </button>
+</div>
+        <button id="btnStart" onclick="toggleStart()">▶ Start</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU4NzI0ZmI5ZjE0ZTQ5NTFiNzFiZWJiMGNjZTU0ZmVlIiwiaCI6Im11cm11cjY0In0=';
+
+        let mojaPozycja = null;
+        let celPozycja = null;
+        let markerJa = null;
+        let markerCel = null;
+        let liniaTrasy = null;
+        let kroки = [];
+
+        let startTime = null;
+        let timerInterval = null;
+        let dystansPrzebyta = 0;
+        let ostatniaPozycja = null;
+        let czyDziala = false;
+        let waypointy = [];
+
+        // Mapa
+        const map = L.map('map').setView([52.2297, 21.0122], 15);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Znajdź lokalizację
+        map.locate({ setView: true, maxZoom: 16 });
+        map.on('locationfound', function(e) {
+            mojaPozycja = e.latlng;
+            if (markerJa) map.removeLayer(markerJa);
+            markerJa = L.marker(e.latlng).addTo(map)
+                .bindPopup('Jesteś tutaj 📍').openPopup();
+        });
+
+        // Kliknięcie = cel
+        map.on('click', function(e) {
+            if (czyDziala) return;
+            if (markerCel) map.removeLayer(markerCel);
+            if (liniaTrasy) map.removeLayer(liniaTrasy);
+
+            celPozycja = e.latlng;
+            markerCel = L.marker(e.latlng, {
+                icon: L.divIcon({ html: '🏁', iconSize: [30,30], className: '' })
+            }).addTo(map);
+
+            pobierzTrase();
+        });
+
+        // Pobierz trasę
+        async function pobierzTrase() {
+            if (!mojaPozycja || !celPozycja) return;
+            document.getElementById('instrukcja-box').textContent = '⏳ Szukam trasy...';
+
+            const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${mojaPozycja.lng},${mojaPozycja.lat}&end=${celPozycja.lng},${celPozycja.lat}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const wspolrzedne = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                const dystans = (data.features[0].properties.summary.distance / 1000).toFixed(2);
+                const czas = Math.round(data.features[0].properties.summary.duration / 60);
+
+                // Kroki nawigacji
+                kroки = data.features[0].properties.segments[0].steps;
+
+                liniaTrasy = L.polyline(wspolrzedne, { color: '#4CAF50', weight: 5 }).addTo(map);
+                map.fitBounds(liniaTrasy.getBounds(), { padding: [40, 40] });
+
+                document.getElementById('instrukcja-box').textContent =
+                    `✅ Trasa gotowa! ${dystans} km · ok. ${czas} min`;
+                document.getElementById('dystans-pozostal').textContent =
+                    `Pozostało: ${dystans} km`;
+
+            } catch(err) {
+                document.getElementById('instrukcja-box').textContent = '❌ Błąd trasy – sprawdź klucz API';
+            }
+        }
+
+        // Start / Stop
+        function toggleStart() {
+            const btn = document.getElementById('btnStart');
+            if (!czyDziala) {
+                if (!celPozycja) {
+                    alert('Najpierw kliknij cel na mapie!');
+                    return;
+                }
+                // START
+                czyDziala = true;
+                waypointy = [];
+document.getElementById('btnTak').disabled = false;
+document.getElementById('btnNie').disabled = false;
+                startTime = Date.now();
+                dystansPrzebyta = 0;
+                ostatniaPozycja = mojaPozycja;
+                btn.textContent = '⏹ Stop';
+                btn.classList.add('stop');
+
+                // Timer
+                timerInterval = setInterval(aktualizujCzas, 1000);
+
+                // Śledzenie GPS
+                map.locate({ watch: true, maxZoom: 17 });
+                map.on('locationfound', aktualizujPozycje);
+
+            } else {
+                // STOP
+                function zatrzymaj() {
+    czyDziala = false;
+    document.getElementById('btnTak').disabled = true;
+document.getElementById('btnNie').disabled = true;
+    clearInterval(timerInterval);
+    map.stopLocate();
+    const btn = document.getElementById('btnStart');
+    btn.textContent = '▶ Start';
+    btn.classList.remove('stop');
+
+    // Zapisz wynik jeśli przeszłaś cokolwiek
+    if (dystansPrzebyta > 10) {
+        const sekundy = Math.floor((Date.now() - startTime) / 1000);
+        const sredniaPredkosc = dystansPrzebyta > 0
+            ? ((dystansPrzebyta / 1000) / (sekundy / 3600)).toFixed(1)
+            : '0.0';
+
+        const wynik = {
+            data: new Date().toLocaleDateString('pl-PL'),
+            godzina: new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'}),
+            czas: document.getElementById('czas').textContent,
+            dystans: (dystansPrzebyta / 1000).toFixed(2),
+            predkosc: sredniaPredkosc
+        };
+
+        // Pobierz istniejące wyniki i dodaj nowy
+        const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
+        wyniki.unshift(wynik); // dodaj na początek
+        localStorage.setItem('wyniki', JSON.stringify(wyniki));
+    }
+}
+            }
+        }
+
+        function aktualizujCzas() {
+            const sekundy = Math.floor((Date.now() - startTime) / 1000);
+            const mm = String(Math.floor(sekundy / 60)).padStart(2, '0');
+            const ss = String(sekundy % 60).padStart(2, '0');
+            document.getElementById('czas').textContent = `${mm}:${ss}`;
+        }
+
+        function aktualizujPozycje(e) {
+            if (!czyDziala) return;
+
+            const nowaPozycja = e.latlng;
+
+            // Przesuń znacznik
+            if (markerJa) map.removeLayer(markerJa);
+            markerJa = L.marker(nowaPozycja).addTo(map);
+            map.setView(nowaPozycja);
+
+            // Dystans
+            if (ostatniaPozycja) {
+                const delta = ostatniaPozycja.distanceTo(nowaPozycja);
+                if (delta > 2) { // ignoruj szum GPS poniżej 2m
+                    dystansPrzebyta += delta;
+                    ostatniaPozycja = nowaPozycja;
+                }
+            }
+
+            // Prędkość z GPS
+            const predkosc = e.speed ? (e.speed * 3.6).toFixed(1) : obliczPredkosc(nowaPozycja);
+            document.getElementById('predkosc').textContent = predkosc;
+            document.getElementById('dystans').textContent = (dystansPrzebyta / 1000).toFixed(2);
+
+            // Najbliższy krok nawigacji
+            if (kroки.length > 0) {
+                const krok = kroки[0];
+                document.getElementById('instrukcja-box').textContent =
+                    `➡️ ${krok.instruction}`;
+
+                // Sprawdź czy dotarłeś do następnego punktu (50m)
+                if (celPozycja && nowaPozycja.distanceTo(celPozycja) < 20) {
+                    zatrzymaj();
+                    document.getElementById('instrukcja-box').textContent = '🎉 Dotarłeś do celu!';
+                }
+            }
+
+            mojaPozycja = nowaPozycja;
+        }
+
+        let ostatniCzasGPS = null;
+        let ostatniaPozycjaGPS = null;
+
+        function obliczPredkosc(nowaPozycja) {
+            const teraz = Date.now();
+            if (ostatniaPozycjaGPS && ostatniCzasGPS) {
+                const dystans = ostatniaPozycjaGPS.distanceTo(nowaPozycja);
+                const czas = (teraz - ostatniCzasGPS) / 1000;
+                const predkosc = (dystans / czas * 3.6).toFixed(1);
+                ostatniaPozycjaGPS = nowaPozycja;
+                ostatniCzasGPS = teraz;
+                return predkosc;
+            }
+            ostatniaPozycjaGPS = nowaPozycja;
+            ostatniCzasGPS = teraz;
+            return '0.0';
+        }
+
+        function zatrzymaj() {
+            czyDziala = false;
+            clearInterval(timerInterval);
+            map.stopLocate();
+            const btn = document.getElementById('btnStart');
+            btn.textContent = '▶ Start';
+            btn.classList.remove('stop');
+        }
+        function dodajWaypoint(typ) {
+    if (!mojaPozycja) return;
+
+    const kolor = typ === 'tak' ? 'green' : 'red';
+    const emoji = typ === 'tak' ? '✅' : '❌';
+
+    // Postaw kropkę na mapie
+    L.circleMarker(mojaPozycja, {
+        radius: 10,
+        fillColor: kolor,
+        color: 'white',
+        weight: 2,
+        opacity: 1,
+        fillOpacity: 0.9
+    }).addTo(map).bindPopup(`${emoji} ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'})}`);
+
+    // Zapisz waypoint
+    waypointy.push({
+        typ: typ,
+        pozycja: mojaPozycja,
+        czas: new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'})
+    });
+}
+    </script>
+</body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moje wyniki</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: sans-serif;
+            background: #f0f4f0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        #btnPowrot {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            color: #555;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #2d5a27;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 13px;
+            margin-bottom: 24px;
+        }
+
+        .statystyki-top {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .stat-box {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .stat-box .wartosc {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2d5a27;
+        }
+
+        .stat-box .label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        h2 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .wynik-karta {
+            background: white;
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 12px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .wynik-karta .data {
+            font-size: 13px;
+            color: #888;
+            grid-column: 1 / -1;
+            margin-bottom: 4px;
+        }
+
+        .wynik-karta .wartosc {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d5a27;
+        }
+
+        .wynik-karta .label {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .pusty {
+            text-align: center;
+            color: #aaa;
+            margin-top: 60px;
+            font-size: 15px;
+        }
+
+        .pusty .emoji {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        #btnUsun {
+            margin-top: 24px;
+            width: 100%;
+            padding: 12px;
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            color: #aaa;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        #btnUsun:hover { background: #fff0f0; color: #f44336; border-color: #f44336; }
+    </style>
+</head>
+<body>
+    <button id="btnPowrot" onclick="window.location.href='menu.html'">← Menu</button>
+
+    <h1>🏆 Moje wyniki</h1>
+    <p class="subtitle">Twój osobisty progres</p>
+
+    <div class="statystyki-top">
+        <div class="stat-box">
+            <div class="wartosc" id="lacznie-spacery">0</div>
+            <div class="label">Spacerów</div>
+        </div>
+        <div class="stat-box">
+            <div class="wartosc" id="lacznie-km">0.0</div>
+            <div class="label">km łącznie</div>
+        </div>
+        <div class="stat-box">
+            <div class="wartosc" id="najlepszy-dystans">—</div>
+            <div class="label">Najdłuższy spacer</div>
+        </div>
+        <div class="stat-box">
+            <div class="wartosc" id="najlepsza-predkosc">—</div>
+            <div class="label">Maks. prędkość km/h</div>
+        </div>
+    </div>
+
+    <h2>Historia spacerów</h2>
+    <div id="lista"></div>
+
+    <script>
+        const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
+        const lista = document.getElementById('lista');
+
+        if (wyniki.length === 0) {
+            lista.innerHTML = `
+                <div class="pusty">
+                    <span class="emoji">🚶</span>
+                    Brak spacerów – czas wyjść na zewnątrz!
+                </div>`;
+        } else {
+            // Statystyki ogólne
+            const lacznyDystans = wyniki.reduce((s, w) => s + parseFloat(w.dystans), 0);
+            const najDystans = Math.max(...wyniki.map(w => parseFloat(w.dystans)));
+            const najPredkosc = Math.max(...wyniki.map(w => parseFloat(w.predkosc)));
+
+            document.getElementById('lacznie-spacery').textContent = wyniki.length;
+            document.getElementById('lacznie-km').textContent = lacznyDystans.toFixed(1);
+            document.getElementById('najlepszy-dystans').textContent = najDystans.toFixed(1) + ' km';
+            document.getElementById('najlepsza-predkosc').textContent = najPredkosc;
+
+            // Lista spacerów
+            wyniki.forEach((w, i) => {
+                lista.innerHTML += `
+                    <div class="wynik-karta">
+                        <div class="data">📅 ${w.data} · ${w.godzina}</div>
+                        <div>
+                            <div class="wartosc">${w.czas}</div>
+                            <div class="label">Czas</div>
+                        </div>
+                        <div>
+                            <div class="wartosc">${w.dystans}</div>
+                            <div class="label">km</div>
+                        </div>
+                        <div>
+                            <div class="wartosc">${w.predkosc}</div>
+                            <div class="label">km/h śr.</div>
+                        </div>
+                    </div>`;
+            });
+
+            lista.innerHTML += `<button id="btnUsun" onclick="usunWyniki()">🗑️ Usuń wszystkie wyniki</button>`;
+        }
+
+        function usunWyniki() {
+            if (confirm('Na pewno chcesz usunąć wszystkie wyniki?')) {
+                localStorage.removeItem('wyniki');
+                location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

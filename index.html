@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitive Walking</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        body { margin: 0; padding: 0; font-family: sans-serif; }
+        #map { height: 100vh; width: 100%; }
+
+        #panel {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            text-align: center;
+            font-size: 14px;
+        }
+
+        #panel button {
+            margin-top: 8px;
+            padding: 8px 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        #panel button:hover { background: #45a049; }
+        #btnPowrot {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
+    background: white;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+#btnPowrot:hover { background: #f5f5f5; }
+    </style>
+</head>
+<body>
+    <button id="btnPowrot" onclick="window.location.href='menu.html'">
+    ← Menu
+</button>
+    <div id="map"></div>
+    <div id="panel">
+        <div id="instrukcja">📍 Kliknij w mapę żeby wybrać cel</div>
+        <button id="btnTrasa" style="display:none" onclick="pobierzTrase()">
+            🚶 Wyznacz trasę pieszą
+        </button>
+        <button id="btnReset" style="display:none" onclick="resetuj()">
+            🔄 Zacznij od nowa
+        </button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU4NzI0ZmI5ZjE0ZTQ5NTFiNzFiZWJiMGNjZTU0ZmVlIiwiaCI6Im11cm11cjY0In0=';
+
+        let mojaPozycja = null;
+        let celPozycja = null;
+        let markerCel = null;
+        let markerJa = null;
+        let liniaTrasy = null;
+
+        // Stwórz mapę
+        const map = L.map('map').setView([52.2297, 21.0122], 13);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        // Znajdź moją lokalizację
+        map.locate({ setView: true, maxZoom: 16 });
+
+        map.on('locationfound', function(e) {
+            mojaPozycja = e.latlng;
+            markerJa = L.marker(e.latlng)
+                .addTo(map)
+                .bindPopup('Jesteś tutaj! 📍')
+                .openPopup();
+        });
+
+        map.on('locationerror', function() {
+            alert('Nie udało się znaleźć Twojej lokalizacji.');
+        });
+
+        // Kliknięcie w mapę = wybór celu
+        map.on('click', function(e) {
+            if (liniaTrasy) return; // jak trasa już narysowana, ignoruj
+
+            // Usuń poprzedni znacznik celu
+            if (markerCel) map.removeLayer(markerCel);
+
+            celPozycja = e.latlng;
+            markerCel = L.marker(e.latlng, {
+                icon: L.divIcon({
+                    html: '🏁',
+                    iconSize: [30, 30],
+                    className: ''
+                })
+            }).addTo(map).bindPopup('Cel 🏁').openPopup();
+
+            document.getElementById('instrukcja').textContent = '✅ Cel wybrany! Kliknij przycisk żeby wyznaczyć trasę.';
+            document.getElementById('btnTrasa').style.display = 'inline-block';
+        });
+
+        // Pobierz trasę z OpenRouteService
+        async function pobierzTrase() {
+            if (!mojaPozycja || !celPozycja) {
+                alert('Poczekaj aż znajdziemy Twoją lokalizację!');
+                return;
+            }
+
+            document.getElementById('instrukcja').textContent = '⏳ Szukam trasy...';
+            document.getElementById('btnTrasa').style.display = 'none';
+
+            const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${mojaPozycja.lng},${mojaPozycja.lat}&end=${celPozycja.lng},${celPozycja.lat}`;
+
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const wspolrzedne = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                const dystans = (data.features[0].properties.summary.distance / 1000).toFixed(2);
+                const czas = Math.round(data.features[0].properties.summary.duration / 60);
+
+                // Narysuj trasę
+                liniaTrasy = L.polyline(wspolrzedne, { color: '#4CAF50', weight: 5 }).addTo(map);
+                map.fitBounds(liniaTrasy.getBounds(), { padding: [40, 40] });
+
+                document.getElementById('instrukcja').textContent =
+                    `🚶 ${dystans} km · ⏱️ ok. ${czas} min`;
+                document.getElementById('btnReset').style.display = 'inline-block';
+
+            } catch(err) {
+                document.getElementById('instrukcja').textContent = '❌ Błąd – sprawdź klucz API';
+                document.getElementById('btnTrasa').style.display = 'inline-block';
+                console.error(err);
+            }
+        }
+
+        // Reset
+        function resetuj() {
+            if (markerCel) map.removeLayer(markerCel);
+            if (liniaTrasy) map.removeLayer(liniaTrasy);
+            markerCel = null;
+            celPozycja = null;
+            liniaTrasy = null;
+            document.getElementById('instrukcja').textContent = '📍 Kliknij w mapę żeby wybrać cel';
+            document.getElementById('btnTrasa').style.display = 'none';
+            document.getElementById('btnReset').style.display = 'none';
+        }
+    </script>
+</body>
+</html>

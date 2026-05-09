@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Competitive Walking</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: sans-serif;
+            background: #f0f4f0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 48px;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #2d5a27;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 40px;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 18px 20px;
+            background: white;
+            border: none;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            cursor: pointer;
+            text-decoration: none;
+            color: #222;
+            font-size: 16px;
+            font-weight: 500;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+        }
+
+        .btn:active {
+            transform: translateY(0px);
+        }
+
+        .btn-icon {
+            font-size: 28px;
+            width: 40px;
+            text-align: center;
+        }
+
+        .btn-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .btn-desc {
+            font-size: 12px;
+            color: #888;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        .btn-primary { border-left: 4px solid #4CAF50; }
+        .btn-secondary { border-left: 4px solid #2196F3; }
+        .btn-tertiary { border-left: 4px solid #FF9800; }
+        .btn-quaternary { border-left: 4px solid #9C27B0; }
+    </style>
+</head>
+<body>
+    <div class="logo">🚶</div>
+    <h1>Competitive Walking</h1>
+    <p class="subtitle">Chodź szybciej. Idź dalej.</p>
+
+    <div class="menu">
+        <a href="index.html" class="btn btn-primary">
+            <span class="btn-icon">🗺️</span>
+            <span class="btn-text">
+                Wybierz trasę
+                <span class="btn-desc">Zaplanuj gdzie chcesz iść</span>
+            </span>
+        </a>
+
+        <a href="navigate.html" class="btn btn-secondary">
+            <span class="btn-icon">🧭</span>
+            <span class="btn-text">
+                Nawigacja
+                <span class="btn-desc">Prowadź mnie krok po kroku</span>
+            </span>
+        </a>
+
+        <a href="leaderboard.html" class="btn btn-tertiary">
+            <span class="btn-icon">🏆</span>
+            <span class="btn-text">
+                Leaderboard
+                <span class="btn-desc">Porównaj wyniki ze znajomymi</span>
+            </span>
+        </a>
+
+        <a href="#" class="btn btn-quaternary">
+            <span class="btn-icon">🎯</span>
+            <span class="btn-text">
+                Osiągnięcia
+                <span class="btn-desc">Twoje odznaki i rekordy</span>
+            </span>
+        </a>
+    </div>
+</body>
+</html>
