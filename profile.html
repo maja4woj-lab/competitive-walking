@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: sans-serif;
+            background: #f0f4f0;
+            padding-bottom: 40px;
+        }
+
+        #btnPowrot {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            z-index: 1000;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        /* SEKCJA PROFILU */
+        .profil-header {
+            background: #2d5a27;
+            color: white;
+            padding: 60px 20px 30px;
+            text-align: center;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 12px;
+        }
+
+        .avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            border: 3px solid white;
+            object-fit: cover;
+            background: #4CAF50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+
+        .profil-imie {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .profil-edytuj {
+            font-size: 13px;
+            opacity: 0.8;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+
+        /* FORMULARZ EDYCJI */
+        .edycja-form {
+            background: white;
+            margin: 16px;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: none;
+        }
+
+        .edycja-form h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 16px;
+        }
+
+        .pole {
+            margin-bottom: 12px;
+        }
+
+        .pole label {
+            font-size: 12px;
+            color: #888;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .pole input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 15px;
+        }
+
+        .btn-zapisz {
+            width: 100%;
+            padding: 12px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* STATYSTYKI */
+        .sekcja {
+            padding: 20px 16px 0;
+        }
+
+        .sekcja h2 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .statystyki {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat {
+            background: white;
+            border-radius: 16px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .stat .wartosc {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2d5a27;
+        }
+
+        .stat .label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        /* LISTA TRAS */
+        .trasa-karta {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .trasa-info {
+            padding: 16px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
+        .trasa-data {
+            grid-column: 1 / -1;
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 8px;
+        }
+
+        .trasa-stat .wartosc {
+            font-size: 18px;
+            font-weight: 700;
+            color: #2d5a27;
+        }
+
+        .trasa-stat .label {
+            font-size: 11px;
+            color: #888;
+        }
+
+        .trasa-mapa {
+            height: 180px;
+            width: 100%;
+        }
+
+        .trasa-waypoints {
+            padding: 10px 16px;
+            font-size: 12px;
+            color: #888;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .pusty {
+            text-align: center;
+            color: #aaa;
+            padding: 40px 20px;
+            font-size: 15px;
+        }
+
+        .pusty .emoji {
+            font-size: 48px;
+            display: block;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+<body>
+    <button id="btnPowrot" onclick="window.location.href='menu.html'">← Menu</button>
+
+    <!-- NAGŁÓWEK PROFILU -->
+    <div class="profil-header">
+        <div class="avatar-container">
+            <div class="avatar" id="avatar">🚶</div>
+            <div class="avatar-edit" onclick="document.getElementById('inputZdjecie').click()">✏️</div>
+            <input type="file" id="inputZdjecie" accept="image/*" style="display:none" onchange="zmienZdjecie(event)">
+        </div>
+        <div class="profil-imie" id="profil-imie">Twój profil</div>
+        <div class="profil-edytuj" onclick="toggleEdycja()">✏️ Edytuj dane</div>
+    </div>
+
+    <!-- FORMULARZ EDYCJI -->
+    <div class="edycja-form" id="edycja-form">
+        <h3>Edytuj profil</h3>
+        <div class="pole">
+            <label>Imię</label>
+            <input type="text" id="input-imie" placeholder="np. Anna">
+        </div>
+        <div class="pole">
+            <label>Nazwisko</label>
+            <input type="text" id="input-nazwisko" placeholder="np. Kowalska">
+        </div>
+        <div class="pole">
+            <label>Miasto</label>
+            <input type="text" id="input-miasto" placeholder="np. Warszawa">
+        </div>
+        <button class="btn-zapisz" onclick="zapiszProfil()">💾 Zapisz</button>
+    </div>
+
+    <!-- STATYSTYKI -->
+    <div class="sekcja">
+        <h2>📊 Moje statystyki</h2>
+        <div class="statystyki">
+            <div class="stat">
+                <div class="wartosc" id="stat-spacery">0</div>
+                <div class="label">Spacerów</div>
+            </div>
+            <div class="stat">
+                <div class="wartosc" id="stat-km">0.0</div>
+                <div class="label">km łącznie</div>
+            </div>
+            <div class="stat">
+                <div class="wartosc" id="stat-czas">0</div>
+                <div class="label">Minut łącznie</div>
+            </div>
+            <div class="stat">
+                <div class="wartosc" id="stat-predkosc">—</div>
+                <div class="label">Maks. prędkość</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HISTORIA TRAS -->
+    <div class="sekcja">
+        <h2>🗺️ Moje trasy</h2>
+        <div id="lista-tras"></div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Wczytaj profil
+        const profil = JSON.parse(localStorage.getItem('profil') || '{}');
+        const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
+
+        // Pokaż dane profilu
+        function wczytajProfil() {
+            if (profil.imie) {
+                document.getElementById('profil-imie').textContent =
+                    `${profil.imie} ${profil.nazwisko || ''}`.trim();
+            }
+            if (profil.zdjecie) {
+                document.getElementById('avatar').innerHTML =
+                    `<img src="${profil.zdjecie}" alt="avatar">`;
+            }
+            if (profil.imie) {
+                document.getElementById('input-imie').value = profil.imie;
+            }
+            if (profil.nazwisko) {
+                document.getElementById('input-nazwisko').value = profil.nazwisko;
+            }
+            if (profil.miasto) {
+                document.getElementById('input-miasto').value = profil.miasto;
+            }
+        }
+
+        // Pokaż/ukryj formularz edycji
+        function toggleEdycja() {
+            const form = document.getElementById('edycja-form');
+            form.style.display = form.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Zapisz profil
+        function zapiszProfil() {
+            profil.imie = document.getElementById('input-imie').value;
+            profil.nazwisko = document.getElementById('input-nazwisko').value;
+            profil.miasto = document.getElementById('input-miasto').value;
+            localStorage.setItem('profil', JSON.stringify(profil));
+            wczytajProfil();
+            toggleEdycja();
+        }
+
+        // Zmień zdjęcie
+        function zmienZdjecie(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                profil.zdjecie = e.target.result;
+                localStorage.setItem('profil', JSON.stringify(profil));
+                document.getElementById('avatar').innerHTML =
+                    `<img src="${e.target.result}" alt="avatar">`;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Statystyki
+        function wczytajStatystyki() {
+            if (wyniki.length === 0) return;
+            const lacznyKm = wyniki.reduce((s, w) => s + parseFloat(w.dystans), 0);
+            const lacznyMin = wyniki.reduce((s, w) => {
+                const czesci = w.czas.split(':');
+                return s + parseInt(czesci[0]) * 60 + parseInt(czesci[1]);
+            }, 0);
+            const najPredkosc = Math.max(...wyniki.map(w => parseFloat(w.predkosc)));
+
+            document.getElementById('stat-spacery').textContent = wyniki.length;
+            document.getElementById('stat-km').textContent = lacznyKm.toFixed(1);
+            document.getElementById('stat-czas').textContent = lacznyMin;
+            document.getElementById('stat-predkosc').textContent = najPredkosc + ' km/h';
+        }
+
+        // Lista tras z mapkami
+        function wczytajTrasy() {
+            const lista = document.getElementById('lista-tras');
+
+            if (wyniki.length === 0) {
+                lista.innerHTML = `
+                    <div class="pusty">
+                        <span class="emoji">🚶</span>
+                        Brak tras – czas wyjść na spacer!
+                    </div>`;
+                return;
+            }
+
+            wyniki.forEach((wynik, index) => {
+                const div = document.createElement('div');
+                div.className = 'trasa-karta';
+
+                // Policz waypoints
+                const takCount = wynik.waypointy ? wynik.waypointy.filter(w => w.typ === 'tak').length : 0;
+                const nieCount = wynik.waypointy ? wynik.waypointy.filter(w => w.typ === 'nie').length : 0;
+
+                div.innerHTML = `
+                    <div class="trasa-info">
+                        <div class="trasa-data">📅 ${wynik.data} · ${wynik.godzina}</div>
+                        <div class="trasa-stat">
+                            <div class="wartosc">${wynik.czas}</div>
+                            <div class="label">Czas</div>
+                        </div>
+                        <div class="trasa-stat">
+                            <div class="wartosc">${wynik.dystans}</div>
+                            <div class="label">km</div>
+                        </div>
+                        <div class="trasa-stat">
+                            <div class="wartosc">${wynik.predkosc}</div>
+                            <div class="label">km/h śr.</div>
+                        </div>
+                    </div>
+                    <div class="trasa-mapa" id="mapa-${index}"></div>
+                    ${(takCount > 0 || nieCount > 0) ? `
+                    <div class="trasa-waypoints">
+                        ✅ TAK: ${takCount}x &nbsp;&nbsp; ❌ NIE: ${nieCount}x
+                    </div>` : ''}
+                `;
+
+                lista.appendChild(div);
+
+                // Rysuj mapkę jeśli są współrzędne
+                if (wynik.trasa && wynik.trasa.length > 1) {
+                    setTimeout(() => {
+                        const mapa = L.map(`mapa-${index}`, {
+                            zoomControl: false,
+                            dragging: false,
+                            scrollWheelZoom: false,
+                            doubleClickZoom: false,
+                            touchZoom: false
+                        });
+
+                        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
+
+                        // Narysuj trasę
+                        const linia = L.polyline(wynik.trasa, {
+                            color: '#4CAF50',
+                            weight: 4
+                        }).addTo(mapa);
+
+                        mapa.fitBounds(linia.getBounds(), { padding: [20, 20] });
+
+                        // Znacznik start
+                        L.circleMarker(wynik.trasa[0], {
+                            radius: 8, fillColor: '#2196F3',
+                            color: 'white', weight: 2, fillOpacity: 1
+                        }).addTo(mapa).bindPopup('Start');
+
+                        // Znacznik koniec
+                        L.circleMarker(wynik.trasa[wynik.trasa.length - 1], {
+                            radius: 8, fillColor: '#f44336',
+                            color: 'white', weight: 2, fillOpacity: 1
+                        }).addTo(mapa).bindPopup('Koniec');
+
+                        // Waypoints TAK/NIE
+                        if (wynik.waypointy) {
+                            wynik.waypointy.forEach(wp => {
+                                L.circleMarker([wp.pozycja.lat, wp.pozycja.lng], {
+                                    radius: 7,
+                                    fillColor: wp.typ === 'tak' ? 'green' : 'red',
+                                    color: 'white',
+                                    weight: 2,
+                                    fillOpacity: 0.9
+                                }).addTo(mapa).bindPopup(`${wp.typ === 'tak' ? '✅' : '❌'} ${wp.czas}`);
+                            });
+                        }
+                    }, 100);
+                } else {
+                    document.getElementById(`mapa-${index}`).innerHTML =
+                        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;font-size:13px;">Brak danych trasy</div>';
+                }
+            });
+        }
+
+        wczytajProfil();
+        wczytajStatystyki();
+        wczytajTrasy();
+    </script>
+</body>
+</html>
