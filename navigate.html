@@ -175,6 +175,7 @@
         let ostatniaPozycja = null;
         let czyDziala = false;
         let waypointy = [];
+        let trasaWspolrzedne = [];
 
         // Mapa
         const map = L.map('map').setView([52.2297, 21.0122], 15);
@@ -350,6 +351,8 @@ function aktualizujPozycje(e) {
 
     // Wyśrodkuj mapę na Twojej pozycji
     map.setView(nowaPozycja);
+    // Zapisuj współrzędne trasy na bieżąco
+trasaWspolrzedne.push([nowaPozycja.lat, nowaPozycja.lng]);
 
     // Prędkość
     const predkosc = e.speed ? (e.speed * 3.6).toFixed(1) : obliczPredkosc(nowaPozycja);
@@ -409,12 +412,14 @@ function aktualizujPozycje(e) {
             : '0.0';
 
         const wynik = {
-            data: new Date().toLocaleDateString('pl-PL'),
-            godzina: new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'}),
-            czas: document.getElementById('czas').textContent,
-            dystans: (dystansPrzebyta / 1000).toFixed(2),
-            predkosc: sredniaPredkosc
-        };
+    data: new Date().toLocaleDateString('pl-PL'),
+    godzina: new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'}),
+    czas: document.getElementById('czas').textContent,
+    dystans: (dystansPrzebyta / 1000).toFixed(2),
+    predkosc: sredniaPredkosc,
+    trasa: trasaWspolrzedne,
+    waypointy: waypointy
+};
 
         const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
         wyniki.unshift(wynik);
