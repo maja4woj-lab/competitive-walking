@@ -321,7 +321,13 @@
         }).addTo(map);
 
         // Lokalizacja
-        map.locate({ setView: true, maxZoom: 16 });
+        map.locate({
+    setView: true,
+    maxZoom: 16,
+    enableHighAccuracy: true,
+    timeout: 10000,
+    maximumAge: 0
+});
         map.on('locationfound', function(e) {
             mojaPozycja = e.latlng;
             if (markerJa) map.removeLayer(markerJa);
