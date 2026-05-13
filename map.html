@@ -3,66 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa</title>
+    <title>Zaplanuj trasę</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
-        body { margin: 0; padding: 0; font-family: sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; }
         #map { height: 100vh; width: 100%; }
 
-        #btnPowrot {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            z-index: 1000;
-            background: white;
-            border: none;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-        }
-
+        /* PANEL GÓRNY */
         #panel {
             position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
+            top: 0; left: 0; right: 0;
             z-index: 1000;
             background: white;
-            padding: 12px 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            text-align: center;
-            font-size: 14px;
-            min-width: 200px;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            padding: 12px 16px;
         }
 
-        #panel button {
-            margin-top: 8px;
-            padding: 8px 16px;
-            background: #4CAF50;
-            color: white;
+        .panel-row1 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        #btnPowrot {
+            background: none;
             border: none;
-            border-radius: 8px;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 4px;
+            flex-shrink: 0;
+        }
+
+        h1 {
+            font-size: 17px;
+            color: #2d5a27;
+            font-weight: 700;
+            flex: 1;
+        }
+
+        /* PUNKTY TRASY */
+        .punkty-trasy {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .punkt-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .punkt-ikona {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .ikona-start { background: #2196F3; }
+        .ikona-przystanek { background: #FF9800; }
+        .ikona-koniec { background: #f44336; }
+
+        .punkt-input {
+            flex: 1;
+            padding: 9px 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .punkt-input:focus { border-color: #4CAF50; }
+
+        .btn-usun-punkt {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #ccc;
+            flex-shrink: 0;
+        }
+
+        .btn-usun-punkt:hover { color: #f44336; }
+
+        /* PRZYCISKI AKCJI */
+        .akcje {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-przystanek {
+            flex: 1;
+            padding: 9px;
+            background: none;
+            border: 1px dashed #4CAF50;
+            border-radius: 10px;
+            color: #4CAF50;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-szukaj {
+            flex: 2;
+            padding: 9px;
+            background: #4CAF50;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-szukaj:hover { background: #45a049; }
+
+        /* WYNIKI WYSZUKIWANIA */
+        #wyniki-wyszukiwania {
+            position: absolute;
+            left: 16px;
+            right: 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            z-index: 1001;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .wynik-item {
+            padding: 12px 16px;
             cursor: pointer;
             font-size: 14px;
-            margin: 4px;
+            border-bottom: 1px solid #f0f0f0;
         }
 
-        #panel button:hover { background: #45a049; }
-        #panel .btn-zapisz { background: #2196F3; }
-        #panel .btn-zapisz:hover { background: #1976D2; }
+        .wynik-item:hover { background: #f9f9f9; }
+        .wynik-item:last-child { border-bottom: none; }
+        .wynik-nazwa { font-weight: 500; color: #222; }
+        .wynik-adres { font-size: 12px; color: #888; margin-top: 2px; }
+
+        /* PANEL DOLNY - pojawia się po wyznaczeniu trasy */
+        #panel-dol {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
+            padding: 20px 16px;
+            display: none;
+        }
+
+        .trasa-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 16px;
+        }
+
+        .trasa-stat { text-align: center; }
+        .trasa-stat .wartosc { font-size: 22px; font-weight: 700; color: #2d5a27; }
+        .trasa-stat .label { font-size: 12px; color: #888; margin-top: 2px; }
+
+        .nazwa-row {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .nazwa-row input {
+            flex: 1;
+            padding: 10px 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .przyciski-dol {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-zapisz {
+            flex: 1;
+            padding: 14px;
+            background: white;
+            border: 2px solid #4CAF50;
+            border-radius: 14px;
+            color: #4CAF50;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-nawiguj {
+            flex: 2;
+            padding: 14px;
+            background: #4CAF50;
+            border: none;
+            border-radius: 14px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-nawiguj:hover { background: #45a049; }
+
+        /* PRZYCISK MOJEJ LOKALIZACJI */
+        #btnLokalizacja {
+            position: absolute;
+            bottom: 100px;
+            right: 16px;
+            z-index: 999;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
 </head>
 <body>
     <div id="map"></div>
-    <button id="btnPowrot" onclick="window.location.href='index.html'">← Trasy</button>
 
+    <!-- PANEL GÓRNY -->
     <div id="panel">
-        <div id="instrukcja">⏳ Ładowanie...</div>
-        <div id="przyciski"></div>
+        <div class="panel-row1">
+            <button id="btnPowrot" onclick="window.location.href='index.html'">←</button>
+            <h1>🗺️ Zaplanuj trasę</h1>
+        </div>
+
+        <div class="punkty-trasy" id="punkty-trasy">
+            <div class="punkt-row" id="row-start">
+                <div class="punkt-ikona ikona-start">📍</div>
+                <input class="punkt-input" id="input-start" type="text"
+                    placeholder="Skąd? (adres lub Twoja lokalizacja)"
+                    onfocus="aktywnyInput='start'"
+                    oninput="szukajAdres(this.value, 'start')">
+            </div>
+            <div id="przystanki-container"></div>
+            <div class="punkt-row" id="row-koniec">
+                <div class="punkt-ikona ikona-koniec">🏁</div>
+                <input class="punkt-input" id="input-koniec" type="text"
+                    placeholder="Dokąd? (wpisz adres)"
+                    onfocus="aktywnyInput='koniec'"
+                    oninput="szukajAdres(this.value, 'koniec')">
+            </div>
+        </div>
+
+        <div class="akcje">
+            <button class="btn-przystanek" onclick="dodajPrzystanek()">+ Przystanek</button>
+            <button class="btn-szukaj" onclick="wyznaczTrase()">🚶 Wyznacz trasę</button>
+        </div>
     </div>
+
+    <!-- WYNIKI WYSZUKIWANIA -->
+    <div id="wyniki-wyszukiwania"></div>
+
+    <!-- PANEL DOLNY -->
+    <div id="panel-dol">
+        <div class="trasa-info">
+            <div class="trasa-stat">
+                <div class="wartosc" id="info-dystans">—</div>
+                <div class="label">km</div>
+            </div>
+            <div class="trasa-stat">
+                <div class="wartosc" id="info-czas">—</div>
+                <div class="label">minut</div>
+            </div>
+        </div>
+        <div class="nazwa-row">
+            <input type="text" id="input-nazwa" placeholder="💾 Nazwa trasy (opcjonalnie)">
+        </div>
+        <div class="przyciski-dol">
+            <button class="btn-zapisz" onclick="zapiszTrase()">💾 Zapisz</button>
+            <button class="btn-nawiguj" onclick="nawiguj()">🧭 Nawiguj teraz!</button>
+        </div>
+    </div>
+
+    <button id="btnLokalizacja" onclick="idDoLokalizacji()">📍</button>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
@@ -70,110 +307,197 @@
 
         let mojaPozycja = null;
         let markerJa = null;
-        let markerCel = null;
+        let markery = [];
         let liniaTrasy = null;
+        let aktywnyInput = null;
+        let przystankiCount = 0;
         let aktualnaTrasa = null;
+        let szukanieTimeout = null;
 
+        // Mapa
         const map = L.map('map').setView([52.2297, 21.0122], 13);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Znajdź lokalizację
+        // Lokalizacja
         map.locate({ setView: true, maxZoom: 16 });
         map.on('locationfound', function(e) {
             mojaPozycja = e.latlng;
             if (markerJa) map.removeLayer(markerJa);
-            markerJa = L.marker(e.latlng).addTo(map)
-                .bindPopup('Jesteś tutaj 📍').openPopup();
+            markerJa = L.circleMarker(e.latlng, {
+                radius: 10, fillColor: '#2196F3',
+                color: 'white', weight: 3, fillOpacity: 1
+            }).addTo(map);
+
+            // Wstaw "Moja lokalizacja" jako punkt startowy
+            if (!document.getElementById('input-start').value) {
+                document.getElementById('input-start').value = 'Moja lokalizacja';
+                punkty['start'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Moja lokalizacja' };
+            }
         });
 
-        map.on('locationerror', function() {
-            document.getElementById('instrukcja').textContent = '📍 Kliknij cel na mapie';
+        // Kliknięcie na mapę = ustaw jako cel jeśli nie ma końca
+        map.on('click', function(e) {
+            if (!punkty['koniec']) {
+                punkty['koniec'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany punkt' };
+                document.getElementById('input-koniec').value = 'Wybrany punkt';
+                postawMarker('koniec', e.latlng, '🏁');
+            }
         });
 
-        // Sprawdź czy przyszły dane z ekranu wyboru trasy
-        const daneTrasy = JSON.parse(localStorage.getItem('nowaTrasa') || 'null');
+        // Słownik punktów
+        let punkty = {};
 
-        if (daneTrasy && daneTrasy.punkty) {
-            // Trasa z adresów
-            localStorage.removeItem('nowaTrasa');
-            setTimeout(() => rysujTraseZPunktow(daneTrasy), 1000);
-        } else {
-            // Tryb kliknij na mapie
-            document.getElementById('instrukcja').textContent = '📍 Kliknij cel na mapie';
-            map.on('click', function(e) {
-                if (liniaTrasy) return;
-                if (markerCel) map.removeLayer(markerCel);
-                celPozycja = e.latlng;
-                markerCel = L.marker(e.latlng, {
-                    icon: L.divIcon({ html: '🏁', iconSize: [30,30], className: '' })
-                }).addTo(map).bindPopup('Cel 🏁').openPopup();
+        // Szukaj adresu z opóźnieniem
+        function szukajAdres(wartosc, inputId) {
+            clearTimeout(szukanieTimeout);
+            if (wartosc.length < 3) {
+                ukryjWyniki();
+                return;
+            }
+            szukanieTimeout = setTimeout(() => geokodujISzukaj(wartosc, inputId), 400);
+        }
 
-                document.getElementById('instrukcja').textContent = '✅ Cel wybrany!';
-                document.getElementById('przyciski').innerHTML =
-                    `<button onclick="pobierzTroseKlik()">🚶 Wyznacz trasę</button>
-                     <button onclick="resetuj()" style="background:#aaa;">🔄 Reset</button>`;
+        async function geokodujISzukaj(zapytanie, inputId) {
+            try {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(zapytanie)}&limit=4&countrycodes=pl`;
+                const response = await fetch(url);
+                const data = await response.json();
+                pokazWyniki(data, inputId);
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        function pokazWyniki(wyniki, inputId) {
+            const div = document.getElementById('wyniki-wyszukiwania');
+            if (wyniki.length === 0) { ukryjWyniki(); return; }
+
+            // Pozycja pod panelem
+            const panel = document.getElementById('panel');
+            div.style.top = (panel.offsetHeight + 8) + 'px';
+            div.style.display = 'block';
+            div.innerHTML = '';
+
+            wyniki.forEach(w => {
+                const item = document.createElement('div');
+                item.className = 'wynik-item';
+                const nazwa = w.display_name.split(',')[0];
+                const adres = w.display_name.split(',').slice(1, 3).join(',');
+                item.innerHTML = `<div class="wynik-nazwa">${nazwa}</div><div class="wynik-adres">${adres}</div>`;
+                item.onclick = () => wybierzWynik(w, inputId);
+                div.appendChild(item);
             });
         }
 
-        let celPozycja = null;
+        function wybierzWynik(wynik, inputId) {
+            const latlng = { lat: parseFloat(wynik.lat), lng: parseFloat(wynik.lon) };
+            const nazwa = wynik.display_name.split(',')[0];
 
-        // Trasa z kliknięcia
-        async function pobierzTroseKlik() {
-            if (!mojaPozycja || !celPozycja) {
-                alert('Poczekaj na lokalizację!');
-                return;
-            }
-            document.getElementById('instrukcja').textContent = '⏳ Szukam trasy...';
-            document.getElementById('przyciski').innerHTML = '';
+            punkty[inputId] = { ...latlng, nazwa: wynik.display_name };
 
-            const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${mojaPozycja.lng},${mojaPozycja.lat}&end=${celPozycja.lng},${celPozycja.lat}`;
+            // Wpisz w input
+            const input = document.getElementById(`input-${inputId}`) ||
+                          document.querySelector(`[data-id="${inputId}"]`);
+            if (input) input.value = nazwa;
 
-            try {
-                const response = await fetch(url);
-                const data = await response.json();
-                const wspolrzedne = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
-                const dystans = (data.features[0].properties.summary.distance / 1000).toFixed(2);
-                const czas = Math.round(data.features[0].properties.summary.duration / 60);
-
-                liniaTrasy = L.polyline(wspolrzedne, { color: '#4CAF50', weight: 5 }).addTo(map);
-                map.fitBounds(liniaTrasy.getBounds(), { padding: [40, 40] });
-
-                aktualnaTrasa = {
-                    nazwa: `Trasa ${new Date().toLocaleDateString('pl-PL')}`,
-                    dystans: dystans,
-                    punkty: [
-                        { lat: mojaPozycja.lat, lng: mojaPozycja.lng },
-                        { lat: celPozycja.lat, lng: celPozycja.lng }
-                    ],
-                    adresy: ['Moja lokalizacja', 'Cel']
-                };
-
-                document.getElementById('instrukcja').textContent = `🚶 ${dystans} km · ⏱️ ok. ${czas} min`;
-                document.getElementById('przyciski').innerHTML = `
-                    <button onclick="zapiszTrase()">💾 Zapisz trasę</button>
-                    <button onclick="nawiguj()" style="background:#FF9800;">🧭 Nawiguj</button>
-                    <button onclick="resetuj()" style="background:#aaa;">🔄 Reset</button>`;
-
-            } catch(err) {
-                document.getElementById('instrukcja').textContent = '❌ Błąd – sprawdź klucz API';
-            }
+            // Ikona
+            const ikona = inputId === 'start' ? '📍' : inputId === 'koniec' ? '🏁' : '🔶';
+            postawMarker(inputId, latlng, ikona);
+            map.setView(latlng, 15);
+            ukryjWyniki();
         }
 
-        // Trasa z adresów (kilka punktów)
-        async function rysujTraseZPunktow(dane) {
-            document.getElementById('instrukcja').textContent = '⏳ Wyznaczam trasę...';
+        function postawMarker(id, latlng, ikona) {
+            if (markery[id]) map.removeLayer(markery[id]);
+            markery[id] = L.marker(latlng, {
+                icon: L.divIcon({ html: ikona, iconSize: [30,30], className: '' })
+            }).addTo(map);
+        }
+
+        function ukryjWyniki() {
+            document.getElementById('wyniki-wyszukiwania').style.display = 'none';
+        }
+
+        // Kliknięcie poza wynikami = ukryj
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#wyniki-wyszukiwania') && !e.target.closest('.punkt-input')) {
+                ukryjWyniki();
+            }
+        });
+
+        // Dodaj przystanek
+        let przystankiIds = [];
+        function dodajPrzystanek() {
+            przystankiCount++;
+            const id = `przystanek-${przystankiCount}`;
+            przystankiIds.push(id);
+            const litery = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const litera = litery[przystankiCount - 1];
+
+            const div = document.createElement('div');
+            div.className = 'punkt-row';
+            div.id = `row-${id}`;
+            div.innerHTML = `
+                <div class="punkt-ikona ikona-przystanek">${litera}</div>
+                <input class="punkt-input" id="input-${id}" data-id="${id}"
+                    type="text" placeholder="Przystanek ${litera}"
+                    onfocus="aktywnyInput='${id}'"
+                    oninput="szukajAdres(this.value, '${id}')">
+                <button class="btn-usun-punkt" onclick="usunPrzystanek('${id}')">✕</button>
+            `;
+
+            document.getElementById('przystanki-container').appendChild(div);
+        }
+
+        function usunPrzystanek(id) {
+            document.getElementById(`row-${id}`).remove();
+            delete punkty[id];
+            if (markery[id]) { map.removeLayer(markery[id]); delete markery[id]; }
+            przystankiIds = przystankiIds.filter(i => i !== id);
+        }
+
+        // Wyznacz trasę
+        async function wyznaczTrase() {
+            if (!punkty['start'] && !mojaPozycja) {
+                alert('Wpisz adres startowy!');
+                return;
+            }
+            if (!punkty['koniec']) {
+                alert('Wpisz adres końcowy!');
+                return;
+            }
+
+            // Jeśli start = moja lokalizacja
+            if (!punkty['start'] && mojaPozycja) {
+                punkty['start'] = { lat: mojaPozycja.lat, lng: mojaPozycja.lng, nazwa: 'Moja lokalizacja' };
+            }
+
+            // Zbierz wszystkie punkty w kolejności
+            const kolejnosc = ['start', ...przystankiIds, 'koniec'];
+            const gotowePunkty = kolejnosc
+                .filter(id => punkty[id])
+                .map(id => punkty[id]);
+
+            if (gotowePunkty.length < 2) {
+                alert('Potrzebuję przynajmniej punkt startowy i końcowy!');
+                return;
+            }
+
+            // Usuń starą trasę
+            if (liniaTrasy) { map.removeLayer(liniaTrasy); liniaTrasy = null; }
+            document.getElementById('panel-dol').style.display = 'none';
 
             try {
-                const punkty = dane.punkty;
                 let wspolrzedneTrasy = [];
                 let calkowitaDystans = 0;
                 let calkowityCzas = 0;
 
-                // Pobierz trasę dla każdego odcinka
-                for (let i = 0; i < punkty.length - 1; i++) {
-                    const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${punkty[i].lng},${punkty[i].lat}&end=${punkty[i+1].lng},${punkty[i+1].lat}`;
+                for (let i = 0; i < gotowePunkty.length - 1; i++) {
+                    const a = gotowePunkty[i];
+                    const b = gotowePunkty[i + 1];
+                    const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${a.lng},${a.lat}&end=${b.lng},${b.lat}`;
                     const response = await fetch(url);
                     const data = await response.json();
                     const odcinek = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
@@ -186,66 +510,47 @@
                 const czas = Math.round(calkowityCzas / 60);
 
                 liniaTrasy = L.polyline(wspolrzedneTrasy, { color: '#4CAF50', weight: 5 }).addTo(map);
-                map.fitBounds(liniaTrasy.getBounds(), { padding: [40, 40] });
-
-                // Znaczniki punktów
-                punkty.forEach((p, i) => {
-                    const etykieta = i === 0 ? '📍' : i === punkty.length - 1 ? '🏁' : `${String.fromCharCode(65 + i - 1)}`;
-                    L.marker([p.lat, p.lng], {
-                        icon: L.divIcon({ html: etykieta, iconSize: [30,30], className: '' })
-                    }).addTo(map).bindPopup(dane.adresy[i]);
-                });
+                map.fitBounds(liniaTrasy.getBounds(), { padding: [40, 160] });
 
                 aktualnaTrasa = {
-                    nazwa: dane.nazwa || `Trasa ${new Date().toLocaleDateString('pl-PL')}`,
+                    nazwa: '',
                     dystans: dystans,
-                    punkty: punkty,
-                    adresy: dane.adresy
+                    punkty: gotowePunkty,
+                    adresy: gotowePunkty.map(p => p.nazwa)
                 };
 
-                document.getElementById('instrukcja').textContent =
-                    `🚶 ${dystans} km · ⏱️ ok. ${czas} min`;
-                document.getElementById('przyciski').innerHTML = `
-                    <button onclick="zapiszTrase()">💾 Zapisz trasę</button>
-                    <button onclick="nawiguj()" style="background:#FF9800;">🧭 Nawiguj</button>
-                    <button onclick="resetuj()" style="background:#aaa;">🔄 Reset</button>`;
+                document.getElementById('info-dystans').textContent = dystans;
+                document.getElementById('info-czas').textContent = czas;
+                document.getElementById('panel-dol').style.display = 'block';
 
             } catch(err) {
-                document.getElementById('instrukcja').textContent = '❌ Błąd wyznaczania trasy';
+                alert('Błąd wyznaczania trasy – sprawdź klucz API.');
                 console.error(err);
             }
         }
 
-        // Zapisz trasę do listy
+        // Zapisz trasę
         function zapiszTrase() {
             if (!aktualnaTrasa) return;
+            const nazwa = document.getElementById('input-nazwa').value.trim();
+            aktualnaTrasa.nazwa = nazwa || `Trasa ${new Date().toLocaleDateString('pl-PL')}`;
             const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
             zapisane.unshift(aktualnaTrasa);
             localStorage.setItem('zapisaneTrasy', JSON.stringify(zapisane));
-            alert(`✅ Trasa "${aktualnaTrasa.nazwa}" zapisana!`);
-            document.getElementById('przyciski').innerHTML = `
-                <button onclick="nawiguj()" style="background:#FF9800;">🧭 Nawiguj</button>
-                <button onclick="resetuj()" style="background:#aaa;">🔄 Reset</button>`;
+            alert(`✅ Zapisano: "${aktualnaTrasa.nazwa}"!`);
         }
 
         // Nawiguj
         function nawiguj() {
-            if (aktualnaTrasa) {
-                localStorage.setItem('aktywnaTrasa', JSON.stringify(aktualnaTrasa));
-            }
+            if (!aktualnaTrasa) return;
+            const nazwa = document.getElementById('input-nazwa').value.trim();
+            if (nazwa) aktualnaTrasa.nazwa = nazwa;
+            localStorage.setItem('aktywnaTrasa', JSON.stringify(aktualnaTrasa));
             window.location.href = 'navigate.html';
         }
 
-        // Reset
-        function resetuj() {
-            if (markerCel) map.removeLayer(markerCel);
-            if (liniaTrasy) map.removeLayer(liniaTrasy);
-            markerCel = null;
-            celPozycja = null;
-            liniaTrasy = null;
-            aktualnaTrasa = null;
-            document.getElementById('instrukcja').textContent = '📍 Kliknij cel na mapie';
-            document.getElementById('przyciski').innerHTML = '';
+        function idDoLokalizacji() {
+            if (mojaPozycja) map.setView(mojaPozycja, 16);
         }
     </script>
 </body>
