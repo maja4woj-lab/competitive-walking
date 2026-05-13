@@ -344,11 +344,85 @@
         });
 
         // Kliknięcie na mapę = ustaw jako cel jeśli nie ma końca
-        map.on('click', function(e) {
-    // Zawsze nadpisuj punkt końcowy przy kliknięciu
-    punkty['koniec'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany punkt' };
-    document.getElementById('input-koniec').value = 'Wybrany punkt';
-    postawMarker('koniec', e.latlng, '🏁');
+        let popupKlikniecia = null;
+
+map.on('click', function(e) {
+    // Zamknij poprzedni popup
+    if (popupKlikniecia) map.closePopup(popupKlikniecia);
+
+    // Policz ile punktów już mamy
+    const czyMamyKoniec = !!punkty['koniec'];
+
+    const content = document.createElement('div');
+    content.style.cssText = 'display:flex;flex-direction:column;gap:8px;min-width:160px;padding:4px;';
+
+    // Przycisk - ustaw jako cel
+    const btnCel = document.createElement('button');
+    btnCel.textContent = '🏁 Ustaw jako cel';
+    btnCel.style.cssText = 'padding:10px;background:#4CAF50;color:white;border:none;border-radius:10px;font-size:14px;cursor:pointer;font-weight:600;';
+    btnCel.onclick = () => {
+        punkty['koniec'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany punkt' };
+        document.getElementById('input-koniec').value = 'Wybrany punkt';
+        postawMarker('koniec', e.latlng, '🏁');
+        map.closePopup(popupKlikniecia);
+
+        // Spróbuj zamienić na adres
+        zamienNaAdres(e.latlng, 'koniec');
+    };
+
+    // Przycisk - dodaj jako przystanek
+    const btnPrzystanek = document.createElement('button');
+    btnPrzystanek.textContent = '🔶 Dodaj jako przystanek';
+    btnPrzystanek.style.cssText = 'padding:10px;background:#FF9800;color:white;border:none;border-radius:10px;font-size:14px;cursor:pointer;font-weight:600;';
+    btnPrzystanek.onclick = () => {
+        przystankiCount++;
+        const id = `przystanek-${przystankiCount}`;
+        przystankiIds.push(id);
+        const litery = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const litera = litery[przystankiIds.length - 1];
+
+        punkty[id] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: `Przystanek ${litera}` };
+        postawMarker(id, e.latlng, '🔶');
+
+        // Dodaj input do panelu
+        const div = document.createElement('div');
+        div.className = 'punkt-row';
+        div.id = `row-${id}`;
+        div.innerHTML = `
+            <div class="punkt-ikona ikona-przystanek">${litera}</div>
+            <input class="punkt-input" id="input-${id}" data-id="${id}"
+                type="text" value="Przystanek ${litera}"
+                onfocus="aktywnyInput='${id}'"
+                oninput="szukajAdres(this.value, '${id}')">
+            <button class="btn-usun-punkt" onclick="usunPrzystanek('${id}')">✕</button>
+        `;
+        document.getElementById('przystanki-container').appendChild(div);
+
+        // Spróbuj zamienić na adres
+        zamienNaAdres(e.latlng, id);
+        map.closePopup(popupKlikniecia);
+    };
+
+    // Przycisk - ustaw jako start
+    const btnStart = document.createElement('button');
+    btnStart.textContent = '📍 Ustaw jako start';
+    btnStart.style.cssText = 'padding:10px;background:#2196F3;color:white;border:none;border-radius:10px;font-size:14px;cursor:pointer;font-weight:600;';
+    btnStart.onclick = () => {
+        punkty['start'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany start' };
+        document.getElementById('input-start').value = 'Wybrany start';
+        postawMarker('start', e.latlng, '📍');
+        zamienNaAdres(e.latlng, 'start');
+        map.closePopup(popupKlikniecia);
+    };
+
+    content.appendChild(btnCel);
+    content.appendChild(btnPrzystanek);
+    content.appendChild(btnStart);
+
+    popupKlikniecia = L.popup({ closeButton: true })
+        .setLatLng(e.latlng)
+        .setContent(content)
+        .openOn(map);
 });
 
         // Słownik punktów
@@ -557,6 +631,27 @@ const adres = w.display_name.split(',').slice(3, 5).join(',');
         function idDoLokalizacji() {
             if (mojaPozycja) map.setView(mojaPozycja, 16);
         }
+        // Zamień współrzędne na czytelny adres
+function zamienNaAdres(latlng, inputId) {
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
+        .then(r => r.json())
+        .then(data => {
+            const adres = data.address;
+            const ladnyAdres = [
+                adres.road,
+                adres.house_number,
+                adres.city || adres.town || adres.village
+            ].filter(Boolean).join(', ');
+
+            if (ladnyAdres) {
+                const input = document.getElementById(`input-${inputId}`) ||
+                              document.querySelector(`[data-id="${inputId}"]`);
+                if (input) input.value = ladnyAdres;
+                if (punkty[inputId]) punkty[inputId].nazwa = ladnyAdres;
+            }
+        })
+        .catch(() => {});
+}
     </script>
 </body>
 </html>
