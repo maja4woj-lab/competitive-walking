@@ -7,17 +7,11 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        body {
-            font-family: sans-serif;
-            background: #f0f4f0;
-            padding-bottom: 40px;
-        }
+        body { font-family: sans-serif; background: #f0f4f0; padding-bottom: 40px; }
 
         #btnPowrot {
             position: fixed;
-            top: 12px;
-            left: 12px;
+            top: 12px; left: 12px;
             z-index: 1000;
             background: white;
             border: none;
@@ -42,8 +36,7 @@
         }
 
         .avatar {
-            width: 90px;
-            height: 90px;
+            width: 90px; height: 90px;
             border-radius: 50%;
             border: 3px solid white;
             background: #4CAF50;
@@ -55,20 +48,14 @@
             overflow: hidden;
         }
 
-        .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .avatar img { width: 100%; height: 100%; object-fit: cover; }
 
         .avatar-edit {
             position: absolute;
-            bottom: 0;
-            right: 0;
+            bottom: 0; right: 0;
             background: white;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 28px; height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -77,24 +64,9 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
-        .profil-imie {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 4px;
-        }
-
-        .profil-miasto {
-            font-size: 13px;
-            opacity: 0.8;
-            margin-bottom: 8px;
-        }
-
-        .profil-edytuj {
-            font-size: 13px;
-            opacity: 0.8;
-            cursor: pointer;
-            text-decoration: underline;
-        }
+        .profil-imie { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+        .profil-miasto { font-size: 13px; opacity: 0.8; margin-bottom: 8px; }
+        .profil-edytuj { font-size: 13px; opacity: 0.8; cursor: pointer; text-decoration: underline; }
 
         .edycja-form {
             background: white;
@@ -105,49 +77,21 @@
             display: none;
         }
 
-        .edycja-form h3 {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 16px;
-        }
-
+        .edycja-form h3 { font-size: 16px; color: #333; margin-bottom: 16px; }
         .pole { margin-bottom: 12px; }
-
-        .pole label {
-            font-size: 12px;
-            color: #888;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .pole input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 15px;
-        }
+        .pole label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
+        .pole input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; }
 
         .btn-zapisz {
-            width: 100%;
-            padding: 12px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 8px;
+            width: 100%; padding: 12px;
+            background: #4CAF50; color: white;
+            border: none; border-radius: 12px;
+            font-size: 16px; font-weight: 600;
+            cursor: pointer; margin-top: 8px;
         }
 
         .sekcja { padding: 20px 16px 0; }
-
-        .sekcja h2 {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 12px;
-        }
+        .sekcja h2 { font-size: 16px; color: #333; margin-bottom: 12px; }
 
         .statystyki {
             display: grid;
@@ -164,17 +108,8 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .stat .wartosc {
-            font-size: 26px;
-            font-weight: 700;
-            color: #2d5a27;
-        }
-
-        .stat .label {
-            font-size: 12px;
-            color: #888;
-            margin-top: 4px;
-        }
+        .stat .wartosc { font-size: 26px; font-weight: 700; color: #2d5a27; }
+        .stat .label { font-size: 12px; color: #888; margin-top: 4px; }
 
         .trasa-karta {
             background: white;
@@ -191,80 +126,136 @@
             gap: 8px;
         }
 
-        .trasa-data {
+        .trasa-naglowek {
             grid-column: 1 / -1;
-            font-size: 13px;
-            color: #888;
-            margin-bottom: 8px;
-        }
-
-        .trasa-nazwa {
-            grid-column: 1 / -1;
-            font-size: 15px;
-            font-weight: 700;
-            color: #2d5a27;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
             margin-bottom: 4px;
         }
 
-        .trasa-procent {
-            grid-column: 1 / -1;
-            margin-bottom: 8px;
-        }
+        .trasa-nazwa { font-size: 15px; font-weight: 700; color: #2d5a27; }
+        .trasa-data { grid-column: 1 / -1; font-size: 13px; color: #888; margin-bottom: 8px; }
+
+        .trasa-procent { grid-column: 1 / -1; margin-bottom: 8px; }
 
         .procent-bar {
-            height: 6px;
-            background: #eee;
-            border-radius: 4px;
-            overflow: hidden;
+            height: 6px; background: #eee;
+            border-radius: 4px; overflow: hidden;
             margin-top: 4px;
         }
 
-        .procent-fill {
-            height: 100%;
-            background: #4CAF50;
-            border-radius: 4px;
+        .procent-fill { height: 100%; background: #4CAF50; border-radius: 4px; }
+        .procent-tekst { font-size: 11px; color: #888; margin-top: 3px; }
+
+        .trasa-stat .wartosc { font-size: 18px; font-weight: 700; color: #2d5a27; }
+        .trasa-stat .label { font-size: 11px; color: #888; }
+
+        .btn-usun-trase {
+            background: none; border: none;
+            font-size: 18px; cursor: pointer;
+            color: #ccc; padding: 4px;
+            flex-shrink: 0;
         }
 
-        .procent-tekst {
-            font-size: 11px;
-            color: #888;
-            margin-top: 3px;
+        .btn-usun-trase:hover { color: #f44336; }
+
+        .trasa-mapa-podglad {
+            height: 180px; width: 100%;
+            cursor: pointer;
+            position: relative;
         }
 
-        .trasa-stat .wartosc {
-            font-size: 18px;
-            font-weight: 700;
-            color: #2d5a27;
-        }
-
-        .trasa-stat .label {
-            font-size: 11px;
-            color: #888;
-        }
-
-        .trasa-mapa {
-            height: 180px;
-            width: 100%;
+        .mapa-overlay {
+            position: absolute;
+            bottom: 8px; right: 8px;
+            background: white;
+            border-radius: 8px;
+            padding: 4px 10px;
+            font-size: 12px;
+            color: #555;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            z-index: 1000;
+            pointer-events: none;
         }
 
         .trasa-waypoints {
             padding: 10px 16px;
-            font-size: 12px;
-            color: #888;
+            font-size: 12px; color: #888;
             border-top: 1px solid #f0f0f0;
         }
 
         .pusty {
-            text-align: center;
-            color: #aaa;
-            padding: 40px 20px;
-            font-size: 15px;
+            text-align: center; color: #aaa;
+            padding: 40px 20px; font-size: 15px;
         }
 
-        .pusty .emoji {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 12px;
+        .pusty .emoji { font-size: 48px; display: block; margin-bottom: 12px; }
+
+        /* MODAL SZCZEGÓŁÓW TRASY */
+        #modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            z-index: 2000;
+            background: white;
+            flex-direction: column;
+        }
+
+        #modal.otwarty { display: flex; }
+
+        #modal-naglowek {
+            background: #2d5a27;
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #modal-naglowek button {
+            background: none; border: none;
+            color: white; font-size: 20px;
+            cursor: pointer;
+        }
+
+        #modal-naglowek h2 { font-size: 16px; font-weight: 700; }
+        #modal-mapa { flex: 1; }
+
+        #modal-notatka {
+            padding: 16px;
+            background: white;
+            border-top: 1px solid #eee;
+            display: none;
+        }
+
+        #modal-notatka h3 { font-size: 14px; color: #333; margin-bottom: 8px; }
+
+        #notatka-input {
+            width: 100%; padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 8px;
+            resize: none;
+            height: 80px;
+        }
+
+        .notatka-przyciski { display: flex; gap: 8px; }
+
+        .btn-zapisz-notatke {
+            flex: 1; padding: 10px;
+            background: #4CAF50; color: white;
+            border: none; border-radius: 10px;
+            font-size: 14px; font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-anuluj-notatke {
+            padding: 10px 16px;
+            background: #eee; color: #555;
+            border: none; border-radius: 10px;
+            font-size: 14px; cursor: pointer;
         }
     </style>
 </head>
@@ -326,10 +317,31 @@
         <div id="lista-tras"></div>
     </div>
 
+    <!-- MODAL SZCZEGÓŁÓW -->
+    <div id="modal">
+        <div id="modal-naglowek">
+            <button onclick="zamknijModal()">←</button>
+            <h2 id="modal-tytul">Szczegóły trasy</h2>
+        </div>
+        <div id="modal-mapa"></div>
+        <div id="modal-notatka">
+            <h3 id="notatka-tytul">📝 Notatka do punktu</h3>
+            <textarea id="notatka-input" placeholder="Wpisz swoją notatkę..."></textarea>
+            <div class="notatka-przyciski">
+                <button class="btn-anuluj-notatke" onclick="zamknijNotatke()">Anuluj</button>
+                <button class="btn-zapisz-notatke" onclick="zapiszNotatke()">💾 Zapisz notatkę</button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const profil = JSON.parse(localStorage.getItem('profil') || '{}');
-        const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
+        let wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
+
+        let modalMapa = null;
+        let aktywnyWaypointIndex = null;
+        let aktywnyWynikIndex = null;
 
         function wczytajProfil() {
             if (profil.imie) {
@@ -383,11 +395,17 @@
                 return s + parseInt(czesci[0]) * 60 + parseInt(czesci[1]);
             }, 0);
             const najPredkosc = Math.max(...wyniki.map(w => parseFloat(w.predkosc)));
-
             document.getElementById('stat-spacery').textContent = wyniki.length;
             document.getElementById('stat-km').textContent = lacznyKm.toFixed(1);
             document.getElementById('stat-czas').textContent = lacznyMin;
             document.getElementById('stat-predkosc').textContent = najPredkosc + ' km/h';
+        }
+
+        function usunTrase(index) {
+            if (!confirm('Usunąć tę trasę z historii?')) return;
+            wyniki.splice(index, 1);
+            localStorage.setItem('wyniki', JSON.stringify(wyniki));
+            location.reload();
         }
 
         function wczytajTrasy() {
@@ -412,7 +430,10 @@
 
                 div.innerHTML = `
                     <div class="trasa-info">
-                        <div class="trasa-nazwa">${wynik.nazwa || 'Trasa własna'}</div>
+                        <div class="trasa-naglowek">
+                            <div class="trasa-nazwa">${wynik.nazwa || 'Trasa własna'}</div>
+                            <button class="btn-usun-trase" onclick="usunTrase(${index})">🗑️</button>
+                        </div>
                         <div class="trasa-data">📅 ${wynik.data} · ${wynik.godzina}</div>
                         <div class="trasa-procent">
                             <div class="procent-bar">
@@ -433,7 +454,9 @@
                             <div class="label">km/h śr.</div>
                         </div>
                     </div>
-                    <div class="trasa-mapa" id="mapa-${index}"></div>
+                    <div class="trasa-mapa-podglad" id="mapa-${index}" onclick="otworzModal(${index})">
+                        <div class="mapa-overlay">🔍 Kliknij żeby powiększyć</div>
+                    </div>
                     ${(takCount > 0 || nieCount > 0) ? `
                     <div class="trasa-waypoints">
                         ✅ TAK: ${takCount}x &nbsp;&nbsp; ❌ NIE: ${nieCount}x
@@ -442,6 +465,7 @@
 
                 lista.appendChild(div);
 
+                // Mała podglądowa mapka (nieinteraktywna)
                 if (wynik.trasa && wynik.trasa.length > 1) {
                     setTimeout(() => {
                         const mapa = L.map(`mapa-${index}`, {
@@ -449,7 +473,8 @@
                             dragging: false,
                             scrollWheelZoom: false,
                             doubleClickZoom: false,
-                            touchZoom: false
+                            touchZoom: false,
+                            tap: false
                         });
 
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
@@ -461,24 +486,22 @@
                         mapa.fitBounds(linia.getBounds(), { padding: [20, 20] });
 
                         L.circleMarker(wynik.trasa[0], {
-                            radius: 8, fillColor: '#2196F3',
+                            radius: 6, fillColor: '#2196F3',
                             color: 'white', weight: 2, fillOpacity: 1
-                        }).addTo(mapa).bindPopup('Start');
+                        }).addTo(mapa);
 
                         L.circleMarker(wynik.trasa[wynik.trasa.length - 1], {
-                            radius: 8, fillColor: '#f44336',
+                            radius: 6, fillColor: '#f44336',
                             color: 'white', weight: 2, fillOpacity: 1
-                        }).addTo(mapa).bindPopup('Koniec');
+                        }).addTo(mapa);
 
                         if (wynik.waypointy) {
                             wynik.waypointy.forEach(wp => {
                                 L.circleMarker([wp.pozycja.lat, wp.pozycja.lng], {
-                                    radius: 7,
+                                    radius: 5,
                                     fillColor: wp.typ === 'tak' ? 'green' : 'red',
                                     color: 'white', weight: 2, fillOpacity: 0.9
-                                }).addTo(mapa).bindPopup(
-                                    `${wp.typ === 'tak' ? '✅' : '❌'} ${wp.czas}`
-                                );
+                                }).addTo(mapa);
                             });
                         }
                     }, 100);
@@ -487,6 +510,112 @@
                         '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;font-size:13px;">Brak danych trasy</div>';
                 }
             });
+        }
+
+        // Otwórz modal z interaktywną mapą
+        function otworzModal(index) {
+            const wynik = wyniki[index];
+            if (!wynik.trasa || wynik.trasa.length < 2) return;
+
+            aktywnyWynikIndex = index;
+            document.getElementById('modal-tytul').textContent = wynik.nazwa || 'Szczegóły trasy';
+            document.getElementById('modal').classList.add('otwarty');
+            document.getElementById('modal-notatka').style.display = 'none';
+
+            // Usuń starą mapę jeśli istnieje
+            if (modalMapa) {
+                modalMapa.remove();
+                modalMapa = null;
+            }
+
+            // Stwórz nową interaktywną mapę
+            setTimeout(() => {
+                modalMapa = L.map('modal-mapa');
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(modalMapa);
+
+                const linia = L.polyline(wynik.trasa, {
+                    color: '#4CAF50', weight: 5
+                }).addTo(modalMapa);
+
+                modalMapa.fitBounds(linia.getBounds(), { padding: [40, 40] });
+
+                // Start
+                L.circleMarker(wynik.trasa[0], {
+                    radius: 10, fillColor: '#2196F3',
+                    color: 'white', weight: 2, fillOpacity: 1
+                }).addTo(modalMapa).bindPopup('🏁 Start');
+
+                // Koniec
+                L.circleMarker(wynik.trasa[wynik.trasa.length - 1], {
+                    radius: 10, fillColor: '#f44336',
+                    color: 'white', weight: 2, fillOpacity: 1
+                }).addTo(modalMapa).bindPopup('🏁 Koniec');
+
+                // Waypoints z notatkami – klikalne!
+                if (wynik.waypointy) {
+                    wynik.waypointy.forEach((wp, wpIndex) => {
+                        const marker = L.circleMarker([wp.pozycja.lat, wp.pozycja.lng], {
+                            radius: 10,
+                            fillColor: wp.typ === 'tak' ? 'green' : 'red',
+                            color: 'white', weight: 2, fillOpacity: 0.9
+                        }).addTo(modalMapa);
+
+                        // Popup z notatką i przyciskiem edycji
+                        const notatka = wp.notatka || '';
+                        const popupContent = document.createElement('div');
+                        popupContent.style.cssText = 'min-width:160px;';
+                        popupContent.innerHTML = `
+                            <div style="font-weight:700;margin-bottom:6px;">
+                                ${wp.typ === 'tak' ? '✅ TAK' : '❌ NIE'} · ${wp.czas}
+                            </div>
+                            <div id="notatka-tekst-${wpIndex}" style="font-size:13px;color:#555;margin-bottom:8px;">
+                                ${notatka || '<i style="color:#aaa">Brak notatki</i>'}
+                            </div>
+                            <button onclick="edytujNotatke(${index}, ${wpIndex})"
+                                style="width:100%;padding:8px;background:#4CAF50;color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;">
+                                ✏️ ${notatka ? 'Edytuj notatkę' : 'Dodaj notatkę'}
+                            </button>
+                        `;
+
+                        marker.bindPopup(popupContent);
+                    });
+                }
+            }, 100);
+        }
+
+        function zamknijModal() {
+            document.getElementById('modal').classList.remove('otwarty');
+            if (modalMapa) {
+                modalMapa.remove();
+                modalMapa = null;
+            }
+        }
+
+        // Edytuj notatkę przy waypoincie
+        function edytujNotatke(wynikIndex, wpIndex) {
+            aktywnyWynikIndex = wynikIndex;
+            aktywnyWaypointIndex = wpIndex;
+            const wp = wyniki[wynikIndex].waypointy[wpIndex];
+            document.getElementById('notatka-input').value = wp.notatka || '';
+            document.getElementById('notatka-tytul').textContent =
+                `📝 ${wp.typ === 'tak' ? '✅ TAK' : '❌ NIE'} · ${wp.czas}`;
+            document.getElementById('modal-notatka').style.display = 'block';
+        }
+
+        function zamknijNotatke() {
+            document.getElementById('modal-notatka').style.display = 'none';
+        }
+
+        function zapiszNotatke() {
+            const tekst = document.getElementById('notatka-input').value.trim();
+            wyniki[aktywnyWynikIndex].waypointy[aktywnyWaypointIndex].notatka = tekst;
+            localStorage.setItem('wyniki', JSON.stringify(wyniki));
+            zamknijNotatke();
+
+            // Odśwież popup
+            alert('✅ Notatka zapisana!');
+            zamknijModal();
+            setTimeout(() => otworzModal(aktywnyWynikIndex), 200);
         }
 
         wczytajProfil();
