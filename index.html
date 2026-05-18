@@ -425,10 +425,10 @@
 
         // Idź zapisaną trasą
         function idzTrasa(index) {
-            const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
-            localStorage.setItem('nowaTrasa', JSON.stringify(zapisane[index]));
-            window.location.href = 'map.html';
-        }
+    const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
+    localStorage.setItem('aktywnaTrasa', JSON.stringify(zapisane[index]));
+    window.location.href = 'saved_route.html';
+}
 
         // Usuń zapisaną trasę
         function usunTrase(index) {
