@@ -28,7 +28,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
-        /* SEKCJA PROFILU */
         .profil-header {
             background: #2d5a27;
             color: white;
@@ -47,7 +46,6 @@
             height: 90px;
             border-radius: 50%;
             border: 3px solid white;
-            object-fit: cover;
             background: #4CAF50;
             display: flex;
             align-items: center;
@@ -85,6 +83,12 @@
             margin-bottom: 4px;
         }
 
+        .profil-miasto {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+        }
+
         .profil-edytuj {
             font-size: 13px;
             opacity: 0.8;
@@ -92,7 +96,6 @@
             text-decoration: underline;
         }
 
-        /* FORMULARZ EDYCJI */
         .edycja-form {
             background: white;
             margin: 16px;
@@ -108,9 +111,7 @@
             margin-bottom: 16px;
         }
 
-        .pole {
-            margin-bottom: 12px;
-        }
+        .pole { margin-bottom: 12px; }
 
         .pole label {
             font-size: 12px;
@@ -140,10 +141,7 @@
             margin-top: 8px;
         }
 
-        /* STATYSTYKI */
-        .sekcja {
-            padding: 20px 16px 0;
-        }
+        .sekcja { padding: 20px 16px 0; }
 
         .sekcja h2 {
             font-size: 16px;
@@ -178,7 +176,6 @@
             margin-top: 4px;
         }
 
-        /* LISTA TRAS */
         .trasa-karta {
             background: white;
             border-radius: 16px;
@@ -199,6 +196,39 @@
             font-size: 13px;
             color: #888;
             margin-bottom: 8px;
+        }
+
+        .trasa-nazwa {
+            grid-column: 1 / -1;
+            font-size: 15px;
+            font-weight: 700;
+            color: #2d5a27;
+            margin-bottom: 4px;
+        }
+
+        .trasa-procent {
+            grid-column: 1 / -1;
+            margin-bottom: 8px;
+        }
+
+        .procent-bar {
+            height: 6px;
+            background: #eee;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .procent-fill {
+            height: 100%;
+            background: #4CAF50;
+            border-radius: 4px;
+        }
+
+        .procent-tekst {
+            font-size: 11px;
+            color: #888;
+            margin-top: 3px;
         }
 
         .trasa-stat .wartosc {
@@ -241,7 +271,6 @@
 <body>
     <button id="btnPowrot" onclick="window.location.href='menu.html'">← Menu</button>
 
-    <!-- NAGŁÓWEK PROFILU -->
     <div class="profil-header">
         <div class="avatar-container">
             <div class="avatar" id="avatar">🚶</div>
@@ -249,10 +278,10 @@
             <input type="file" id="inputZdjecie" accept="image/*" style="display:none" onchange="zmienZdjecie(event)">
         </div>
         <div class="profil-imie" id="profil-imie">Twój profil</div>
+        <div class="profil-miasto" id="profil-miasto"></div>
         <div class="profil-edytuj" onclick="toggleEdycja()">✏️ Edytuj dane</div>
     </div>
 
-    <!-- FORMULARZ EDYCJI -->
     <div class="edycja-form" id="edycja-form">
         <h3>Edytuj profil</h3>
         <div class="pole">
@@ -270,7 +299,6 @@
         <button class="btn-zapisz" onclick="zapiszProfil()">💾 Zapisz</button>
     </div>
 
-    <!-- STATYSTYKI -->
     <div class="sekcja">
         <h2>📊 Moje statystyki</h2>
         <div class="statystyki">
@@ -293,7 +321,6 @@
         </div>
     </div>
 
-    <!-- HISTORIA TRAS -->
     <div class="sekcja">
         <h2>🗺️ Moje trasy</h2>
         <div id="lista-tras"></div>
@@ -301,38 +328,31 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Wczytaj profil
         const profil = JSON.parse(localStorage.getItem('profil') || '{}');
         const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
 
-        // Pokaż dane profilu
         function wczytajProfil() {
             if (profil.imie) {
                 document.getElementById('profil-imie').textContent =
                     `${profil.imie} ${profil.nazwisko || ''}`.trim();
             }
+            if (profil.miasto) {
+                document.getElementById('profil-miasto').textContent = `📍 ${profil.miasto}`;
+            }
             if (profil.zdjecie) {
                 document.getElementById('avatar').innerHTML =
                     `<img src="${profil.zdjecie}" alt="avatar">`;
             }
-            if (profil.imie) {
-                document.getElementById('input-imie').value = profil.imie;
-            }
-            if (profil.nazwisko) {
-                document.getElementById('input-nazwisko').value = profil.nazwisko;
-            }
-            if (profil.miasto) {
-                document.getElementById('input-miasto').value = profil.miasto;
-            }
+            if (profil.imie) document.getElementById('input-imie').value = profil.imie;
+            if (profil.nazwisko) document.getElementById('input-nazwisko').value = profil.nazwisko;
+            if (profil.miasto) document.getElementById('input-miasto').value = profil.miasto;
         }
 
-        // Pokaż/ukryj formularz edycji
         function toggleEdycja() {
             const form = document.getElementById('edycja-form');
             form.style.display = form.style.display === 'block' ? 'none' : 'block';
         }
 
-        // Zapisz profil
         function zapiszProfil() {
             profil.imie = document.getElementById('input-imie').value;
             profil.nazwisko = document.getElementById('input-nazwisko').value;
@@ -342,7 +362,6 @@
             toggleEdycja();
         }
 
-        // Zmień zdjęcie
         function zmienZdjecie(event) {
             const file = event.target.files[0];
             if (!file) return;
@@ -356,7 +375,6 @@
             reader.readAsDataURL(file);
         }
 
-        // Statystyki
         function wczytajStatystyki() {
             if (wyniki.length === 0) return;
             const lacznyKm = wyniki.reduce((s, w) => s + parseFloat(w.dystans), 0);
@@ -372,7 +390,6 @@
             document.getElementById('stat-predkosc').textContent = najPredkosc + ' km/h';
         }
 
-        // Lista tras z mapkami
         function wczytajTrasy() {
             const lista = document.getElementById('lista-tras');
 
@@ -389,13 +406,20 @@
                 const div = document.createElement('div');
                 div.className = 'trasa-karta';
 
-                // Policz waypoints
                 const takCount = wynik.waypointy ? wynik.waypointy.filter(w => w.typ === 'tak').length : 0;
                 const nieCount = wynik.waypointy ? wynik.waypointy.filter(w => w.typ === 'nie').length : 0;
+                const procent = wynik.procent || 100;
 
                 div.innerHTML = `
                     <div class="trasa-info">
+                        <div class="trasa-nazwa">${wynik.nazwa || 'Trasa własna'}</div>
                         <div class="trasa-data">📅 ${wynik.data} · ${wynik.godzina}</div>
+                        <div class="trasa-procent">
+                            <div class="procent-bar">
+                                <div class="procent-fill" style="width:${procent}%"></div>
+                            </div>
+                            <div class="procent-tekst">${procent}% trasy ukończone</div>
+                        </div>
                         <div class="trasa-stat">
                             <div class="wartosc">${wynik.czas}</div>
                             <div class="label">Czas</div>
@@ -418,7 +442,6 @@
 
                 lista.appendChild(div);
 
-                // Rysuj mapkę jeśli są współrzędne
                 if (wynik.trasa && wynik.trasa.length > 1) {
                     setTimeout(() => {
                         const mapa = L.map(`mapa-${index}`, {
@@ -431,36 +454,31 @@
 
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
 
-                        // Narysuj trasę
                         const linia = L.polyline(wynik.trasa, {
-                            color: '#4CAF50',
-                            weight: 4
+                            color: '#4CAF50', weight: 4
                         }).addTo(mapa);
 
                         mapa.fitBounds(linia.getBounds(), { padding: [20, 20] });
 
-                        // Znacznik start
                         L.circleMarker(wynik.trasa[0], {
                             radius: 8, fillColor: '#2196F3',
                             color: 'white', weight: 2, fillOpacity: 1
                         }).addTo(mapa).bindPopup('Start');
 
-                        // Znacznik koniec
                         L.circleMarker(wynik.trasa[wynik.trasa.length - 1], {
                             radius: 8, fillColor: '#f44336',
                             color: 'white', weight: 2, fillOpacity: 1
                         }).addTo(mapa).bindPopup('Koniec');
 
-                        // Waypoints TAK/NIE
                         if (wynik.waypointy) {
                             wynik.waypointy.forEach(wp => {
                                 L.circleMarker([wp.pozycja.lat, wp.pozycja.lng], {
                                     radius: 7,
                                     fillColor: wp.typ === 'tak' ? 'green' : 'red',
-                                    color: 'white',
-                                    weight: 2,
-                                    fillOpacity: 0.9
-                                }).addTo(mapa).bindPopup(`${wp.typ === 'tak' ? '✅' : '❌'} ${wp.czas}`);
+                                    color: 'white', weight: 2, fillOpacity: 0.9
+                                }).addTo(mapa).bindPopup(
+                                    `${wp.typ === 'tak' ? '✅' : '❌'} ${wp.czas}`
+                                );
                             });
                         }
                     }, 100);
