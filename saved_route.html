@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trasa</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; }
+        #map { height: 60vh; width: 100%; }
+
+        #btnPowrot {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        #panel-dol {
+            background: white;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -4px 16px rgba(0,0,0,0.15);
+            padding: 20px 16px;
+        }
+
+        .nazwa-trasy {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d5a27;
+            margin-bottom: 16px;
+        }
+
+        .trasa-info {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        .trasa-stat { text-align: center; }
+
+        .trasa-stat .wartosc {
+            font-size: 26px;
+            font-weight: 700;
+            color: #2d5a27;
+        }
+
+        .trasa-stat .label {
+            font-size: 12px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .adresy {
+            background: #f9f9f9;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        .btn-nawiguj {
+            width: 100%;
+            padding: 16px;
+            background: #4CAF50;
+            border: none;
+            border-radius: 16px;
+            color: white;
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-nawiguj:hover { background: #45a049; }
+
+        .ladowanie {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            font-size: 14px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+    <button id="btnPowrot" onclick="window.location.href='index.html'">← Trasy</button>
+    <div class="ladowanie" id="ladowanie">⏳ Ładowanie trasy...</div>
+
+    <div id="panel-dol">
+        <div class="nazwa-trasy" id="nazwa-trasy">—</div>
+        <div class="trasa-info">
+            <div class="trasa-stat">
+                <div class="wartosc" id="info-dystans">—</div>
+                <div class="label">km</div>
+            </div>
+            <div class="trasa-stat">
+                <div class="wartosc" id="info-czas">—</div>
+                <div class="label">minut (szacunkowo)</div>
+            </div>
+        </div>
+        <div class="adresy" id="adresy"></div>
+        <button class="btn-nawiguj" onclick="nawiguj()">🧭 Nawiguj tą trasą!</button>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        const API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU4NzI0ZmI5ZjE0ZTQ5NTFiNzFiZWJiMGNjZTU0ZmVlIiwiaCI6Im11cm11cjY0In0=';
+
+        const mapa = L.map('map');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(mapa);
+
+        const trasa = JSON.parse(localStorage.getItem('aktywnaTrasa') || 'null');
+
+        if (!trasa) {
+            window.location.href = 'index.html';
+        } else {
+            wczytajTrase();
+        }
+
+        async function wczytajTrase() {
+            document.getElementById('nazwa-trasy').textContent = trasa.nazwa;
+            document.getElementById('info-dystans').textContent = trasa.dystans;
+
+            // Szacowany czas (5 km/h tempo spaceru)
+            const czas = Math.round((parseFloat(trasa.dystans) / 5) * 60);
+            document.getElementById('info-czas').textContent = czas;
+
+            // Adresy
+            if (trasa.adresy && trasa.adresy.length > 0) {
+                const adresyHtml = trasa.adresy.map((a, i) => {
+                    const ikona = i === 0 ? '📍' : i === trasa.adresy.length - 1 ? '🏁' : '🔶';
+                    return `${ikona} ${a}`;
+                }).join('<br>');
+                document.getElementById('adresy').innerHTML = adresyHtml;
+            }
+
+            // Rysuj trasę
+            try {
+                const punkty = trasa.punkty;
+                let wspolrzedneTrasy = [];
+
+                for (let i = 0; i < punkty.length - 1; i++) {
+                    const a = punkty[i];
+                    const b = punkty[i + 1];
+                    const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${a.lng},${a.lat}&end=${b.lng},${b.lat}`;
+                    const response = await fetch(url);
+                    const data = await response.json();
+                    const odcinek = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                    wspolrzedneTrasy = wspolrzedneTrasy.concat(odcinek);
+                }
+
+                const linia = L.polyline(wspolrzedneTrasy, {
+                    color: '#4CAF50',
+                    weight: 5
+                }).addTo(mapa);
+
+                mapa.fitBounds(linia.getBounds(), { padding: [40, 40] });
+
+                // Znaczniki punktów
+                punkty.forEach((p, i) => {
+                    const ikona = i === 0 ? '📍' : i === punkty.length - 1 ? '🏁' : '🔶';
+                    L.marker([p.lat, p.lng], {
+                        icon: L.divIcon({ html: ikona, iconSize: [30, 30], className: '' })
+                    }).addTo(mapa);
+                });
+
+            } catch(err) {
+                console.error(err);
+            }
+
+            document.getElementById('ladowanie').style.display = 'none';
+        }
+
+        function nawiguj() {
+            localStorage.setItem('aktywnaTrasa', JSON.stringify(trasa));
+            window.location.href = 'navigate.html';
+        }
+    </script>
+</body>
+</html>
