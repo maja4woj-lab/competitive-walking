@@ -491,7 +491,7 @@ document.getElementById('debug').innerHTML =
     `Zakręt: ${krok.latlng.lat.toFixed(5)}, ${krok.latlng.lng.toFixed(5)}<br>` +
     krokiPunkty.map((k, i) => `${i+1}. ${k.instrukcja}`).join('<br>');
 
-                if (odleglosc < 35 && !kierunkowskazAktywny) {
+                if (odleglosc < 30 && !kierunkowskazAktywny) {
                     aktualizujKierunkowskazy(krok.instrukcja);
                 }
 
@@ -602,11 +602,11 @@ document.getElementById('debug').innerHTML =
             alert(`Lewa: ${czyPolaczenoLeft() ? '🟢 połączona' : '🔴 niepołączona'}\nPrawa: ${czyPolaczenoRight() ? '🟢 połączona' : '🔴 niepołączona'}`);
             if (czyPolaczenoLeft()) {
                 await wyslijKomende('LEFT', 'ON');
-                setTimeout(() => wyslijKomende('LEFT', 'OFF'), 7000);
+                setTimeout(() => wyslijKomende('LEFT', 'OFF'), 4000);
             }
             if (czyPolaczenoRight()) {
                 await wyslijKomende('RIGHT', 'ON');
-                setTimeout(() => wyslijKomende('RIGHT', 'OFF'), 7000);
+                setTimeout(() => wyslijKomende('RIGHT', 'OFF'), 4000);
             }
         }
 
