@@ -485,10 +485,11 @@
                 document.getElementById('instrukcja-box').textContent = `➡️ ${krok.instrukcja}`;
                 document.getElementById('dystans-pozostal').textContent = `Za ${Math.round(odleglosc)}m`;
 
-                // Aktualizuj debug z odległością
-                document.getElementById('debug').innerHTML =
-                    `📍 Kroków: ${krokiPunkty.length} | Do zakrętu: ${Math.round(odleglosc)}m<br>` +
-                    krokiPunkty.map((k, i) => `${i+1}. ${k.instrukcja}`).join('<br>');
+document.getElementById('debug').innerHTML =
+    `📍 Do zakrętu: ${Math.round(odleglosc)}m | kierunkowskaz: ${kierunkowskazAktywny}<br>` +
+    `GPS: ${nowaPozycja.lat.toFixed(5)}, ${nowaPozycja.lng.toFixed(5)}<br>` +
+    `Zakręt: ${krok.latlng.lat.toFixed(5)}, ${krok.latlng.lng.toFixed(5)}<br>` +
+    krokiPunkty.map((k, i) => `${i+1}. ${k.instrukcja}`).join('<br>');
 
                 if (odleglosc < 15 && !kierunkowskazAktywny) {
                     aktualizujKierunkowskazy(krok.instrukcja);
