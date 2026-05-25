@@ -491,11 +491,11 @@ document.getElementById('debug').innerHTML =
     `Zakręt: ${krok.latlng.lat.toFixed(5)}, ${krok.latlng.lng.toFixed(5)}<br>` +
     krokiPunkty.map((k, i) => `${i+1}. ${k.instrukcja}`).join('<br>');
 
-                if (odleglosc < 15 && !kierunkowskazAktywny) {
+                if (odleglosc < 35 && !kierunkowskazAktywny) {
                     aktualizujKierunkowskazy(krok.instrukcja);
                 }
 
-                if (odleglosc < 8) {
+                if (odleglosc < 20) {
                     krokiPunkty.shift();
                     kierunkowskazAktywny = false;
                     if (krokiPunkty.length > 0) {
