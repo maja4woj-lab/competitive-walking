@@ -8,12 +8,11 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: sans-serif; background: #f0f4f0; }
-        #map { height: 55vh; width: 100%; }
+        #map { height: 50vh; width: 100%; }
 
         #btnPowrot {
             position: absolute;
-            top: 10px;
-            left: 10px;
+            top: 10px; left: 10px;
             z-index: 1000;
             background: white;
             border: none;
@@ -25,10 +24,10 @@
         }
 
         #panel-dol {
-            padding: 20px;
+            padding: 16px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 12px;
         }
 
         #instrukcja-box {
@@ -40,6 +39,40 @@
             font-size: 16px;
             font-weight: 500;
             color: #222;
+        }
+
+        /* BLE STATUS */
+        #ble-status {
+            background: white;
+            border-radius: 12px;
+            padding: 10px 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .ble-przyciski {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-ble {
+            padding: 6px 12px;
+            background: #f0f4f0;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .btn-ble:hover { background: #e0e8e0; }
+
+        .ble-wskazniki {
+            display: flex;
+            gap: 8px;
+            font-size: 12px;
         }
 
         .statystyki {
@@ -112,9 +145,7 @@
             cursor: pointer;
         }
 
-        #btnStart:hover { background: #45a049; }
         #btnStart.stop { background: #f44336; }
-        #btnStart.stop:hover { background: #d32f2f; }
 
         #btnZakoncz {
             padding: 16px;
@@ -127,8 +158,6 @@
             cursor: pointer;
             display: none;
         }
-
-        #btnZakoncz:hover { background: #e65100; }
 
         #dystans-pozostal {
             text-align: center;
@@ -143,6 +172,18 @@
 
     <div id="panel-dol">
         <div id="instrukcja-box">⏳ Ładowanie...</div>
+
+        <!-- STATUS BLUETOOTH -->
+        <div id="ble-status">
+            <div class="ble-wskazniki">
+                <span id="ble-left">🔴 Lewa</span>
+                <span id="ble-right">🔴 Prawa</span>
+            </div>
+            <div class="ble-przyciski">
+                <button class="btn-ble" onclick="polaczRaczke('LEFT')">🔗 Lewa</button>
+                <button class="btn-ble" onclick="polaczRaczke('RIGHT')">🔗 Prawa</button>
+            </div>
+        </div>
 
         <div class="statystyki">
             <div class="stat">
@@ -171,6 +212,7 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="bluetooth.js"></script>
     <script>
         const API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU4NzI0ZmI5ZjE0ZTQ5NTFiNzFiZWJiMGNjZTU0ZmVlIiwiaCI6Im11cm11cjY0In0=';
 
@@ -190,16 +232,18 @@
         let ostatniCzasGPS = null;
         let ostatniaPozycjaGPS = null;
 
+        // Podpięcie przycisków rączek
+        onButtonLeft  = () => dodajWaypoint('nie');  // lewa = NIE (czerwony)
+        onButtonRight = () => dodajWaypoint('tak');  // prawa = TAK (zielony)
+
         // Mapa
         const map = L.map('map').setView([52.2297, 21.0122], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
         }).addTo(map);
 
-        // Wczytaj aktywną trasę z localStorage
         const aktywnaTrasa = JSON.parse(localStorage.getItem('aktywnaTrasa') || 'null');
 
-        // Znajdź lokalizację
         map.locate({ setView: true, maxZoom: 16, enableHighAccuracy: true });
 
         map.on('locationfound', function(e) {
@@ -225,7 +269,6 @@
             }
         });
 
-        // Kliknięcie na mapę = ręczny wybór celu
         map.on('click', function(e) {
             if (czyDziala || aktywnaTrasa) return;
             celPozycja = e.latlng;
@@ -235,7 +278,6 @@
             pobierzTrase(mojaPozycja, celPozycja);
         });
 
-        // Narysuj trasę z aktywnaTrasa
         async function rysujAktywnaTrase() {
             if (!aktywnaTrasa || !aktywnaTrasa.punkty) return;
             document.getElementById('instrukcja-box').textContent = '⏳ Ładowanie trasy...';
@@ -276,11 +318,9 @@
 
             } catch(err) {
                 document.getElementById('instrukcja-box').textContent = '❌ Błąd ładowania trasy';
-                console.error(err);
             }
         }
 
-        // Pobierz trasę ręcznie
         async function pobierzTrase(start, cel) {
             if (!start || !cel) return;
             document.getElementById('instrukcja-box').textContent = '⏳ Szukam trasy...';
@@ -308,7 +348,6 @@
             }
         }
 
-        // Start / Stop
         function toggleStart() {
             const btn = document.getElementById('btnStart');
             if (!czyDziala) {
@@ -341,6 +380,22 @@
             const mm = String(Math.floor(sekundy / 60)).padStart(2, '0');
             const ss = String(sekundy % 60).padStart(2, '0');
             document.getElementById('czas').textContent = `${mm}:${ss}`;
+        }
+
+        // Wykryj kierunek skrętu i steruj rączkami
+        async function aktualizujKierunkowskazy(instrukcja) {
+            if (!instrukcja) return;
+            const txt = instrukcja.toLowerCase();
+
+            if (txt.includes('left') || txt.includes('lewo') || txt.includes('lew')) {
+                await kierunkowskazLewo(true);
+                setTimeout(() => kierunkowskazLewo(false), 3000);
+            } else if (txt.includes('right') || txt.includes('prawo') || txt.includes('praw')) {
+                await kierunkowskazPrawo(true);
+                setTimeout(() => kierunkowskazPrawo(false), 3000);
+            } else {
+                await wylaczObie();
+            }
         }
 
         function aktualizujPozycje(e) {
@@ -380,8 +435,9 @@
             document.getElementById('dystans').textContent = (dystansPrzebyta / 1000).toFixed(2);
 
             if (kroки.length > 0) {
-                document.getElementById('instrukcja-box').textContent =
-                    `➡️ ${kroки[0].instruction}`;
+                const instrukcja = kroки[0].instruction;
+                document.getElementById('instrukcja-box').textContent = `➡️ ${instrukcja}`;
+                aktualizujKierunkowskazy(instrukcja);
             }
 
             if (celPozycja && nowaPozycja.distanceTo(celPozycja) < 20) {
@@ -410,6 +466,7 @@
             clearInterval(timerInterval);
             map.stopLocate();
             liniaUkonczona = null;
+            wylaczObie();
             const btn = document.getElementById('btnStart');
             btn.textContent = '▶ Start';
             btn.classList.remove('stop');
@@ -420,7 +477,6 @@
 
         function zakonczTrase() {
             if (!confirm('Zakończyć trasę i zapisać wynik?')) return;
-
             zatrzymaj();
 
             let procent = 100;
