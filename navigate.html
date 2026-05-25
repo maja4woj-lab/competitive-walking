@@ -267,26 +267,40 @@
         });
 
         // Przetwórz kroki – przypisz każdemu krokowi współrzędne punktu z linii trasy
-        function przetworzKroki(kroki, wspolrzedneTrasy) {
-            krokiPunkty = [];
-            kroki.forEach(krok => {
-                // Pomiń "Head north/south/east/west" – to nie są zakręty
-                const inst = krok.instruction.toLowerCase();
-                const czyGlowny = inst.startsWith('head ') || inst.startsWith('depart');
-                if (czyGlowny) return;
+     function przetworzKroki(kroki, wspolrzedneTrasy) {
+    krokiPunkty = [];
+    
+    // Pokaż wszystkie kroki w konsoli żebyśmy widziały co przychodzi
+    console.log('Wszystkie kroki:', JSON.stringify(kroki.map(k => ({
+        inst: k.instruction,
+        dist: k.distance,
+        wp: k.way_points
+    }))));
 
-                // Pobierz punkt końcowy kroku z linii trasy
-                const idx = krok.way_points ? krok.way_points[1] : null;
-                if (idx !== null && wspolrzedneTrasy[idx]) {
-                    krokiPunkty.push({
-                        latlng: L.latLng(wspolrzedneTrasy[idx][0], wspolrzedneTrasy[idx][1]),
-                        instrukcja: krok.instruction
-                    });
-                }
+    kroki.forEach(krok => {
+        const inst = krok.instruction.toLowerCase();
+        const czyPomijany = inst.startsWith('head ') || inst.startsWith('depart') || inst.includes('arrive');
+        
+        console.log(`Krok: "${krok.instruction}" | pomijany: ${czyPomijany} | way_points: ${krok.way_points}`);
+        
+        if (czyPomijany) return;
+
+        const idx = krok.way_points ? krok.way_points[1] : null;
+        if (idx !== null && wspolrzedneTrasy[idx]) {
+            krokiPunkty.push({
+                latlng: L.latLng(wspolrzedneTrasy[idx][0], wspolrzedneTrasy[idx][1]),
+                instrukcja: krok.instruction
             });
-            aktualnyKrokIndex = 0;
-            pokazNastepnyKrok();
+            console.log(`✅ Dodano krok: "${krok.instruction}" na indeksie ${idx}`);
+        } else {
+            console.log(`❌ Brak punktu dla kroku: "${krok.instruction}" | idx: ${idx} | długość trasy: ${wspolrzedneTrasy.length}`);
         }
+    });
+    
+    console.log(`Łącznie kroków do nawigacji: ${krokiPunkty.length}`);
+    aktualnyKrokIndex = 0;
+    pokazNastepnyKrok();
+}
 
         function pokazNastepnyKrok() {
             if (krokiPunkty.length === 0) {
