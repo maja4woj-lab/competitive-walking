@@ -424,16 +424,32 @@
             document.getElementById('dystans').textContent = (dystansPrzebyta / 1000).toFixed(2);
 
             if (kroки.length > 0) {
-                const instrukcja = kroки[0].instruction;
+                const krok = kroки[0];
+                const instrukcja = krok.instruction;
                 document.getElementById('instrukcja-box').textContent = `➡️ ${instrukcja}`;
-                aktualizujKierunkowskazy(instrukcja);
 
-                // Przejdź do następnego kroku gdy zostało mniej niż 15m
-                if (kroки[0].distance < 15) {
-                    kroки.shift();
-                    if (kroки.length > 0) {
+                // Sprawdź odległość od punktu końcowego tego kroku
+                if (liniaTrasy) {
+                    const punktyTrasy = liniaTrasy.getLatLngs();
+                    const indeksKroku = krok.way_points ? krok.way_points[1] : 0;
+                    if (indeksKroku && punktyTrasy[indeksKroku]) {
+                        const odlegloscDoKroku = nowaPozycja.distanceTo(punktyTrasy[indeksKroku]);
                         document.getElementById('dystans-pozostal').textContent =
-                            `Następny: ${kroки[0].instruction}`;
+                            `Za ${Math.round(odlegloscDoKroku)}m: ${instrukcja}`;
+
+                        // 10m przed zakrętem – uruchom kierunkowskaz
+                        if (odlegloscDoKroku < 10) {
+                            aktualizujKierunkowskazy(instrukcja);
+                        }
+
+                        // Przejdź do następnego kroku gdy minęłaś punkt
+                        if (odlegloscDoKroku < 10) {
+                            kroки.shift();
+                            if (kroки.length > 0) {
+                                document.getElementById('instrukcja-box').textContent =
+                                    `➡️ ${kroки[0].instruction}`;
+                            }
+                        }
                     }
                 }
             }
