@@ -41,7 +41,6 @@
             color: #222;
         }
 
-        /* BLE STATUS */
         #ble-status {
             background: white;
             border-radius: 12px;
@@ -53,10 +52,7 @@
             gap: 8px;
         }
 
-        .ble-przyciski {
-            display: flex;
-            gap: 8px;
-        }
+        .ble-przyciski { display: flex; gap: 8px; }
 
         .btn-ble {
             padding: 6px 12px;
@@ -67,13 +63,7 @@
             cursor: pointer;
         }
 
-        .btn-ble:hover { background: #e0e8e0; }
-
-        .ble-wskazniki {
-            display: flex;
-            gap: 8px;
-            font-size: 12px;
-        }
+        .ble-wskazniki { display: flex; gap: 8px; font-size: 12px; }
 
         .statystyki {
             display: grid;
@@ -89,17 +79,8 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .stat-wartosc {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2d5a27;
-        }
-
-        .stat-label {
-            font-size: 11px;
-            color: #888;
-            margin-top: 4px;
-        }
+        .stat-wartosc { font-size: 24px; font-weight: 700; color: #2d5a27; }
+        .stat-label { font-size: 11px; color: #888; margin-top: 4px; }
 
         .przyciski-waypoint {
             display: grid;
@@ -129,10 +110,7 @@
             cursor: pointer;
         }
 
-        .btn-tak:disabled, .btn-nie:disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-        }
+        .btn-tak:disabled, .btn-nie:disabled { opacity: 0.4; cursor: not-allowed; }
 
         #btnStart {
             padding: 16px;
@@ -159,11 +137,17 @@
             display: none;
         }
 
-        #dystans-pozostal {
-            text-align: center;
-            color: #888;
-            font-size: 13px;
+        #btnTest {
+            padding: 12px;
+            background: #9C27B0;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            cursor: pointer;
         }
+
+        #dystans-pozostal { text-align: center; color: #888; font-size: 13px; }
     </style>
 </head>
 <body>
@@ -173,7 +157,6 @@
     <div id="panel-dol">
         <div id="instrukcja-box">⏳ Ładowanie...</div>
 
-        <!-- STATUS BLUETOOTH -->
         <div id="ble-status">
             <div class="ble-wskazniki">
                 <span id="ble-left">🔴 Lewa</span>
@@ -209,6 +192,7 @@
 
         <button id="btnStart" onclick="toggleStart()">▶ Start</button>
         <button id="btnZakoncz" onclick="zakonczTrase()">🏁 Zakończ trasę</button>
+        <button id="btnTest" onclick="testRaczki()">🔧 Test rączek</button>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -232,11 +216,9 @@
         let ostatniCzasGPS = null;
         let ostatniaPozycjaGPS = null;
 
-        // Podpięcie przycisków rączek
-        onButtonLeft  = () => dodajWaypoint('nie');  // lewa = NIE (czerwony)
-        onButtonRight = () => dodajWaypoint('tak');  // prawa = TAK (zielony)
+        onButtonLeft  = () => dodajWaypoint('nie');
+        onButtonRight = () => dodajWaypoint('tak');
 
-        // Mapa
         const map = L.map('map').setView([52.2297, 21.0122], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap'
@@ -382,19 +364,26 @@
             document.getElementById('czas').textContent = `${mm}:${ss}`;
         }
 
-        // Wykryj kierunek skrętu i steruj rączkami
         async function aktualizujKierunkowskazy(instrukcja) {
             if (!instrukcja) return;
             const txt = instrukcja.toLowerCase();
 
-            if (txt.includes('left') || txt.includes('lewo') || txt.includes('lew')) {
+            if (txt.includes('left') || txt.includes('lewo') ||
+                txt.includes('slight left') || txt.includes('sharp left')) {
                 await kierunkowskazLewo(true);
                 setTimeout(() => kierunkowskazLewo(false), 3000);
-            } else if (txt.includes('right') || txt.includes('prawo') || txt.includes('praw')) {
+            } else if (txt.includes('right') || txt.includes('prawo') ||
+                       txt.includes('slight right') || txt.includes('sharp right')) {
                 await kierunkowskazPrawo(true);
                 setTimeout(() => kierunkowskazPrawo(false), 3000);
-            } else {
-                await wylaczObie();
+            } else if (txt.includes('uturn') || txt.includes('u-turn') ||
+                       txt.includes('zawróć')) {
+                await kierunkowskazLewo(true);
+                setTimeout(async () => {
+                    await kierunkowskazLewo(false);
+                    await kierunkowskazPrawo(true);
+                    setTimeout(() => kierunkowskazPrawo(false), 1500);
+                }, 1500);
             }
         }
 
@@ -438,6 +427,15 @@
                 const instrukcja = kroки[0].instruction;
                 document.getElementById('instrukcja-box').textContent = `➡️ ${instrukcja}`;
                 aktualizujKierunkowskazy(instrukcja);
+
+                // Przejdź do następnego kroku gdy zostało mniej niż 15m
+                if (kroки[0].distance < 15) {
+                    kroки.shift();
+                    if (kroки.length > 0) {
+                        document.getElementById('dystans-pozostal').textContent =
+                            `Następny: ${kroки[0].instruction}`;
+                    }
+                }
             }
 
             if (celPozycja && nowaPozycja.distanceTo(celPozycja) < 20) {
@@ -528,6 +526,19 @@
                 pozycja: mojaPozycja,
                 czas: new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'})
             });
+        }
+
+        async function testRaczki() {
+            alert(`Lewa: ${czyPolaczenoLeft() ? '🟢 połączona' : '🔴 niepołączona'}\nPrawa: ${czyPolaczenoRight() ? '🟢 połączona' : '🔴 niepołączona'}`);
+
+            if (czyPolaczenoLeft()) {
+                await wyslijKomende('LEFT', 'ON');
+                setTimeout(() => wyslijKomende('LEFT', 'OFF'), 3000);
+            }
+            if (czyPolaczenoRight()) {
+                await wyslijKomende('RIGHT', 'ON');
+                setTimeout(() => wyslijKomende('RIGHT', 'OFF'), 3000);
+            }
         }
     </script>
 </body>
