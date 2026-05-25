@@ -374,19 +374,21 @@
             if (txt.includes('left') || txt.includes('lewo') ||
                 txt.includes('slight left') || txt.includes('sharp left')) {
                 await kierunkowskazLewo(true);
-                setTimeout(() => kierunkowskazLewo(false), 3000);
+                setTimeout(() => kierunkowskazLewo(false), 7000);
+
             } else if (txt.includes('right') || txt.includes('prawo') ||
                        txt.includes('slight right') || txt.includes('sharp right')) {
                 await kierunkowskazPrawo(true);
-                setTimeout(() => kierunkowskazPrawo(false), 3000);
+                setTimeout(() => kierunkowskazPrawo(false), 7000);
+
             } else if (txt.includes('uturn') || txt.includes('u-turn') ||
                        txt.includes('zawróć')) {
                 await kierunkowskazLewo(true);
                 setTimeout(async () => {
                     await kierunkowskazLewo(false);
                     await kierunkowskazPrawo(true);
-                    setTimeout(() => kierunkowskazPrawo(false), 1500);
-                }, 1500);
+                    setTimeout(() => kierunkowskazPrawo(false), 3500);
+                }, 3500);
             }
         }
 
@@ -439,7 +441,7 @@
                         document.getElementById('dystans-pozostal').textContent =
                             `Za ${Math.round(odlegloscDoKroku)}m: ${instrukcja}`;
 
-                        if (odlegloscDoKroku < 10) {
+                        if (odlegloscDoKroku < 15) {
                             aktualizujKierunkowskazy(instrukcja);
                             kroки.shift();
                             if (kroки.length > 0) {
@@ -545,16 +547,16 @@
             alert(`Lewa: ${czyPolaczenoLeft() ? '🟢 połączona' : '🔴 niepołączona'}\nPrawa: ${czyPolaczenoRight() ? '🟢 połączona' : '🔴 niepołączona'}`);
             if (czyPolaczenoLeft()) {
                 await wyslijKomende('LEFT', 'ON');
-                setTimeout(() => wyslijKomende('LEFT', 'OFF'), 3000);
+                setTimeout(() => wyslijKomende('LEFT', 'OFF'), 7000);
             }
             if (czyPolaczenoRight()) {
                 await wyslijKomende('RIGHT', 'ON');
-                setTimeout(() => wyslijKomende('RIGHT', 'OFF'), 3000);
+                setTimeout(() => wyslijKomende('RIGHT', 'OFF'), 7000);
             }
         }
 
         async function testZakret() {
-            alert('Test: lewa rączka zapali się teraz, prawa za 5 sekund!');
+            alert('Test: lewa rączka zapali się teraz, prawa za 8 sekund!');
             document.getElementById('instrukcja-box').textContent = '➡️ Turn left (TEST)';
             await kierunkowskazLewo(true);
             setTimeout(async () => {
@@ -564,8 +566,8 @@
                 setTimeout(() => {
                     kierunkowskazPrawo(false);
                     document.getElementById('instrukcja-box').textContent = '✅ Test zakończony!';
-                }, 3000);
-            }, 5000);
+                }, 7000);
+            }, 8000);
         }
     </script>
 </body>
