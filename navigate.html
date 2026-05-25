@@ -145,6 +145,15 @@
         }
 
         #dystans-pozostal { text-align: center; color: #888; font-size: 13px; }
+
+        #debug {
+            background: #fff3cd;
+            border-radius: 8px;
+            padding: 8px;
+            font-size: 11px;
+            color: #555;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -181,6 +190,7 @@
         </div>
 
         <div id="dystans-pozostal">—</div>
+        <div id="debug">Zaplanuj trasę żeby zobaczyć kroki nawigacji</div>
 
         <div class="przyciski-waypoint">
             <button class="btn-tak" id="btnTak" onclick="dodajWaypoint('tak')" disabled>✅ TAK</button>
@@ -206,11 +216,7 @@
         let markerJa = null;
         let liniaTrasy = null;
         let liniaUkonczona = null;
-
-        // Kroki nawigacji jako lista punktów na mapie
-        let krokiPunkty = []; // [{latlng, instrukcja}, ...]
-        let aktualnyKrokIndex = 0;
-
+        let krokiPunkty = [];
         let startTime = null;
         let timerInterval = null;
         let dystansPrzebyta = 0;
@@ -266,41 +272,36 @@
             pobierzTrase(mojaPozycja, celPozycja);
         });
 
-        // Przetwórz kroki – przypisz każdemu krokowi współrzędne punktu z linii trasy
-     function przetworzKroki(kroki, wspolrzedneTrasy) {
-    krokiPunkty = [];
-    
-    // Pokaż wszystkie kroki w konsoli żebyśmy widziały co przychodzi
-    console.log('Wszystkie kroki:', JSON.stringify(kroki.map(k => ({
-        inst: k.instruction,
-        dist: k.distance,
-        wp: k.way_points
-    }))));
+        function przetworzKroki(kroki, wspolrzedneTrasy) {
+            krokiPunkty = [];
 
-    kroki.forEach(krok => {
-        const inst = krok.instruction.toLowerCase();
-        const czyPomijany = inst.startsWith('head ') || inst.startsWith('depart') || inst.includes('arrive');
-        
-        console.log(`Krok: "${krok.instruction}" | pomijany: ${czyPomijany} | way_points: ${krok.way_points}`);
-        
-        if (czyPomijany) return;
+            kroki.forEach(krok => {
+                const inst = krok.instruction.toLowerCase();
+                const czyPomijany = inst.startsWith('head ') ||
+                                    inst.startsWith('depart') ||
+                                    inst.includes('arrive');
+                if (czyPomijany) return;
 
-        const idx = krok.way_points ? krok.way_points[1] : null;
-        if (idx !== null && wspolrzedneTrasy[idx]) {
-            krokiPunkty.push({
-                latlng: L.latLng(wspolrzedneTrasy[idx][0], wspolrzedneTrasy[idx][1]),
-                instrukcja: krok.instruction
+                const idx = krok.way_points ? krok.way_points[1] : null;
+                if (idx !== null && wspolrzedneTrasy[idx]) {
+                    krokiPunkty.push({
+                        latlng: L.latLng(wspolrzedneTrasy[idx][0], wspolrzedneTrasy[idx][1]),
+                        instrukcja: krok.instruction
+                    });
+                }
             });
-            console.log(`✅ Dodano krok: "${krok.instruction}" na indeksie ${idx}`);
-        } else {
-            console.log(`❌ Brak punktu dla kroku: "${krok.instruction}" | idx: ${idx} | długość trasy: ${wspolrzedneTrasy.length}`);
+
+            // Pokaż debug na ekranie
+            const debugEl = document.getElementById('debug');
+            if (debugEl) {
+                if (krokiPunkty.length === 0) {
+                    debugEl.innerHTML = '⚠️ Brak kroków nawigacji – trasa może być za krótka lub prosta';
+                } else {
+                    debugEl.innerHTML = `📍 Kroków: ${krokiPunkty.length}<br>` +
+                        krokiPunkty.map((k, i) => `${i+1}. ${k.instrukcja}`).join('<br>');
+                }
+            }
         }
-    });
-    
-    console.log(`Łącznie kroków do nawigacji: ${krokiPunkty.length}`);
-    aktualnyKrokIndex = 0;
-    pokazNastepnyKrok();
-}
 
         function pokazNastepnyKrok() {
             if (krokiPunkty.length === 0) {
@@ -336,7 +337,6 @@
                     const offset = wspolrzedneTrasy.length;
                     wspolrzedneTrasy = wspolrzedneTrasy.concat(odcinek);
 
-                    // Skoryguj indeksy way_points o offset
                     const kroki = data.features[0].properties.segments[0].steps.map(k => ({
                         ...k,
                         way_points: k.way_points ? [k.way_points[0] + offset, k.way_points[1] + offset] : k.way_points
@@ -355,8 +355,6 @@
 
                 document.getElementById('instrukcja-box').textContent =
                     `✅ ${aktywnaTrasa.nazwa} · ${aktywnaTrasa.dystans} km`;
-                document.getElementById('dystans-pozostal').textContent =
-                    krokiPunkty.length > 0 ? `Pierwszy zakręt: ${krokiPunkty[0].instrukcja}` : '';
 
             } catch(err) {
                 document.getElementById('instrukcja-box').textContent = '❌ Błąd ładowania trasy';
@@ -480,7 +478,6 @@
             document.getElementById('predkosc').textContent = predkosc;
             document.getElementById('dystans').textContent = (dystansPrzebyta / 1000).toFixed(2);
 
-            // Nawigacja krok po kroku
             if (krokiPunkty.length > 0) {
                 const krok = krokiPunkty[0];
                 const odleglosc = nowaPozycja.distanceTo(krok.latlng);
@@ -488,23 +485,23 @@
                 document.getElementById('instrukcja-box').textContent = `➡️ ${krok.instrukcja}`;
                 document.getElementById('dystans-pozostal').textContent = `Za ${Math.round(odleglosc)}m`;
 
-                // 15m przed zakrętem – uruchom kierunkowskaz
+                // Aktualizuj debug z odległością
+                document.getElementById('debug').innerHTML =
+                    `📍 Kroków: ${krokiPunkty.length} | Do zakrętu: ${Math.round(odleglosc)}m<br>` +
+                    krokiPunkty.map((k, i) => `${i+1}. ${k.instrukcja}`).join('<br>');
+
                 if (odleglosc < 15 && !kierunkowskazAktywny) {
                     aktualizujKierunkowskazy(krok.instrukcja);
                 }
 
-                // 8m – przejdź do następnego kroku
                 if (odleglosc < 8) {
                     krokiPunkty.shift();
                     kierunkowskazAktywny = false;
                     if (krokiPunkty.length > 0) {
-                        const nastepny = krokiPunkty[0];
-                        const dist = Math.round(nowaPozycja.distanceTo(nastepny.latlng));
-                        document.getElementById('instrukcja-box').textContent = `➡️ ${nastepny.instrukcja}`;
-                        document.getElementById('dystans-pozostal').textContent = `Za ${dist}m`;
+                        document.getElementById('instrukcja-box').textContent =
+                            `➡️ ${krokiPunkty[0].instrukcja}`;
                     } else {
                         document.getElementById('instrukcja-box').textContent = '🚶 Idź prosto do celu';
-                        document.getElementById('dystans-pozostal').textContent = '';
                     }
                 }
             }
