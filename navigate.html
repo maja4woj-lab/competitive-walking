@@ -137,9 +137,8 @@
             display: none;
         }
 
-        #btnTest {
+        .btn-test {
             padding: 12px;
-            background: #9C27B0;
             color: white;
             border: none;
             border-radius: 12px;
@@ -192,7 +191,11 @@
 
         <button id="btnStart" onclick="toggleStart()">▶ Start</button>
         <button id="btnZakoncz" onclick="zakonczTrase()">🏁 Zakończ trasę</button>
-        <button id="btnTest" onclick="testRaczki()">🔧 Test rączek</button>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button class="btn-test" style="background:#9C27B0;" onclick="testRaczki()">🔧 Test rączek</button>
+            <button class="btn-test" style="background:#FF5722;" onclick="testZakret()">🔧 Test zakrętu</button>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -428,7 +431,6 @@
                 const instrukcja = krok.instruction;
                 document.getElementById('instrukcja-box').textContent = `➡️ ${instrukcja}`;
 
-                // Sprawdź odległość od punktu końcowego tego kroku
                 if (liniaTrasy) {
                     const punktyTrasy = liniaTrasy.getLatLngs();
                     const indeksKroku = krok.way_points ? krok.way_points[1] : 0;
@@ -437,13 +439,8 @@
                         document.getElementById('dystans-pozostal').textContent =
                             `Za ${Math.round(odlegloscDoKroku)}m: ${instrukcja}`;
 
-                        // 10m przed zakrętem – uruchom kierunkowskaz
                         if (odlegloscDoKroku < 10) {
                             aktualizujKierunkowskazy(instrukcja);
-                        }
-
-                        // Przejdź do następnego kroku gdy minęłaś punkt
-                        if (odlegloscDoKroku < 10) {
                             kroки.shift();
                             if (kroки.length > 0) {
                                 document.getElementById('instrukcja-box').textContent =
@@ -546,7 +543,6 @@
 
         async function testRaczki() {
             alert(`Lewa: ${czyPolaczenoLeft() ? '🟢 połączona' : '🔴 niepołączona'}\nPrawa: ${czyPolaczenoRight() ? '🟢 połączona' : '🔴 niepołączona'}`);
-
             if (czyPolaczenoLeft()) {
                 await wyslijKomende('LEFT', 'ON');
                 setTimeout(() => wyslijKomende('LEFT', 'OFF'), 3000);
@@ -555,6 +551,21 @@
                 await wyslijKomende('RIGHT', 'ON');
                 setTimeout(() => wyslijKomende('RIGHT', 'OFF'), 3000);
             }
+        }
+
+        async function testZakret() {
+            alert('Test: lewa rączka zapali się teraz, prawa za 5 sekund!');
+            document.getElementById('instrukcja-box').textContent = '➡️ Turn left (TEST)';
+            await kierunkowskazLewo(true);
+            setTimeout(async () => {
+                await kierunkowskazLewo(false);
+                document.getElementById('instrukcja-box').textContent = '➡️ Turn right (TEST)';
+                await kierunkowskazPrawo(true);
+                setTimeout(() => {
+                    kierunkowskazPrawo(false);
+                    document.getElementById('instrukcja-box').textContent = '✅ Test zakończony!';
+                }, 3000);
+            }, 5000);
         }
     </script>
 </body>
