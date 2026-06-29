@@ -189,7 +189,6 @@
             border: 1.5px solid #eee;
             border-radius: 10px;
             width: 34px; height: 34px;
-            font-size: 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -252,9 +251,10 @@
             width: 12px; height: 12px;
             border-radius: 50%;
             background: #2d6a2d;
+            flex-shrink: 0;
         }
 
-        /* MOJE MIEJSCA – dwa duże przyciski */
+        /* MOJE MIEJSCA */
         .miejsca-wybor {
             padding: 24px 20px;
             display: flex;
@@ -267,55 +267,43 @@
             border-radius: 24px;
             border: none;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            gap: 10px;
             cursor: pointer;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
             transition: transform 0.1s;
         }
 
         .btn-miejsca:hover { transform: scale(0.97); }
 
-        .btn-miejsca-zielone {
-            background: #2d6a2d;
-            color: white;
-        }
-
-        .btn-miejsca-czerwone {
-            background: #7B1F1F;
-            color: white;
-        }
+        .btn-miejsca-zielone { background: #2d6a2d; }
+        .btn-miejsca-czerwone { background: #7B1F1F; }
 
         .btn-miejsca-kropka {
-            width: 40px; height: 40px;
+            width: 50px; height: 50px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.35);
         }
 
         /* LISTA MIEJSC */
+        .btn-powrot-miejsca {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: none;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 22px;
+            font-weight: 600;
+            color: #aaa;
+            cursor: pointer;
+            padding: 20px 20px;
+        }
+
         .miejsca-lista {
             padding: 0 20px 20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
-        }
-
-        .btn-powrot-miejsca {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: none;
-            border: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 14px;
-            font-weight: 600;
-            color: #aaa;
-            cursor: pointer;
-            padding: 12px 20px;
         }
 
         .miejsce-karta {
@@ -359,11 +347,6 @@
             font-style: italic;
         }
 
-        .strzalka-prawo {
-            color: #ddd;
-            font-size: 20px;
-        }
-
         .pusty {
             text-align: center;
             color: #ccc;
@@ -394,7 +377,6 @@
             flex-shrink: 0;
         }
 
-        /* DUŻY GROT STRZAŁKI */
         .btn-cofnij {
             background: none;
             border: none;
@@ -403,15 +385,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-        }
-
-        .btn-cofnij svg {
-            width: 32px;
-            height: 32px;
-        }
-
-        .btn-cofnij svg polygon {
-            fill: #ccc;
+            flex-shrink: 0;
         }
 
         .modal-naglowek h2 {
@@ -561,24 +535,20 @@
 
         <!-- MOJE MIEJSCA -->
         <div class="zakladka-content" id="tab-moje-miejsca">
-            <!-- Widok: dwa duże przyciski -->
             <div id="widok-wybor">
                 <div class="miejsca-wybor">
                     <button class="btn-miejsca btn-miejsca-zielone" onclick="pokazListeMiejsc('tak')">
                         <div class="btn-miejsca-kropka"></div>
-                        Pozytywne
                     </button>
                     <button class="btn-miejsca btn-miejsca-czerwone" onclick="pokazListeMiejsc('nie')">
                         <div class="btn-miejsca-kropka"></div>
-                        Negatywne
                     </button>
                 </div>
             </div>
 
-            <!-- Widok: lista miejsc -->
             <div id="widok-lista" style="display:none;">
                 <button class="btn-powrot-miejsca" onclick="powrotDoWyboru()">
-                    <svg viewBox="0 0 24 24" width="20" height="20">
+                    <svg viewBox="0 0 24 24" width="48" height="48">
                         <polygon points="15,4 5,12 15,20" fill="#ccc"/>
                     </svg>
                     Wróć
@@ -592,7 +562,9 @@
     <div class="modal-pelny" id="modal-trasa">
         <div class="modal-naglowek">
             <button class="btn-cofnij" onclick="zamknijModalTrasy()">
-                <svg viewBox="0 0 24 24"><polygon points="16,4 6,12 16,20" fill="#ccc"/></svg>
+                <svg viewBox="0 0 24 24" width="48" height="48">
+                    <polygon points="16,4 6,12 16,20" fill="#ccc"/>
+                </svg>
             </button>
             <h2 id="modal-trasa-tytul">Spacer</h2>
         </div>
@@ -603,7 +575,9 @@
     <div class="modal-pelny" id="modal-miejsce">
         <div class="modal-naglowek">
             <button class="btn-cofnij" onclick="zamknijModalMiejsca()">
-                <svg viewBox="0 0 24 24"><polygon points="16,4 6,12 16,20" fill="#ccc"/></svg>
+                <svg viewBox="0 0 24 24" width="48" height="48">
+                    <polygon points="16,4 6,12 16,20" fill="#ccc"/>
+                </svg>
             </button>
             <h2 id="modal-miejsce-tytul">Miejsce</h2>
         </div>
@@ -653,7 +627,7 @@
                     `${profil.imie} ${profil.nazwisko || ''}`.trim();
             }
             if (profil.miasto) {
-                document.getElementById('profil-miasto').textContent = `${profil.miasto}`;
+                document.getElementById('profil-miasto').textContent = profil.miasto;
             }
             if (profil.zdjecie) {
                 document.getElementById('avatar').innerHTML =
@@ -691,7 +665,6 @@
             reader.readAsDataURL(file);
         }
 
-        // KALENDARZ
         function renderujKalendarz() {
             const nazwyMiesiecy = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec',
                 'Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
@@ -763,7 +736,6 @@
             renderujKalendarz();
         }
 
-        // MOJE MIEJSCA
         function pokazListeMiejsc(typ) {
             document.getElementById('widok-wybor').style.display = 'none';
             document.getElementById('widok-lista').style.display = 'block';
@@ -783,7 +755,7 @@
             });
 
             if (miejsca.length === 0) {
-                lista.innerHTML = `<div class="pusty">Brak ${typ === 'tak' ? 'pozytywnych' : 'negatywnych'} miejsc</div>`;
+                lista.innerHTML = `<div class="pusty">Brak zaznaczonych miejsc</div>`;
                 return;
             }
 
@@ -812,7 +784,6 @@
             document.getElementById('widok-lista').style.display = 'none';
         }
 
-        // MODAL TRASY
         function otworzModalTrasy(index) {
             const wynik = wyniki[index];
             if (!wynik || !wynik.trasa || wynik.trasa.length < 2) return;
@@ -847,7 +818,6 @@
             if (modalTrasMapa) { modalTrasMapa.remove(); modalTrasMapa = null; }
         }
 
-        // MODAL MIEJSCA
         function otworzModalMiejsca(wynikIdx, wpIdx) {
             const wynik = wyniki[wynikIdx];
             const wp = wynik.waypointy[wpIdx];
