@@ -3,441 +3,971 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wybór trasy</title>
+    <title>Trasy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: sans-serif;
-            background: #f0f4f0;
-            min-height: 100vh;
-            padding: 20px;
-            padding-bottom: 40px;
+            font-family: 'Montserrat', sans-serif;
+            background: #f9f9f9;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        #btnPowrot {
-            background: none;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            color: #555;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        h1 { font-size: 22px; color: #2d5a27; margin-bottom: 4px; }
-
-        .subtitle { color: #888; font-size: 13px; margin-bottom: 24px; }
-
-        .opcje {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 32px;
-        }
-
-        .opcja {
+        /* NAGŁÓWEK */
+        .naglowek {
             background: white;
-            border-radius: 16px;
-            padding: 20px 16px;
-            text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            cursor: pointer;
-            text-decoration: none;
-            color: #222;
-            transition: transform 0.1s;
-            border: 2px solid transparent;
-        }
-
-        .opcja:hover { transform: translateY(-2px); }
-        .opcja.aktywna { border-color: #4CAF50; }
-
-        .opcja-icon { font-size: 32px; margin-bottom: 8px; }
-        .opcja-nazwa { font-size: 15px; font-weight: 600; }
-        .opcja-opis { font-size: 12px; color: #888; margin-top: 4px; }
-
-        /* SEKCJA ZAPISANE TRASY */
-        #sekcja-zapisane, #sekcja-nowa { display: none; }
-
-        .sekcja-tytul {
-            font-size: 16px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 12px;
-        }
-
-        .trasa-karta {
-            background: white;
-            border-radius: 16px;
-            padding: 16px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .trasa-karta-info .nazwa {
-            font-size: 16px;
-            font-weight: 600;
-            color: #222;
-        }
-
-        .trasa-karta-info .meta {
-            font-size: 12px;
-            color: #888;
-            margin-top: 3px;
-        }
-
-        .btn-idz {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-
-        .btn-usun {
-            background: none;
-            border: none;
-            font-size: 18px;
-            cursor: pointer;
-            margin-left: 8px;
-            color: #ccc;
-        }
-
-        .btn-usun:hover { color: #f44336; }
-
-        .pusta-lista {
-            text-align: center;
-            color: #aaa;
-            padding: 30px 0;
-            font-size: 14px;
-        }
-
-        /* SEKCJA NOWA TRASA */
-        .pole { margin-bottom: 12px; }
-
-        .pole label {
-            font-size: 12px;
-            color: #888;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .pole input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 15px;
-        }
-
-        .przystanki { margin-bottom: 12px; }
-
-        .przystanek {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-
-        .przystanek input {
-            flex: 1;
-            padding: 12px 14px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            font-size: 15px;
-        }
-
-        .przystanek-litera {
-            width: 28px;
-            height: 28px;
-            background: #4CAF50;
-            color: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 700;
+            padding: 48px 28px 0;
+            border-bottom: 1px solid #f0f0f0;
             flex-shrink: 0;
         }
 
-        .btn-dodaj-przystanek {
-            width: 100%;
-            padding: 10px;
-            background: none;
-            border: 1px dashed #4CAF50;
-            border-radius: 12px;
-            color: #4CAF50;
-            font-size: 14px;
-            cursor: pointer;
-            margin-bottom: 16px;
+        /* ZAKŁADKI */
+        .zakladki {
+            display: flex;
         }
 
-        .pole-nazwa {
-            background: #f9f9f9;
-            border-radius: 16px;
+        .zakladka {
+            flex: 1;
             padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .pole-nazwa label {
-            font-size: 12px;
-            color: #888;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .pole-nazwa input {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            text-align: center;
             font-size: 15px;
+            font-weight: 700;
+            color: #aaa;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-family: 'Montserrat', sans-serif;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            letter-spacing: 0.5px;
         }
 
-        .btn-wyznacz {
-            width: 100%;
-            padding: 16px;
-            background: #4CAF50;
+        .zakladka.aktywna {
+            color: #111;
+            border-bottom: 3px solid #2d6a2d;
+        }
+
+        .zakladka-content {
+            display: none;
+            flex: 1;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+        .zakladka-content.aktywna { display: flex; }
+
+        /* MOJE TRASY */
+        .moje-trasy-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Nawigacja między trasami */
+        .trasa-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-strzalka {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+        }
+
+        .trasa-licznik {
+            font-size: 13px;
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        /* Karta trasy */
+        .trasa-karta {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 0 20px 20px;
+            gap: 12px;
+        }
+
+        .trasa-nazwa {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
+            text-align: center;
+            letter-spacing: 0.5px;
+        }
+
+        .trasa-mapa {
+            flex: 1;
+            min-height: 220px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+        }
+
+        .trasa-meta {
+            background: white;
+            border-radius: 16px;
+            padding: 14px 18px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            font-size: 14px;
+            color: #777;
+            font-weight: 500;
+            line-height: 2;
+            flex-shrink: 0;
+        }
+
+        .trasa-meta strong { color: #111; font-weight: 700; }
+
+        .btn-nawiguj {
+            padding: 18px;
+            background: #2d6a2d;
             color: white;
             border: none;
             border-radius: 16px;
             font-size: 17px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+        }
+
+        .btn-nawiguj:hover { background: #245520; }
+
+        /* BLE STATUS */
+        .ble-pasek {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            flex-shrink: 0;
+        }
+
+        .ble-wskazniki { display: flex; gap: 12px; font-size: 13px; font-weight: 500; }
+
+        .ble-przyciski { display: flex; gap: 8px; }
+
+        .btn-ble {
+            padding: 6px 14px;
+            background: #f5f5f5;
+            border: 1px solid #eee;
+            border-radius: 10px;
+            font-size: 12px;
             font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
         }
 
-        .btn-wyznacz:hover { background: #45a049; }
+        .pusta-lista {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+            gap: 16px;
+        }
 
-        .divider {
+        .pusta-lista p {
+            font-size: 15px;
+            color: #ccc;
+            font-weight: 500;
             text-align: center;
-            color: #aaa;
-            font-size: 13px;
-            margin: 16px 0;
-            position: relative;
         }
 
-        .divider::before, .divider::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background: #ddd;
-        }
-
-        .divider::before { left: 0; }
-        .divider::after { right: 0; }
-
-        .btn-mapa {
-            width: 100%;
-            padding: 14px;
-            background: white;
-            border: 1px solid #ddd;
+        .btn-nowa-trasa {
+            padding: 16px 32px;
+            background: #111;
+            color: white;
+            border: none;
             border-radius: 16px;
             font-size: 15px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
-            color: #333;
+        }
+
+        /* NOWA TRASA */
+        .nowa-trasa-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .pola-adresow {
+            background: white;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            flex-shrink: 0;
+        }
+
+        .pole-adres {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pole-ikona {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .ikona-start { background: #111; }
+        .ikona-przystanek { background: #2d6a2d; }
+        .ikona-koniec { background: #7B1F1F; }
+
+        .pole-ikona svg { width: 16px; height: 16px; }
+        .pole-ikona svg path, .pole-ikona svg circle {
+            stroke: white; stroke-width: 2; fill: none;
+            stroke-linecap: round;
+        }
+
+        .pole-input {
+            flex: 1;
+            padding: 12px 14px;
+            border: 1.5px solid #eee;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+        }
+
+        .pole-input:focus { border-color: #2d6a2d; }
+
+        .btn-usun-pole {
+            background: none;
+            border: none;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .przystanki-container { display: flex; flex-direction: column; gap: 10px; }
+
+        .btn-przystanek {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: 1.5px dashed #2d6a2d;
+            border-radius: 12px;
+            padding: 10px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            color: #2d6a2d;
+            cursor: pointer;
+        }
+
+        /* Wyniki wyszukiwania */
+        #wyniki-wyszukiwania {
+            position: fixed;
+            left: 20px; right: 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            z-index: 1001;
+            display: none;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .wynik-item {
+            padding: 14px 16px;
+            cursor: pointer;
+            font-size: 14px;
+            border-bottom: 1px solid #f5f5f5;
+            font-weight: 500;
+        }
+
+        .wynik-item:hover { background: #f9f9f9; }
+        .wynik-item:last-child { border-bottom: none; }
+
+        .wynik-nazwa { color: #111; }
+        .wynik-adres { font-size: 12px; color: #aaa; margin-top: 2px; }
+
+        /* Mapa nowej trasy */
+        #mapa-nowa {
+            flex: 1;
+            min-height: 200px;
+        }
+
+        /* Panel dolny po wyznaczeniu trasy */
+        .panel-wyznaczona {
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            padding: 16px 20px;
+            display: none;
+            flex-direction: column;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .panel-wyznaczona.widoczny { display: flex; }
+
+        .trasa-info-row {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .trasa-info-stat { text-align: center; }
+        .trasa-info-stat .wartosc { font-size: 22px; font-weight: 700; color: #111; }
+        .trasa-info-stat .label { font-size: 12px; color: #aaa; font-weight: 500; }
+
+        .pole-nazwa-trasy {
+            padding: 12px 14px;
+            border: 1.5px solid #eee;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+            outline: none;
+        }
+
+        .pole-nazwa-trasy:focus { border-color: #2d6a2d; }
+
+        .przyciski-row { display: flex; gap: 10px; }
+
+        .btn-zapisz-trase {
+            flex: 1;
+            padding: 14px;
+            background: white;
+            border: 2px solid #2d6a2d;
+            border-radius: 14px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            color: #2d6a2d;
+            cursor: pointer;
+        }
+
+        .btn-nawiguj-nowa {
+            flex: 2;
+            padding: 14px;
+            background: #2d6a2d;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            color: white;
+            cursor: pointer;
+        }
+
+        /* POPUP NA MAPIE */
+        .popup-mapa {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            min-width: 160px;
+        }
+
+        .popup-btn {
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            color: white;
+        }
+
+        /* NAV */
+        .nav-bar {
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 14px 0;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px; height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-btn.aktywny { background: #2d6a2d; }
+        .nav-btn svg { width: 26px; height: 26px; }
+
+        .nav-btn svg path, .nav-btn svg polyline,
+        .nav-btn svg circle, .nav-btn svg line {
+            stroke: #333; stroke-width: 2; fill: none;
+            stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .nav-btn.aktywny svg path, .nav-btn.aktywny svg polyline,
+        .nav-btn.aktywny svg circle, .nav-btn.aktywny svg line {
+            stroke: white;
         }
     </style>
 </head>
 <body>
-    <button id="btnPowrot" onclick="window.location.href='menu.html'">← Menu</button>
-
-    <h1>🗺️ Wybór trasy</h1>
-    <p class="subtitle">Jak chcesz dziś iść?</p>
-
-    <!-- DWA PRZYCISKI GÓRNE -->
-    <div class="opcje">
-        <div class="opcja" id="opcja-zapisane" onclick="pokazSekcje('zapisane')">
-            <div class="opcja-icon">📋</div>
-            <div class="opcja-nazwa">Moje trasy</div>
-            <div class="opcja-opis">Wybierz zapisaną trasę</div>
+    <div class="naglowek">
+        <div class="zakladki">
+            <button class="zakladka aktywna" onclick="pokazZakladke('moje-trasy', this)">Moje trasy</button>
+            <button class="zakladka" onclick="pokazZakladke('nowa-trasa', this)">Nowa trasa</button>
         </div>
-        <a href="map.html" class="opcja" id="opcja-nowa">
-    <div class="opcja-icon">✏️</div>
-    <div class="opcja-nazwa">Nowa trasa</div>
-    <div class="opcja-opis">Stwórz własną trasę</div>
-</a>
     </div>
 
-    <!-- SEKCJA: MOJE ZAPISANE TRASY -->
-    <div id="sekcja-zapisane">
-        <div class="sekcja-tytul">📋 Moje zapisane trasy</div>
-        <div id="lista-zapisanych"></div>
+    <!-- MOJE TRASY -->
+    <div class="zakladka-content aktywna" id="tab-moje-trasy">
+        <div class="moje-trasy-wrapper" id="moje-trasy-wrapper"></div>
+
+        <!-- BLE -->
+        <div class="ble-pasek">
+            <div class="ble-wskazniki">
+                <span id="ble-left-2">🔴 Lewa</span>
+                <span id="ble-right-2">🔴 Prawa</span>
+            </div>
+            <div class="ble-przyciski">
+                <button class="btn-ble" onclick="polaczRaczke('LEFT')">Lewa</button>
+                <button class="btn-ble" onclick="polaczRaczke('RIGHT')">Prawa</button>
+            </div>
+        </div>
     </div>
 
-    <!-- SEKCJA: NOWA TRASA -->
-    <div id="sekcja-nowa">
-        <div class="sekcja-tytul">✏️ Stwórz nową trasę</div>
+    <!-- NOWA TRASA -->
+    <div class="zakladka-content" id="tab-nowa-trasa">
+        <div class="nowa-trasa-wrapper">
+            <!-- Pola adresów -->
+            <div class="pola-adresow">
+                <div class="pole-adres">
+                    <div class="pole-ikona ikona-start">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>
+                    </div>
+                    <input class="pole-input" id="input-start" type="text"
+                        placeholder="Moja lokalizacja"
+                        onfocus="aktywnyInput='start'"
+                        oninput="szukajAdres(this.value, 'start')">
+                </div>
 
-        <div class="pole-nazwa">
-            <label>Nazwa trasy (opcjonalnie)</label>
-            <input type="text" id="nazwa-trasy" placeholder="np. Trasa przez Łazienki">
+                <div id="przystanki-container" class="przystanki-container"></div>
+
+                <div class="pole-adres">
+                    <div class="pole-ikona ikona-koniec">
+                        <svg viewBox="0 0 24 24"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"/></svg>
+                    </div>
+                    <input class="pole-input" id="input-koniec" type="text"
+                        placeholder="Dokąd?"
+                        onfocus="aktywnyInput='koniec'"
+                        oninput="szukajAdres(this.value, 'koniec')">
+                </div>
+
+                <button class="btn-przystanek" onclick="dodajPrzystanek()">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M12 5v14M5 12h14" stroke="#2d6a2d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                    </svg>
+                    Dodaj przystanek
+                </button>
+
+                <button onclick="wyznaczTrase()" style="padding:14px;background:#111;color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;font-family:Montserrat,sans-serif;cursor:pointer;">
+                    Wyznacz trasę
+                </button>
+            </div>
+
+            <!-- Mapa -->
+            <div id="mapa-nowa"></div>
+
+            <!-- Panel po wyznaczeniu -->
+            <div class="panel-wyznaczona" id="panel-wyznaczona">
+                <div class="trasa-info-row">
+                    <div class="trasa-info-stat">
+                        <div class="wartosc" id="nowa-dystans">—</div>
+                        <div class="label">km</div>
+                    </div>
+                    <div class="trasa-info-stat">
+                        <div class="wartosc" id="nowa-czas">—</div>
+                        <div class="label">minut</div>
+                    </div>
+                </div>
+                <input class="pole-nazwa-trasy" id="input-nazwa-trasy" type="text" placeholder="Nazwa trasy (opcjonalnie)">
+                <div class="przyciski-row">
+                    <button class="btn-zapisz-trase" onclick="zapiszTrase()">Zapisz</button>
+                    <button class="btn-nawiguj-nowa" onclick="nawiguj()">Nawiguj tą trasą!</button>
+                </div>
+            </div>
         </div>
 
-        <div class="pole">
-            <label>📍 Skąd (adres startowy)</label>
-            <input type="text" id="adres-start" placeholder="np. Plac Defilad 1, Warszawa">
+        <!-- BLE -->
+        <div class="ble-pasek">
+            <div class="ble-wskazniki">
+                <span id="ble-left-3">🔴 Lewa</span>
+                <span id="ble-right-3">🔴 Prawa</span>
+            </div>
+            <div class="ble-przyciski">
+                <button class="btn-ble" onclick="polaczRaczke('LEFT')">Lewa</button>
+                <button class="btn-ble" onclick="polaczRaczke('RIGHT')">Prawa</button>
+            </div>
         </div>
-
-        <div class="przystanki" id="przystanki"></div>
-
-        <button class="btn-dodaj-przystanek" onclick="dodajPrzystanek()">
-            + Dodaj przystanek
-        </button>
-
-        <div class="pole">
-            <label>🏁 Dokąd (adres końcowy)</label>
-            <input type="text" id="adres-koniec" placeholder="np. Wilanów, Warszawa">
-        </div>
-
-        <button class="btn-wyznacz" onclick="wyznaczZAdresu()">
-            🚶 Wyznacz trasę
-        </button>
-
-        <div class="divider">lub</div>
-
-        <button class="btn-mapa" onclick="window.location.href='map.html'">
-            🗺️ Kliknij cel na mapie
-        </button>
     </div>
 
+    <!-- Wyniki wyszukiwania -->
+    <div id="wyniki-wyszukiwania"></div>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-btn aktywny">
+            <svg viewBox="0 0 24 24"><path d="M3 12h18M12 3l9 9-9 9"/></svg>
+        </a>
+        <a href="leaderboard.html" class="nav-btn">
+            <svg viewBox="0 0 24 24"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
+        </a>
+        <a href="profile.html" class="nav-btn">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        </a>
+    </nav>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="bluetooth.js"></script>
     <script>
         const API_KEY = 'eyJvcmciOiI1YjNjZTM1OTc4NTExMTAwMDFjZjYyNDgiLCJpZCI6IjU4NzI0ZmI5ZjE0ZTQ5NTFiNzFiZWJiMGNjZTU0ZmVlIiwiaCI6Im11cm11cjY0In0=';
+
+        let aktywnyInput = null;
+        let punkty = {};
+        let przystankiIds = [];
         let przystankiCount = 0;
+        let liniaTrasy = null;
+        let markery = {};
+        let aktualnaTrasa = null;
+        let szukanieTimeout = null;
+        let mojaPozycja = null;
+        let mapaNowa = null;
+        let aktualnySlide = 0;
+        let mapkiTras = {};
 
-        // Pokaż odpowiednią sekcję
-        function pokazSekcje(nazwa) {
-            document.getElementById('sekcja-zapisane').style.display = 'none';
-            document.getElementById('sekcja-nowa').style.display = 'none';
-            document.getElementById('opcja-zapisane').classList.remove('aktywna');
-            document.getElementById('opcja-nowa').classList.remove('aktywna');
-
-            document.getElementById(`sekcja-${nazwa}`).style.display = 'block';
-            document.getElementById(`opcja-${nazwa}`).classList.add('aktywna');
-
-            if (nazwa === 'zapisane') wczytajZapisane();
+        // ZAKŁADKI
+        function pokazZakladke(nazwa, btn) {
+            document.querySelectorAll('.zakladka').forEach(z => z.classList.remove('aktywna'));
+            document.querySelectorAll('.zakladka-content').forEach(z => z.classList.remove('aktywna'));
+            document.getElementById(`tab-${nazwa}`).classList.add('aktywna');
+            btn.classList.add('aktywna');
+            if (nazwa === 'moje-trasy') wczytajMojeTrasy();
+            if (nazwa === 'nowa-trasa') inicjujMapeNowa();
         }
 
-        // Dodaj przystanek
-        function dodajPrzystanek() {
-            przystankiCount++;
-            const litery = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const litera = litery[przystankiCount - 1];
-            const div = document.createElement('div');
-            div.className = 'przystanek';
-            div.id = `przystanek-${przystankiCount}`;
-            div.innerHTML = `
-                <div class="przystanek-litera">${litera}</div>
-                <input type="text" placeholder="Adres przystanku ${litera}">
-                <button onclick="this.parentElement.remove()" style="background:none;border:none;font-size:18px;cursor:pointer;color:#ccc;">✕</button>
-            `;
-            document.getElementById('przystanki').appendChild(div);
-        }
-
-        // Wyznacz trasę z adresu
-        async function wyznaczZAdresu() {
-            const start = document.getElementById('adres-start').value.trim();
-            const koniec = document.getElementById('adres-koniec').value.trim();
-            const nazwa = document.getElementById('nazwa-trasy').value.trim();
-
-            if (!start || !koniec) {
-                alert('Wpisz adres startowy i końcowy!');
-                return;
-            }
-
-            // Zbierz przystanki
-            const przystankiInputy = document.querySelectorAll('.przystanek input');
-            const przystanki = Array.from(przystankiInputy)
-                .map(i => i.value.trim())
-                .filter(v => v);
-
-            // Geokoduj wszystkie adresy
-            const wszystkieAdresy = [start, ...przystanki, koniec];
-
-            try {
-                const wspolrzedne = await Promise.all(
-                    wszystkieAdresy.map(adres => geokoduj(adres))
-                );
-
-                if (wspolrzedne.some(w => !w)) {
-                    alert('Nie udało się znaleźć jednego z adresów. Sprawdź czy są poprawne.');
-                    return;
-                }
-
-                // Zapisz dane i przejdź do mapy
-                const dane = {
-                    punkty: wspolrzedne,
-                    nazwa: nazwa || `Trasa ${new Date().toLocaleDateString('pl-PL')}`,
-                    adresy: wszystkieAdresy
-                };
-
-                localStorage.setItem('nowaTrasa', JSON.stringify(dane));
-                window.location.href = 'map.html';
-
-            } catch(err) {
-                alert('Błąd – sprawdź połączenie internetowe.');
-            }
-        }
-
-        // Geokodowanie adresu → współrzędne
-        async function geokoduj(adres) {
-            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(adres)}&limit=1`;
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.length === 0) return null;
-            return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
-        }
-
-        // Wczytaj zapisane trasy
-        function wczytajZapisane() {
+        // MOJE TRASY
+        function wczytajMojeTrasy() {
+            const wrapper = document.getElementById('moje-trasy-wrapper');
             const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
-            const lista = document.getElementById('lista-zapisanych');
 
             if (zapisane.length === 0) {
-                lista.innerHTML = `<div class="pusta-lista">Brak zapisanych tras.<br>Stwórz pierwszą trasę! 🚶</div>`;
+                wrapper.innerHTML = `
+                    <div class="pusta-lista">
+                        <p>Brak zapisanych tras</p>
+                        <button class="btn-nowa-trasa" onclick="pokazZakladke('nowa-trasa', document.querySelectorAll('.zakladka')[1])">
+                            Stwórz pierwszą trasę
+                        </button>
+                    </div>`;
                 return;
             }
 
-            lista.innerHTML = '';
-            zapisane.forEach((trasa, index) => {
-                lista.innerHTML += `
-                    <div class="trasa-karta">
-                        <div class="trasa-karta-info">
-                            <div class="nazwa">${trasa.nazwa}</div>
-                            <div class="meta">📏 ${trasa.dystans} km · 📍 ${trasa.adresy[0]}</div>
-                        </div>
-                        <div style="display:flex;align-items:center;">
-                            <button class="btn-idz" onclick="idzTrasa(${index})">Idź ▶</button>
-                            <button class="btn-usun" onclick="usunTrase(${index})">🗑️</button>
-                        </div>
-                    </div>`;
+            aktualnySlide = 0;
+            renderujTrase(zapisane, aktualnySlide, wrapper);
+        }
+
+        function renderujTrase(zapisane, index, wrapper) {
+            const trasa = zapisane[index];
+            wrapper.innerHTML = '';
+
+            // Nawigacja
+            const nav = document.createElement('div');
+            nav.className = 'strzalki';
+            nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 20px 0;flex-shrink:0;';
+            nav.innerHTML = `
+                <button class="btn-strzalka" onclick="zmienSlide(-1)" style="background:none;border:none;cursor:pointer;">
+                    <svg viewBox="0 0 24 24" width="40" height="40"><polygon points="16,4 6,12 16,20" fill="${index > 0 ? '#333' : '#ddd'}"/></svg>
+                </button>
+                <span style="font-size:13px;color:#aaa;font-weight:500;">${index + 1} / ${zapisane.length}</span>
+                <button class="btn-strzalka" onclick="zmienSlide(1)" style="background:none;border:none;cursor:pointer;">
+                    <svg viewBox="0 0 24 24" width="40" height="40"><polygon points="8,4 18,12 8,20" fill="${index < zapisane.length - 1 ? '#333' : '#ddd'}"/></svg>
+                </button>
+            `;
+            wrapper.appendChild(nav);
+
+            // Karta
+            const karta = document.createElement('div');
+            karta.className = 'trasa-karta';
+            karta.style.cssText = 'flex:1;display:flex;flex-direction:column;padding:12px 20px 16px;gap:12px;overflow:hidden;';
+
+            karta.innerHTML = `
+                <div class="trasa-nazwa">${trasa.nazwa}</div>
+                <div id="mapa-saved-${index}" style="flex:1;min-height:180px;border-radius:16px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.08);"></div>
+                <div class="trasa-meta">
+                    Kilometry: <strong>${trasa.dystans} km</strong><br>
+                    Przystanki: <strong>${trasa.adresy ? trasa.adresy.length - 2 : 0}</strong><br>
+                    ${trasa.adresy ? `Trasa: <strong>${trasa.adresy[0]} → ${trasa.adresy[trasa.adresy.length-1]}</strong>` : ''}
+                </div>
+                <button class="btn-nawiguj" onclick="nawigujZapisana(${index})">Nawiguj tą trasą!</button>
+            `;
+            wrapper.appendChild(karta);
+
+            // Rysuj mapkę
+            setTimeout(() => {
+                if (mapkiTras[index]) { mapkiTras[index].remove(); }
+                const mapa = L.map(`mapa-saved-${index}`, {
+                    zoomControl: false, dragging: false,
+                    scrollWheelZoom: false, doubleClickZoom: false,
+                    touchZoom: false, tap: false
+                });
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
+                mapkiTras[index] = mapa;
+
+                if (trasa.punkty && trasa.punkty.length > 1) {
+                    rysujTraseNaMapce(mapa, trasa);
+                }
+            }, 100);
+        }
+
+        async function rysujTraseNaMapce(mapa, trasa) {
+            try {
+                let wspolrzedne = [];
+                for (let i = 0; i < trasa.punkty.length - 1; i++) {
+                    const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${trasa.punkty[i].lng},${trasa.punkty[i].lat}&end=${trasa.punkty[i+1].lng},${trasa.punkty[i+1].lat}`;
+                    const r = await fetch(url);
+                    const d = await r.json();
+                    const seg = d.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                    wspolrzedne = wspolrzedne.concat(seg);
+                }
+                const linia = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 4 }).addTo(mapa);
+                mapa.fitBounds(linia.getBounds(), { padding: [20, 20] });
+                L.circleMarker(wspolrzedne[0], { radius: 7, fillColor: '#111', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
+                L.circleMarker(wspolrzedne[wspolrzedne.length-1], { radius: 7, fillColor: '#7B1F1F', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
+            } catch(e) { console.error(e); }
+        }
+
+        function zmienSlide(kierunek) {
+            const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
+            aktualnySlide += kierunek;
+            if (aktualnySlide < 0) aktualnySlide = 0;
+            if (aktualnySlide >= zapisane.length) aktualnySlide = zapisane.length - 1;
+            renderujTrase(zapisane, aktualnySlide, document.getElementById('moje-trasy-wrapper'));
+        }
+
+        function nawigujZapisana(index) {
+            const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
+            localStorage.setItem('aktywnaTrasa', JSON.stringify(zapisane[index]));
+            window.location.href = 'navigate.html';
+        }
+
+        // NOWA TRASA – MAPA
+        function inicjujMapeNowa() {
+            if (mapaNowa) return;
+            setTimeout(() => {
+                mapaNowa = L.map('mapa-nowa').setView([51.1079, 17.0385], 13);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '© OpenStreetMap'
+                }).addTo(mapaNowa);
+
+                mapaNowa.locate({ setView: true, maxZoom: 15, enableHighAccuracy: true });
+                mapaNowa.on('locationfound', function(e) {
+                    mojaPozycja = e.latlng;
+                    L.circleMarker(e.latlng, {
+                        radius: 10, fillColor: '#111',
+                        color: 'white', weight: 3, fillOpacity: 1
+                    }).addTo(mapaNowa);
+
+                    if (!document.getElementById('input-start').value) {
+                        punkty['start'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Moja lokalizacja' };
+                        document.getElementById('input-start').value = 'Moja lokalizacja';
+                        zamienNaAdres(e.latlng, 'start');
+                    }
+                });
+
+                let popupKlikniecia = null;
+                mapaNowa.on('click', function(e) {
+                    if (popupKlikniecia) mapaNowa.closePopup(popupKlikniecia);
+
+                    const content = document.createElement('div');
+                    content.className = 'popup-mapa';
+
+                    const btnCel = document.createElement('button');
+                    btnCel.className = 'popup-btn';
+                    btnCel.style.background = '#7B1F1F';
+                    btnCel.textContent = 'Ustaw jako cel';
+                    btnCel.onclick = () => {
+                        punkty['koniec'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany punkt' };
+                        document.getElementById('input-koniec').value = 'Wybrany punkt';
+                        postawMarker('koniec', e.latlng, '#7B1F1F');
+                        zamienNaAdres(e.latlng, 'koniec');
+                        mapaNowa.closePopup(popupKlikniecia);
+                    };
+
+                    const btnPrzystanek = document.createElement('button');
+                    btnPrzystanek.className = 'popup-btn';
+                    btnPrzystanek.style.background = '#2d6a2d';
+                    btnPrzystanek.textContent = 'Dodaj jako przystanek';
+                    btnPrzystanek.onclick = () => {
+                        przystankiCount++;
+                        const id = `przystanek-${przystankiCount}`;
+                        przystankiIds.push(id);
+                        const litery = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+                        const litera = litery[przystankiIds.length - 1];
+                        punkty[id] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: `Przystanek ${litera}` };
+                        postawMarker(id, e.latlng, '#2d6a2d');
+                        dodajPrzystanekUI(id, litera, `Przystanek ${litera}`);
+                        zamienNaAdres(e.latlng, id);
+                        mapaNowa.closePopup(popupKlikniecia);
+                    };
+
+                    const btnStart = document.createElement('button');
+                    btnStart.className = 'popup-btn';
+                    btnStart.style.background = '#111';
+                    btnStart.textContent = 'Ustaw jako start';
+                    btnStart.onclick = () => {
+                        punkty['start'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany start' };
+                        document.getElementById('input-start').value = 'Wybrany start';
+                        postawMarker('start', e.latlng, '#111');
+                        zamienNaAdres(e.latlng, 'start');
+                        mapaNowa.closePopup(popupKlikniecia);
+                    };
+
+                    content.appendChild(btnCel);
+                    content.appendChild(btnPrzystanek);
+                    content.appendChild(btnStart);
+
+                    popupKlikniecia = L.popup({ closeButton: true })
+                        .setLatLng(e.latlng)
+                        .setContent(content)
+                        .openOn(mapaNowa);
+                });
+            }, 200);
+        }
+
+        function postawMarker(id, latlng, kolor) {
+            if (markery[id]) mapaNowa.removeLayer(markery[id]);
+            markery[id] = L.circleMarker(latlng, {
+                radius: 10, fillColor: kolor,
+                color: 'white', weight: 2.5, fillOpacity: 1
+            }).addTo(mapaNowa);
+        }
+
+        function zamienNaAdres(latlng, inputId) {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}`)
+                .then(r => r.json())
+                .then(data => {
+                    const adres = data.address;
+                    const ladny = [adres.road, adres.house_number, adres.city || adres.town].filter(Boolean).join(', ');
+                    if (ladny) {
+                        const input = document.getElementById(`input-${inputId}`) ||
+                                      document.querySelector(`[data-id="${inputId}"]`);
+                        if (input) input.value = ladny;
+                        if (punkty[inputId]) punkty[inputId].nazwa = ladny;
+                    }
+                }).catch(() => {});
+        }
+
+        // WYSZUKIWANIE ADRESU
+        function szukajAdres(wartosc, inputId) {
+            clearTimeout(szukanieTimeout);
+            if (wartosc.length < 3) { ukryjWyniki(); return; }
+            szukanieTimeout = setTimeout(() => geokodujISzukaj(wartosc, inputId), 400);
+        }
+
+        async function geokodujISzukaj(zapytanie, inputId) {
+            try {
+                const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(zapytanie)}&limit=4&countrycodes=pl`;
+                const r = await fetch(url);
+                const data = await r.json();
+                pokazWyniki(data, inputId);
+            } catch(e) {}
+        }
+
+        function pokazWyniki(wyniki, inputId) {
+            const div = document.getElementById('wyniki-wyszukiwania');
+            if (wyniki.length === 0) { ukryjWyniki(); return; }
+
+            const pola = document.querySelector('.pola-adresow');
+            const rect = pola.getBoundingClientRect();
+            div.style.top = (rect.bottom + 4) + 'px';
+            div.style.display = 'block';
+            div.innerHTML = '';
+
+            wyniki.forEach(w => {
+                const item = document.createElement('div');
+                item.className = 'wynik-item';
+                const nazwa = w.display_name.split(',').slice(0, 2).join(',');
+                item.innerHTML = `<div class="wynik-nazwa">${nazwa}</div>`;
+                item.onclick = () => wybierzWynik(w, inputId);
+                div.appendChild(item);
             });
         }
 
-        // Idź zapisaną trasą
-        function idzTrasa(index) {
-    const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
-    localStorage.setItem('aktywnaTrasa', JSON.stringify(zapisane[index]));
-    window.location.href = 'saved_route.html';
-}
+        function wybierzWynik(wynik, inputId) {
+            const latlng = { lat: parseFloat(wynik.lat), lng: parseFloat(wynik.lon) };
+            const nazwa = wynik.display_name.split(',').slice(0, 2).join(',');
+            punkty[inputId] = { ...latlng, nazwa };
 
-        // Usuń zapisaną trasę
-        function usunTrase(index) {
-            if (!confirm('Usunąć tę trasę?')) return;
-            const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
-            zapisane.splice(index, 1);
-            localStorage.setItem('zapisaneTrasy', JSON.stringify(zapisane));
-            wczytajZapisane();
+            const input = document.getElementById(`input-${inputId}`) ||
+                          document.querySelector(`[data-id="${inputId}"]`);
+            if (input) input.value = nazwa;
+
+            const kolor = inputId === 'start' ? '#111' : inputId === 'koniec' ? '#7B1F1F' : '#2d6a2d';
+            if (mapaNowa) postawMarker(inputId, latlng, kolor);
+            if (mapaNowa) mapaNowa.setView(latlng, 15);
+            ukryjWyniki();
         }
+
+        function ukryjWyniki() {
+            document.getElementById('wyniki-wyszukiwania').style.display = 'none';
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#wyniki-wyszukiwania') && !e.target.closest('.pole-input')) {
+                ukryjWyniki();
+            }
+        });
+
+        // PRZYSTANKI
+        function dodajPrzystanek() {
+            przystankiCount++;
+            const id = `przystanek-${przystankiCount}`;
+            przystankiIds.push(id);
+            const litery = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const litera = litery[przystankiIds.length - 1];
+            dodajPrzystanekUI(id, litera, '');
+        }
+
+        function dodajPrzystanekUI(id, litera, wartosc) {
+            const container = document.getElementById('przystanki-container');
+            const div = document.createElement('div');
+            div.className = 'pole-adres';
+            div.id = `row-${id}`;
+            div.innerHTML = `
+                <div class="pole-ikona ikona-przystanek">
+                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>
+                </div>
+                <input class="pole-input" id="input-${id}" data-id="${id}"
+                    type="text" value="${wartosc}" placeholder="Przystanek ${litera}"
+                    onfocus="aktywnyInput='${id}'"
+                    oninput="szukajAdres(this.value, '${id}')">
+                <button class="btn-usun-pole" onclick="usunPrzystanek('${id}')">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <line x1="18" y1="6" x2="6" y2="18" stroke="#ccc" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="6" y1="6" x2="18" y2="18" stroke="#ccc" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            `;
+            container.appendChild(div);
+        }
+
+        function usunPrzystanek(id) {
+            document.getElementById(`row-${id}`)?.remove();
+            delete punkty[id];
+            if (markery[id] && mapaNowa) { mapaNowa.removeLayer(markery[id]); delete markery[id]; }
+            przystankiIds = przystankiIds.filter(i => i !== id);
+        }
+
+        // WYZNACZ TRASĘ
+        async function wyznaczTrase() {
+            if (!punkty['start'] && !mojaPozycja) { alert('Wpisz adres startowy!'); return; }
+            if (!punkty['koniec']) { alert('Wpisz adres końcowy!'); return; }
+
+            if (!punkty['start'] && mojaPozycja) {
+                punkty['start'] = { lat: mojaPozycja.lat, lng: mojaPozycja.lng, nazwa: 'Moja lokalizacja' };
+            }
+
+            const kolejnosc = ['start', ...przystankiIds, 'koniec'];
+            const gotowe = kolejnosc.filter(id => punkty[id]).map(id => punkty[id]);
+
+            if (liniaTrasy) { mapaNowa.removeLayer(liniaTrasy); liniaTrasy = null; }
+            document.getElementById('panel-wyznaczona').classList.remove('widoczny');
+
+            try {
+                let wspolrzedne = [];
+                let dystans = 0;
+                let czas = 0;
+
+                for (let i = 0; i < gotowe.length - 1; i++) {
+                    const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${gotowe[i].lng},${gotowe[i].lat}&end=${gotowe[i+1].lng},${gotowe[i+1].lat}`;
+                    const r = await fetch(url);
+                    const d = await r.json();
+                    const seg = d.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
+                    wspolrzedne = wspolrzedne.concat(seg);
+                    dystans += d.features[0].properties.summary.distance;
+                    czas += d.features[0].properties.summary.duration;
+                }
+
+                liniaTrasy = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 5 }).addTo(mapaNowa);
+                mapaNowa.fitBounds(liniaTrasy.getBounds(), { padding: [40, 120] });
+
+                document.getElementById('nowa-dystans').textContent = (dystans / 1000).toFixed(2);
+                document.getElementById('nowa-czas').textContent = Math.round(czas / 60);
+
+                aktualnaTrasa = {
+                    nazwa: '',
+                    dystans: (dystans / 1000).toFixed(2),
+                    punkty: gotowe,
+                    adresy: gotowe.map(p => p.nazwa)
+                };
+
+                document.getElementById('panel-wyznaczona').classList.add('widoczny');
+
+            } catch(e) {
+                alert('Błąd wyznaczania trasy');
+            }
+        }
+
+        function zapiszTrase() {
+            if (!aktualnaTrasa) return;
+            const nazwa = document.getElementById('input-nazwa-trasy').value.trim();
+            aktualnaTrasa.nazwa = nazwa || `Trasa ${new Date().toLocaleDateString('pl-PL')}`;
+            const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
+            zapisane.unshift(aktualnaTrasa);
+            localStorage.setItem('zapisaneTrasy', JSON.stringify(zapisane));
+            alert(`Zapisano: "${aktualnaTrasa.nazwa}"`);
+        }
+
+        function nawiguj() {
+            if (!aktualnaTrasa) return;
+            const nazwa = document.getElementById('input-nazwa-trasy').value.trim();
+            if (nazwa) aktualnaTrasa.nazwa = nazwa;
+            localStorage.setItem('aktywnaTrasa', JSON.stringify(aktualnaTrasa));
+            window.location.href = 'navigate.html';
+        }
+
+        // BLE
+        function aktualizujStatusBLE() {
+            ['ble-left-2', 'ble-left-3'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = czyPolaczenoLeft() ? '🟢 Lewa' : '🔴 Lewa';
+            });
+            ['ble-right-2', 'ble-right-3'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = czyPolaczenoRight() ? '🟢 Prawa' : '🔴 Prawa';
+            });
+        }
+
+        // INIT
+        wczytajMojeTrasy();
     </script>
 </body>
 </html>
