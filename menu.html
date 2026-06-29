@@ -20,7 +20,7 @@
             flex-direction: column;
             justify-content: flex-end;
             align-items: flex-start;
-            padding: 0 28px 32px;
+            padding: 0 28px 16px;
             gap: 12px;
         }
         .logo-img { width: 65%; max-width: 240px; }
@@ -30,7 +30,14 @@
             color: #888;
             letter-spacing: 0.5px;
         }
-        .mapa-wrapper { width: 100%; margin-top: 8px; }
+        .mapa-wrapper {
+            width: 100%;
+            margin-top: 8px;
+        }
+        .mapa-wrapper img {
+            width: 100%;
+            display: block;
+        }
         .nav-bar {
             background: white;
             border-top: 1px solid #f0f0f0;
@@ -69,37 +76,8 @@
     <div class="hero">
         <img src="logo_blink.png" alt="blink! blink!" class="logo-img">
         <div class="tagline">w Twoim kierunku</div>
-
         <div class="mapa-wrapper">
-            <svg width="100%" viewBox="0 0 320 220" xmlns="http://www.w3.org/2000/svg">
-
-                <!-- Kółka -->
-                <ellipse cx="38" cy="55" rx="32" ry="26"
-                    fill="#c8d9b0" opacity="0.75" transform="rotate(-20 38 55)"/>
-                <ellipse cx="75" cy="145" rx="58" ry="44"
-                    fill="#c8d9b0" opacity="0.7" transform="rotate(12 75 145)"/>
-                <ellipse cx="185" cy="130" rx="42" ry="34"
-                    fill="#c8d9b0" opacity="0.72" transform="rotate(-8 185 130)"/>
-                <ellipse cx="215" cy="55" rx="28" ry="22"
-                    fill="#c8d9b0" opacity="0.65" transform="rotate(15 215 55)"/>
-                <ellipse cx="282" cy="148" rx="38" ry="40"
-                    fill="#c8d9b0" opacity="0.68" transform="rotate(-5 282 148)"/>
-
-                <!-- Ścieżka -->
-                <path d="M 195 0 C 230 0 270 5 295 25 C 315 45 308 80 295 105 C 280 132 255 140 235 158 C 218 172 208 188 190 200 C 170 200 148 200 128 195 C 108 188 95 175 78 168 C 55 158 25 158 18 142"
-                    fill="none" stroke="#c8c8c8" stroke-width="3.5" stroke-linecap="round"/>
-
-                <!-- Start -->
-                <circle cx="195" cy="0" r="8" fill="#222"/>
-
-                <!-- Kropki pośrednie -->
-                <circle cx="155" cy="88" r="5.5" fill="#2d6a2d"/>
-                <circle cx="78" cy="168" r="5.5" fill="#7B1F1F"/>
-                <circle cx="128" cy="195" r="5.5" fill="#7B1F1F"/>
-
-                <!-- Koniec -->
-                <circle cx="190" cy="200" r="8" fill="#222"/>
-            </svg>
+            <img src="aplikacja_blinkaa.png" alt="mapa">
         </div>
     </div>
 
