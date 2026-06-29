@@ -18,7 +18,6 @@
             overflow: hidden;
         }
 
-        /* NAGŁÓWEK */
         .profil-header {
             background: white;
             padding: 36px 28px 20px;
@@ -27,6 +26,7 @@
             flex-direction: column;
             align-items: center;
             gap: 12px;
+            flex-shrink: 0;
         }
 
         .avatar-container { position: relative; }
@@ -55,9 +55,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
             cursor: pointer;
         }
+
+        .avatar-edit svg { width: 13px; height: 13px; }
+        .avatar-edit svg path { stroke: white; stroke-width: 2; fill: none; stroke-linecap: round; }
 
         .profil-imie {
             font-size: 20px;
@@ -86,7 +88,6 @@
             color: #111;
         }
 
-        /* FORMULARZ */
         .edycja-form {
             background: white;
             margin: 12px 20px;
@@ -136,7 +137,6 @@
             cursor: pointer;
         }
 
-        /* ZAKŁADKI */
         .zakladki {
             display: flex;
             background: white;
@@ -191,6 +191,9 @@
             width: 34px; height: 34px;
             font-size: 16px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .dni-tygodnia {
@@ -251,8 +254,69 @@
             background: #2d6a2d;
         }
 
-        /* MOJE MIEJSCA */
-        .miejsca-lista { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+        /* MOJE MIEJSCA – dwa duże przyciski */
+        .miejsca-wybor {
+            padding: 24px 20px;
+            display: flex;
+            gap: 16px;
+        }
+
+        .btn-miejsca {
+            flex: 1;
+            aspect-ratio: 1;
+            border-radius: 24px;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 15px;
+            font-weight: 700;
+            transition: transform 0.1s;
+        }
+
+        .btn-miejsca:hover { transform: scale(0.97); }
+
+        .btn-miejsca-zielone {
+            background: #2d6a2d;
+            color: white;
+        }
+
+        .btn-miejsca-czerwone {
+            background: #7B1F1F;
+            color: white;
+        }
+
+        .btn-miejsca-kropka {
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* LISTA MIEJSC */
+        .miejsca-lista {
+            padding: 0 20px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-powrot-miejsca {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: none;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #aaa;
+            cursor: pointer;
+            padding: 12px 20px;
+        }
 
         .miejsce-karta {
             background: white;
@@ -268,30 +332,24 @@
         .miejsce-karta:hover { background: #f9f9f9; }
 
         .miejsce-kropka {
-            width: 20px; height: 20px;
+            width: 18px; height: 18px;
             border-radius: 50%;
             flex-shrink: 0;
         }
 
         .miejsce-info { flex: 1; }
 
-        .miejsce-typ {
-            font-size: 14px;
-            font-weight: 700;
-            color: #111;
-        }
-
         .miejsce-czas {
-            font-size: 12px;
-            color: #aaa;
-            font-weight: 500;
-            margin-top: 2px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #111;
         }
 
         .miejsce-trasa {
             font-size: 12px;
             color: #aaa;
             font-weight: 500;
+            margin-top: 2px;
         }
 
         .miejsce-notatka {
@@ -299,6 +357,11 @@
             color: #555;
             margin-top: 4px;
             font-style: italic;
+        }
+
+        .strzalka-prawo {
+            color: #ddd;
+            font-size: 20px;
         }
 
         .pusty {
@@ -309,8 +372,8 @@
             font-weight: 500;
         }
 
-        /* MODAL TRASY */
-        #modal-trasa {
+        /* MODALS */
+        .modal-pelny {
             display: none;
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -319,7 +382,7 @@
             flex-direction: column;
         }
 
-        #modal-trasa.otwarty { display: flex; }
+        .modal-pelny.otwarty { display: flex; }
 
         .modal-naglowek {
             background: white;
@@ -327,16 +390,28 @@
             padding: 48px 20px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             flex-shrink: 0;
         }
 
-        .modal-naglowek button {
+        /* DUŻY GROT STRZAŁKI */
+        .btn-cofnij {
             background: none;
             border: none;
-            font-size: 20px;
             cursor: pointer;
-            color: #111;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-cofnij svg {
+            width: 32px;
+            height: 32px;
+        }
+
+        .btn-cofnij svg polygon {
+            fill: #ccc;
         }
 
         .modal-naglowek h2 {
@@ -345,20 +420,7 @@
             color: #111;
         }
 
-        #modal-trasa-mapa { flex: 1; }
-
-        /* MODAL MIEJSCA */
-        #modal-miejsce {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 2000;
-            background: white;
-            flex-direction: column;
-        }
-
-        #modal-miejsce.otwarty { display: flex; }
-        #modal-miejsce-mapa { flex: 1; }
+        .modal-mapa { flex: 1; }
 
         .modal-info {
             padding: 16px 20px;
@@ -426,11 +488,18 @@
     </style>
 </head>
 <body>
-    <!-- NAGŁÓWEK -->
+
     <div class="profil-header">
         <div class="avatar-container">
-            <div class="avatar" id="avatar">🚶</div>
-            <div class="avatar-edit" onclick="document.getElementById('inputZdjecie').click()">✏️</div>
+            <div class="avatar" id="avatar">
+                <svg viewBox="0 0 24 24" width="40" height="40">
+                    <circle cx="12" cy="8" r="4" stroke="#bbb" stroke-width="2" fill="none"/>
+                    <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke="#bbb" stroke-width="2" fill="none" stroke-linecap="round"/>
+                </svg>
+            </div>
+            <div class="avatar-edit" onclick="document.getElementById('inputZdjecie').click()">
+                <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
             <input type="file" id="inputZdjecie" accept="image/*" style="display:none" onchange="zmienZdjecie(event)">
         </div>
         <div class="profil-imie" id="profil-imie">Twój profil</div>
@@ -438,7 +507,6 @@
         <button class="btn-edytuj" onclick="toggleEdycja()">Edytuj dane</button>
     </div>
 
-    <!-- FORMULARZ -->
     <div class="edycja-form" id="edycja-form">
         <h3>Edytuj profil</h3>
         <div class="pole">
@@ -456,20 +524,23 @@
         <button class="btn-zapisz" onclick="zapiszProfil()">Zapisz</button>
     </div>
 
-    <!-- ZAKŁADKI -->
     <div class="zakladki">
         <button class="zakladka aktywna" onclick="pokazZakladke('aktywnosc', this)">Aktywność</button>
         <button class="zakladka" onclick="pokazZakladke('moje-miejsca', this)">Moje miejsca</button>
     </div>
 
     <div class="scroll-area">
-        <!-- AKTYWNOŚĆ – KALENDARZ -->
+        <!-- AKTYWNOŚĆ -->
         <div class="zakladka-content aktywna" id="tab-aktywnosc">
             <div class="kalendarz-wrapper">
                 <div class="kalendarz-nav">
-                    <button class="btn-miesiac" onclick="poprzedniMiesiac()">‹</button>
+                    <button class="btn-miesiac" onclick="poprzedniMiesiac()">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="15 18 9 12 15 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                    </button>
                     <h2 id="kalendarz-tytul"></h2>
-                    <button class="btn-miesiac" onclick="nastepnyMiesiac()">›</button>
+                    <button class="btn-miesiac" onclick="nastepnyMiesiac()">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="9 18 15 12 9 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                    </button>
                 </div>
                 <div class="dni-tygodnia">
                     <div class="dzien-tyg">Pn</div>
@@ -488,28 +559,55 @@
             </div>
         </div>
 
-        <!-- MOJE MIEJSCA – KROPKI -->
+        <!-- MOJE MIEJSCA -->
         <div class="zakladka-content" id="tab-moje-miejsca">
-            <div class="miejsca-lista" id="miejsca-lista"></div>
+            <!-- Widok: dwa duże przyciski -->
+            <div id="widok-wybor">
+                <div class="miejsca-wybor">
+                    <button class="btn-miejsca btn-miejsca-zielone" onclick="pokazListeMiejsc('tak')">
+                        <div class="btn-miejsca-kropka"></div>
+                        Pozytywne
+                    </button>
+                    <button class="btn-miejsca btn-miejsca-czerwone" onclick="pokazListeMiejsc('nie')">
+                        <div class="btn-miejsca-kropka"></div>
+                        Negatywne
+                    </button>
+                </div>
+            </div>
+
+            <!-- Widok: lista miejsc -->
+            <div id="widok-lista" style="display:none;">
+                <button class="btn-powrot-miejsca" onclick="powrotDoWyboru()">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <polygon points="15,4 5,12 15,20" fill="#ccc"/>
+                    </svg>
+                    Wróć
+                </button>
+                <div class="miejsca-lista" id="miejsca-lista"></div>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL TRASY (z kalendarza) -->
-    <div id="modal-trasa">
+    <!-- MODAL TRASY -->
+    <div class="modal-pelny" id="modal-trasa">
         <div class="modal-naglowek">
-            <button onclick="zamknijModalTrasy()">←</button>
+            <button class="btn-cofnij" onclick="zamknijModalTrasy()">
+                <svg viewBox="0 0 24 24"><polygon points="16,4 6,12 16,20" fill="#ccc"/></svg>
+            </button>
             <h2 id="modal-trasa-tytul">Spacer</h2>
         </div>
-        <div id="modal-trasa-mapa"></div>
+        <div class="modal-mapa" id="modal-trasa-mapa"></div>
     </div>
 
-    <!-- MODAL MIEJSCA (z kropki) -->
-    <div id="modal-miejsce">
+    <!-- MODAL MIEJSCA -->
+    <div class="modal-pelny" id="modal-miejsce">
         <div class="modal-naglowek">
-            <button onclick="zamknijModalMiejsca()">←</button>
-            <h2 id="modal-miejsce-tytul">Moje miejsce</h2>
+            <button class="btn-cofnij" onclick="zamknijModalMiejsca()">
+                <svg viewBox="0 0 24 24"><polygon points="16,4 6,12 16,20" fill="#ccc"/></svg>
+            </button>
+            <h2 id="modal-miejsce-tytul">Miejsce</h2>
         </div>
-        <div id="modal-miejsce-mapa"></div>
+        <div class="modal-mapa" id="modal-miejsce-mapa"></div>
         <div class="modal-info">
             <div class="modal-info-typ" id="modal-miejsce-typ"></div>
             <div class="modal-info-tekst" id="modal-miejsce-tekst"></div>
@@ -543,17 +641,19 @@
             document.getElementById(`tab-${nazwa}`).classList.add('aktywna');
             btn.classList.add('aktywna');
             if (nazwa === 'aktywnosc') renderujKalendarz();
-            if (nazwa === 'moje-miejsca') wczytajMiejsca();
+            if (nazwa === 'moje-miejsca') {
+                document.getElementById('widok-wybor').style.display = 'block';
+                document.getElementById('widok-lista').style.display = 'none';
+            }
         }
 
-        // PROFIL
         function wczytajProfil() {
             if (profil.imie) {
                 document.getElementById('profil-imie').textContent =
                     `${profil.imie} ${profil.nazwisko || ''}`.trim();
             }
             if (profil.miasto) {
-                document.getElementById('profil-miasto').textContent = `📍 ${profil.miasto}`;
+                document.getElementById('profil-miasto').textContent = `${profil.miasto}`;
             }
             if (profil.zdjecie) {
                 document.getElementById('avatar').innerHTML =
@@ -599,7 +699,6 @@
             document.getElementById('kalendarz-tytul').textContent =
                 `${nazwyMiesiecy[aktualnyMiesiac]} ${aktualnyRok}`;
 
-            // Zbierz dni ze spacerami i przypisz wyniki
             const dniDoWynikow = {};
             wyniki.forEach((w, idx) => {
                 if (w.data) {
@@ -664,6 +763,55 @@
             renderujKalendarz();
         }
 
+        // MOJE MIEJSCA
+        function pokazListeMiejsc(typ) {
+            document.getElementById('widok-wybor').style.display = 'none';
+            document.getElementById('widok-lista').style.display = 'block';
+
+            const lista = document.getElementById('miejsca-lista');
+            lista.innerHTML = '';
+
+            const miejsca = [];
+            wyniki.forEach((wynik, wynikIdx) => {
+                if (wynik.waypointy) {
+                    wynik.waypointy.forEach((wp, wpIdx) => {
+                        if (wp.typ === typ) {
+                            miejsca.push({ wynik, wynikIdx, wp, wpIdx });
+                        }
+                    });
+                }
+            });
+
+            if (miejsca.length === 0) {
+                lista.innerHTML = `<div class="pusty">Brak ${typ === 'tak' ? 'pozytywnych' : 'negatywnych'} miejsc</div>`;
+                return;
+            }
+
+            miejsca.forEach(({ wynik, wynikIdx, wp, wpIdx }) => {
+                const div = document.createElement('div');
+                div.className = 'miejsce-karta';
+                div.onclick = () => otworzModalMiejsca(wynikIdx, wpIdx);
+
+                div.innerHTML = `
+                    <div class="miejsce-kropka" style="background: ${typ === 'tak' ? '#2d6a2d' : '#7B1F1F'}"></div>
+                    <div class="miejsce-info">
+                        <div class="miejsce-czas">${wynik.data} · ${wp.czas}</div>
+                        <div class="miejsce-trasa">${wynik.nazwa || 'Trasa własna'}</div>
+                        ${wp.notatka ? `<div class="miejsce-notatka">"${wp.notatka}"</div>` : ''}
+                    </div>
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <polygon points="8,4 18,12 8,20" fill="#ddd"/>
+                    </svg>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        function powrotDoWyboru() {
+            document.getElementById('widok-wybor').style.display = 'block';
+            document.getElementById('widok-lista').style.display = 'none';
+        }
+
         // MODAL TRASY
         function otworzModalTrasy(index) {
             const wynik = wyniki[index];
@@ -685,9 +833,10 @@
                 if (wynik.waypointy) {
                     wynik.waypointy.forEach(wp => {
                         L.circleMarker([wp.pozycja.lat, wp.pozycja.lng], {
-                            radius: 8, fillColor: wp.typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
+                            radius: 8,
+                            fillColor: wp.typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
                             color: 'white', weight: 2, fillOpacity: 0.9
-                        }).addTo(modalTrasMapa).bindPopup(`${wp.typ === 'tak' ? '✅' : '❌'} ${wp.czas}`);
+                        }).addTo(modalTrasMapa);
                     });
                 }
             }, 100);
@@ -698,51 +847,13 @@
             if (modalTrasMapa) { modalTrasMapa.remove(); modalTrasMapa = null; }
         }
 
-        // MOJE MIEJSCA
-        function wczytajMiejsca() {
-            const lista = document.getElementById('miejsca-lista');
-            lista.innerHTML = '';
-
-            const wszystkieMiejsca = [];
-            wyniki.forEach((wynik, wynikIdx) => {
-                if (wynik.waypointy) {
-                    wynik.waypointy.forEach((wp, wpIdx) => {
-                        wszystkieMiejsca.push({ wynik, wynikIdx, wp, wpIdx });
-                    });
-                }
-            });
-
-            if (wszystkieMiejsca.length === 0) {
-                lista.innerHTML = `<div class="pusty">Brak miejsc – zaznacz TAK lub NIE podczas spaceru!</div>`;
-                return;
-            }
-
-            wszystkieMiejsca.forEach(({ wynik, wynikIdx, wp, wpIdx }) => {
-                const div = document.createElement('div');
-                div.className = 'miejsce-karta';
-                div.onclick = () => otworzModalMiejsca(wynikIdx, wpIdx);
-
-                div.innerHTML = `
-                    <div class="miejsce-kropka" style="background: ${wp.typ === 'tak' ? '#2d6a2d' : '#7B1F1F'}"></div>
-                    <div class="miejsce-info">
-                        <div class="miejsce-typ">${wp.typ === 'tak' ? '✅ TAK' : '❌ NIE'}</div>
-                        <div class="miejsce-czas">📅 ${wynik.data} · ${wp.czas}</div>
-                        <div class="miejsce-trasa">🗺️ ${wynik.nazwa || 'Trasa własna'}</div>
-                        ${wp.notatka ? `<div class="miejsce-notatka">"${wp.notatka}"</div>` : ''}
-                    </div>
-                    <div style="color:#ddd;font-size:18px;">›</div>
-                `;
-                lista.appendChild(div);
-            });
-        }
-
         // MODAL MIEJSCA
         function otworzModalMiejsca(wynikIdx, wpIdx) {
             const wynik = wyniki[wynikIdx];
             const wp = wynik.waypointy[wpIdx];
 
             document.getElementById('modal-miejsce-tytul').textContent =
-                wp.typ === 'tak' ? '✅ Miejsce TAK' : '❌ Miejsce NIE';
+                wp.typ === 'tak' ? 'Miejsce pozytywne' : 'Miejsce negatywne';
             document.getElementById('modal-miejsce-typ').textContent =
                 `${wynik.nazwa || 'Trasa własna'} · ${wynik.data}`;
             document.getElementById('modal-miejsce-tekst').textContent =
@@ -758,13 +869,11 @@
 
                 const latlng = L.latLng(wp.pozycja.lat, wp.pozycja.lng);
 
-                // Pokaż trasę w tle jeśli jest
                 if (wynik.trasa && wynik.trasa.length > 1) {
                     L.polyline(wynik.trasa, { color: '#ddd', weight: 4 }).addTo(modalMiejsceMapa);
                 }
 
-                // Pokaż punkt
-                const marker = L.circleMarker(latlng, {
+                L.circleMarker(latlng, {
                     radius: 14,
                     fillColor: wp.typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
                     color: 'white', weight: 3, fillOpacity: 1
