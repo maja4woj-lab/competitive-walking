@@ -24,28 +24,37 @@
             align-items: center;
             justify-content: center;
             padding: 20px;
-            gap: 32px;
+            gap: 8px;
+            position: relative;
         }
 
         .logo-img {
-            width: 60%;
-            max-width: 240px;
+            width: 55%;
+            max-width: 220px;
+            margin-bottom: 4px;
         }
 
-        /* Ilustracja trasy */
-        .trasa-svg {
-            width: 180px;
-            height: 160px;
+        .tagline {
+            font-size: 13px;
+            font-weight: 500;
+            color: #888;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
         }
 
-        /* DOLNY PASEK */
+        .mapa-container {
+            width: 100%;
+            max-width: 380px;
+            height: 260px;
+        }
+
         .nav-bar {
             background: white;
             border-top: 1px solid #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 12px 0 24px;
+            padding: 12px 0 8px;
         }
 
         .nav-btn {
@@ -63,7 +72,6 @@
         }
 
         .nav-btn.aktywny { background: #2d6a2d; }
-
         .nav-btn svg { width: 26px; height: 26px; }
 
         .nav-btn svg path,
@@ -87,31 +95,38 @@
 </head>
 <body>
     <div class="hero">
-        <!-- LOGO -->
         <img src="logo_blink.png" alt="blink! blink!" class="logo-img">
+        <div class="tagline">w Twoim kierunku</div>
 
-        <!-- ILUSTRACJA TRASY -->
-        <svg class="trasa-svg" viewBox="0 0 180 160" xmlns="http://www.w3.org/2000/svg">
-            <!-- Linia trasy – jasny szary -->
-            <path d="M 30 130 Q 50 110 60 90 Q 70 70 90 60 Q 110 50 130 65 Q 150 80 140 100 Q 130 115 110 120"
-                fill="none" stroke="#ccc" stroke-width="3" stroke-linecap="round"/>
+        <svg class="mapa-container" viewBox="0 0 380 260" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="60" cy="200" rx="55" ry="40" fill="#c8d9b0" opacity="0.7"/>
+            <ellipse cx="320" cy="220" rx="50" ry="35" fill="#c8d9b0" opacity="0.7"/>
+            <ellipse cx="200" cy="240" rx="40" ry="25" fill="#c8d9b0" opacity="0.6"/>
+            <ellipse cx="140" cy="180" rx="30" ry="22" fill="#c8d9b0" opacity="0.5"/>
+            <ellipse cx="300" cy="140" rx="35" ry="25" fill="#c8d9b0" opacity="0.5"/>
 
-            <!-- Punkt startowy – zielony -->
-            <circle cx="30" cy="130" r="7" fill="white" stroke="#2d6a2d" stroke-width="2.5"/>
-            <circle cx="30" cy="130" r="3.5" fill="#2d6a2d"/>
+            <path d="M 0 150 Q 80 145 160 155 Q 240 165 380 150"
+                fill="none" stroke="#d0d0d0" stroke-width="12" stroke-linecap="round"/>
+            <path d="M 200 0 Q 195 80 200 160 Q 205 220 200 260"
+                fill="none" stroke="#d0d0d0" stroke-width="10" stroke-linecap="round"/>
+            <path d="M 0 80 Q 80 100 140 130 Q 200 160 260 200 Q 310 230 380 240"
+                fill="none" stroke="#d0d0d0" stroke-width="8" stroke-linecap="round"/>
+            <path d="M 80 0 Q 90 60 100 120 Q 110 160 120 200"
+                fill="none" stroke="#d8d8d8" stroke-width="6" stroke-linecap="round"/>
 
-            <!-- Kropki na trasie – bordowe i zielone -->
-            <circle cx="90" cy="60" r="5" fill="#7B1F1F"/>
-            <circle cx="130" cy="65" r="5" fill="#2d6a2d"/>
-            <circle cx="60" cy="90" r="5" fill="#7B1F1F"/>
+            <path d="M 50 220 Q 90 190 130 160 Q 170 130 210 110 Q 250 90 290 100 Q 330 110 340 140"
+                fill="none" stroke="#aaa" stroke-width="3.5" stroke-linecap="round"/>
 
-            <!-- Punkt końcowy – bordowy -->
-            <circle cx="110" cy="120" r="7" fill="white" stroke="#7B1F1F" stroke-width="2.5"/>
-            <circle cx="110" cy="120" r="3.5" fill="#7B1F1F"/>
+            <circle cx="50" cy="220" r="8" fill="white" stroke="#2d6a2d" stroke-width="2.5"/>
+            <circle cx="50" cy="220" r="4" fill="#2d6a2d"/>
+            <circle cx="130" cy="160" r="6" fill="#7B1F1F"/>
+            <circle cx="210" cy="110" r="6" fill="#2d6a2d"/>
+            <circle cx="290" cy="100" r="6" fill="#7B1F1F"/>
+            <circle cx="340" cy="140" r="8" fill="white" stroke="#7B1F1F" stroke-width="2.5"/>
+            <circle cx="340" cy="140" r="4" fill="#7B1F1F"/>
         </svg>
     </div>
 
-    <!-- DOLNY PASEK -->
     <nav class="nav-bar">
         <a href="index.html" class="nav-btn aktywny">
             <svg viewBox="0 0 24 24">
