@@ -7,7 +7,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         body {
             font-family: 'Montserrat', sans-serif;
             background: white;
@@ -15,7 +14,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .hero {
             flex: 1;
             display: flex;
@@ -25,24 +23,14 @@
             padding: 0 28px 32px;
             gap: 12px;
         }
-
-        .logo-img {
-            width: 65%;
-            max-width: 240px;
-        }
-
+        .logo-img { width: 65%; max-width: 240px; }
         .tagline {
             font-size: 16px;
             font-weight: 500;
             color: #888;
             letter-spacing: 0.5px;
         }
-
-        .mapa-wrapper {
-            width: 100%;
-            margin-top: 8px;
-        }
-
+        .mapa-wrapper { width: 100%; margin-top: 8px; }
         .nav-bar {
             background: white;
             border-top: 1px solid #f0f0f0;
@@ -52,7 +40,6 @@
             padding: 14px 0;
             flex-shrink: 0;
         }
-
         .nav-btn {
             display: flex;
             align-items: center;
@@ -65,25 +52,15 @@
             cursor: pointer;
             text-decoration: none;
         }
-
         .nav-btn.aktywny { background: #2d6a2d; }
         .nav-btn svg { width: 26px; height: 26px; }
-
-        .nav-btn svg path,
-        .nav-btn svg polyline,
-        .nav-btn svg circle,
-        .nav-btn svg line {
-            stroke: #333;
-            stroke-width: 2;
-            fill: none;
-            stroke-linecap: round;
-            stroke-linejoin: round;
+        .nav-btn svg path, .nav-btn svg polyline,
+        .nav-btn svg circle, .nav-btn svg line {
+            stroke: #333; stroke-width: 2; fill: none;
+            stroke-linecap: round; stroke-linejoin: round;
         }
-
-        .nav-btn.aktywny svg path,
-        .nav-btn.aktywny svg polyline,
-        .nav-btn.aktywny svg circle,
-        .nav-btn.aktywny svg line {
+        .nav-btn.aktywny svg path, .nav-btn.aktywny svg polyline,
+        .nav-btn.aktywny svg circle, .nav-btn.aktywny svg line {
             stroke: white;
         }
     </style>
@@ -96,28 +73,23 @@
         <div class="mapa-wrapper">
             <svg width="100%" viewBox="0 0 320 180" xmlns="http://www.w3.org/2000/svg">
 
-                <!-- Trasa NA WIERZCHU – rysowana PRZED kółkami żeby była pod nimi wizualnie -->
-                <!-- Trasa idzie górą między kółkami -->
-                <path d="M 15 45 C 35 28 65 22 95 32 C 112 38 122 50 130 62 C 138 74 142 82 155 85 C 168 88 182 82 198 80 C 214 78 232 74 248 76 C 260 78 268 86 265 98 C 262 110 250 116 238 120 C 224 125 210 126 200 134 C 192 140 186 150 182 162"
-                    fill="none" stroke="#d0d0d0" stroke-width="3.5" stroke-linecap="round"/>
+                <!-- 5 organicznych kółek – różne rozmiary, nie nachodzą na siebie -->
+                <!-- małe lewe górne -->
+                <ellipse cx="38" cy="55" rx="32" ry="26"
+                    fill="#c8d9b0" opacity="0.75" transform="rotate(-20 38 55)"/>
+                <!-- duże lewe dolne -->
+                <ellipse cx="75" cy="130" rx="58" ry="44"
+                    fill="#c8d9b0" opacity="0.7" transform="rotate(12 75 130)"/>
+                <!-- średnie środkowe -->
+                <ellipse cx="180" cy="105" rx="42" ry="34"
+                    fill="#c8d9b0" opacity="0.72" transform="rotate(-8 180 105)"/>
+                <!-- małe środkowe górne -->
+                <ellipse cx="210" cy="45" rx="28" ry="22"
+                    fill="#c8d9b0" opacity="0.65" transform="rotate(15 210 45)"/>
+                <!-- duże prawe -->
+                <ellipse cx="282" cy="130" rx="38" ry="46"
+                    fill="#c8d9b0" opacity="0.68" transform="rotate(-5 282 130)"/>
 
-                <!-- Kółka rysowane PO trasie – zakrywają ją tam gdzie nachodzą -->
-                <ellipse cx="55" cy="115" rx="48" ry="38"
-                    fill="#c8d9b0" opacity="0.75" transform="rotate(-18 55 115)"/>
-                <ellipse cx="185" cy="125" rx="44" ry="35"
-                    fill="#c8d9b0" opacity="0.7" transform="rotate(10 185 125)"/>
-                <ellipse cx="285" cy="95" rx="38" ry="32"
-                    fill="#c8d9b0" opacity="0.72" transform="rotate(-6 285 95)"/>
-
-                <!-- Start – czarna kropka -->
-                <circle cx="15" cy="45" r="8" fill="#222"/>
-
-                <!-- Kropki pośrednie -->
-                <circle cx="95" cy="32" r="5.5" fill="#7B1F1F"/>
-                <circle cx="198" cy="80" r="5.5" fill="#2d6a2d"/>
-
-                <!-- Koniec – czarna kropka -->
-                <circle cx="182" cy="162" r="8" fill="#222"/>
             </svg>
         </div>
     </div>
