@@ -4,48 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profil</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: sans-serif; background: #f0f4f0; padding-bottom: 40px; }
 
-        #btnPowrot {
-            position: fixed;
-            top: 12px; left: 12px;
-            z-index: 1000;
-            background: white;
-            border: none;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-size: 14px;
-            cursor: pointer;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #f9f9f9;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* NAGŁÓWEK PROFILU */
         .profil-header {
-            background: #2d5a27;
-            color: white;
-            padding: 60px 20px 30px;
-            text-align: center;
+            background: white;
+            padding: 48px 28px 24px;
+            border-bottom: 1px solid #f0f0f0;
         }
 
-        .avatar-container {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 12px;
+        .profil-top {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
         }
+
+        .avatar-container { position: relative; flex-shrink: 0; }
 
         .avatar {
-            width: 90px; height: 90px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
-            border: 3px solid white;
-            background: #4CAF50;
+            background: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 36px;
-            cursor: pointer;
+            font-size: 28px;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .avatar img { width: 100%; height: 100%; object-fit: cover; }
@@ -53,146 +51,345 @@
         .avatar-edit {
             position: absolute;
             bottom: 0; right: 0;
-            background: white;
+            background: #111;
             border-radius: 50%;
-            width: 28px; height: 28px;
+            width: 24px; height: 24px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            font-size: 11px;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
         }
 
-        .profil-imie { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-        .profil-miasto { font-size: 13px; opacity: 0.8; margin-bottom: 8px; }
-        .profil-edytuj { font-size: 13px; opacity: 0.8; cursor: pointer; text-decoration: underline; }
+        .profil-info { flex: 1; }
 
-        .edycja-form {
-            background: white;
-            margin: 16px;
-            border-radius: 16px;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            display: none;
+        .profil-imie {
+            font-size: 20px;
+            font-weight: 700;
+            color: #111;
         }
 
-        .edycja-form h3 { font-size: 16px; color: #333; margin-bottom: 16px; }
-        .pole { margin-bottom: 12px; }
-        .pole label { font-size: 12px; color: #888; display: block; margin-bottom: 4px; }
-        .pole input { width: 100%; padding: 10px 14px; border: 1px solid #ddd; border-radius: 10px; font-size: 15px; }
-
-        .btn-zapisz {
-            width: 100%; padding: 12px;
-            background: #4CAF50; color: white;
-            border: none; border-radius: 12px;
-            font-size: 16px; font-weight: 600;
-            cursor: pointer; margin-top: 8px;
+        .profil-miasto {
+            font-size: 13px;
+            color: #aaa;
+            margin-top: 2px;
+            font-weight: 500;
         }
 
-        .sekcja { padding: 20px 16px 0; }
-        .sekcja h2 { font-size: 16px; color: #333; margin-bottom: 12px; }
+        .btn-edytuj {
+            background: none;
+            border: 1.5px solid #ddd;
+            border-radius: 10px;
+            padding: 8px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            color: #111;
+        }
 
+        /* STATYSTYKI */
         .statystyki {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
         }
 
         .stat {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
+            background: #f9f9f9;
+            border-radius: 14px;
+            padding: 14px;
             text-align: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
 
-        .stat .wartosc { font-size: 26px; font-weight: 700; color: #2d5a27; }
-        .stat .label { font-size: 12px; color: #888; margin-top: 4px; }
+        .stat .wartosc {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .stat .label {
+            font-size: 11px;
+            color: #aaa;
+            margin-top: 3px;
+            font-weight: 500;
+        }
+
+        /* FORMULARZ EDYCJI */
+        .edycja-form {
+            background: white;
+            margin: 16px 28px;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            display: none;
+        }
+
+        .edycja-form h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 16px;
+        }
+
+        .pole { margin-bottom: 12px; }
+
+        .pole label {
+            font-size: 12px;
+            color: #aaa;
+            display: block;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .pole input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #eee;
+            border-radius: 12px;
+            font-size: 15px;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .btn-zapisz {
+            width: 100%;
+            padding: 14px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* ZAKŁADKI */
+        .zakladki {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .zakladka {
+            flex: 1;
+            padding: 16px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #aaa;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-family: 'Montserrat', sans-serif;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+        }
+
+        .zakladka.aktywna {
+            color: #111;
+            border-bottom: 2px solid #111;
+        }
+
+        /* ZAWARTOŚĆ ZAKŁADEK */
+        .zakladka-content { display: none; flex: 1; }
+        .zakladka-content.aktywna { display: block; }
+
+        /* AKTYWNOŚĆ */
+        .lista-tras {
+            padding: 20px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
 
         .trasa-karta {
             background: white;
-            border-radius: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 16px;
+            border-radius: 20px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
             overflow: hidden;
         }
 
         .trasa-info {
             padding: 16px 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
         }
 
-        .trasa-naglowek {
-            grid-column: 1 / -1;
+        .trasa-nazwa {
+            font-size: 15px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 4px;
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
+        }
+
+        .trasa-data {
+            font-size: 12px;
+            color: #aaa;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .trasa-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .trasa-stat .wartosc {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .trasa-stat .label {
+            font-size: 11px;
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        .procent-bar {
+            height: 4px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
             margin-bottom: 4px;
         }
 
-        .trasa-nazwa { font-size: 15px; font-weight: 700; color: #2d5a27; }
-        .trasa-data { grid-column: 1 / -1; font-size: 13px; color: #888; margin-bottom: 8px; }
-
-        .trasa-procent { grid-column: 1 / -1; margin-bottom: 8px; }
-
-        .procent-bar {
-            height: 6px; background: #eee;
-            border-radius: 4px; overflow: hidden;
-            margin-top: 4px;
+        .procent-fill {
+            height: 100%;
+            background: #2d6a2d;
+            border-radius: 4px;
         }
 
-        .procent-fill { height: 100%; background: #4CAF50; border-radius: 4px; }
-        .procent-tekst { font-size: 11px; color: #888; margin-top: 3px; }
-
-        .trasa-stat .wartosc { font-size: 18px; font-weight: 700; color: #2d5a27; }
-        .trasa-stat .label { font-size: 11px; color: #888; }
-
-        .btn-usun-trase {
-            background: none; border: none;
-            font-size: 18px; cursor: pointer;
-            color: #ccc; padding: 4px;
-            flex-shrink: 0;
+        .procent-tekst {
+            font-size: 11px;
+            color: #aaa;
+            font-weight: 500;
         }
 
-        .btn-usun-trase:hover { color: #f44336; }
-
-        .trasa-mapa-podglad {
-            height: 180px; width: 100%;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .mapa-overlay {
-            position: absolute;
-            bottom: 8px; right: 8px;
-            background: white;
-            border-radius: 8px;
-            padding: 4px 10px;
-            font-size: 12px;
-            color: #555;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-            z-index: 1000;
-            pointer-events: none;
+        .trasa-mapa {
+            height: 160px;
+            width: 100%;
         }
 
         .trasa-waypoints {
-            padding: 10px 16px;
-            font-size: 12px; color: #888;
-            border-top: 1px solid #f0f0f0;
+            padding: 10px 20px;
+            font-size: 12px;
+            color: #aaa;
+            border-top: 1px solid #f5f5f5;
+            font-weight: 500;
         }
 
+        .btn-usun-trase {
+            background: none;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            color: #ddd;
+        }
+
+        /* MOJE DNI – KALENDARZ */
+        .kalendarz-wrapper {
+            padding: 20px 28px;
+        }
+
+        .kalendarz-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .kalendarz-nav h2 {
+            font-size: 16px;
+            font-weight: 700;
+            color: #111;
+        }
+
+        .btn-miesiac {
+            background: none;
+            border: 1.5px solid #eee;
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dni-tygodnia {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+            margin-bottom: 8px;
+        }
+
+        .dzien-tyg {
+            text-align: center;
+            font-size: 11px;
+            font-weight: 600;
+            color: #aaa;
+            padding: 4px 0;
+        }
+
+        .kalendarz-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 4px;
+        }
+
+        .dzien {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 14px;
+            font-weight: 500;
+            color: #111;
+            cursor: pointer;
+        }
+
+        .dzien.pusty { background: none; }
+        .dzien.dzisiaj { border: 2px solid #111; }
+        .dzien.spacer { background: #2d6a2d; color: white; font-weight: 700; }
+        .dzien.inny-miesiac { color: #ddd; }
+
+        /* LEGENDA */
+        .legenda {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 16px;
+            font-size: 12px;
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        .legenda-kropka {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #2d6a2d;
+        }
+
+        /* PUSTY */
         .pusty {
-            text-align: center; color: #aaa;
-            padding: 40px 20px; font-size: 15px;
+            text-align: center;
+            color: #ccc;
+            padding: 40px 20px;
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        .pusty .emoji { font-size: 48px; display: block; margin-bottom: 12px; }
-
-        /* MODAL SZCZEGÓŁÓW TRASY */
+        /* MODAL */
         #modal {
             display: none;
             position: fixed;
@@ -205,37 +402,51 @@
         #modal.otwarty { display: flex; }
 
         #modal-naglowek {
-            background: #2d5a27;
-            color: white;
-            padding: 16px 20px;
+            background: white;
+            border-bottom: 1px solid #f0f0f0;
+            padding: 48px 28px 16px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
         #modal-naglowek button {
-            background: none; border: none;
-            color: white; font-size: 20px;
+            background: none;
+            border: none;
+            font-size: 20px;
             cursor: pointer;
+            color: #111;
         }
 
-        #modal-naglowek h2 { font-size: 16px; font-weight: 700; }
+        #modal-naglowek h2 {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
+        }
+
         #modal-mapa { flex: 1; }
 
         #modal-notatka {
-            padding: 16px;
+            padding: 16px 28px;
             background: white;
-            border-top: 1px solid #eee;
+            border-top: 1px solid #f0f0f0;
             display: none;
         }
 
-        #modal-notatka h3 { font-size: 14px; color: #333; margin-bottom: 8px; }
+        #modal-notatka h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #111;
+            margin-bottom: 8px;
+        }
 
         #notatka-input {
-            width: 100%; padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
+            width: 100%;
+            padding: 12px;
+            border: 1.5px solid #eee;
+            border-radius: 12px;
             font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
             margin-bottom: 8px;
             resize: none;
             height: 80px;
@@ -244,54 +455,91 @@
         .notatka-przyciski { display: flex; gap: 8px; }
 
         .btn-zapisz-notatke {
-            flex: 1; padding: 10px;
-            background: #4CAF50; color: white;
-            border: none; border-radius: 10px;
-            font-size: 14px; font-weight: 600;
+            flex: 1;
+            padding: 12px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
             cursor: pointer;
         }
 
         .btn-anuluj-notatke {
-            padding: 10px 16px;
-            background: #eee; color: #555;
-            border: none; border-radius: 10px;
-            font-size: 14px; cursor: pointer;
+            padding: 12px 16px;
+            background: #f5f5f5;
+            color: #555;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+        }
+
+        /* NAV */
+        .nav-bar {
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 14px 0;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-btn.aktywny { background: #2d6a2d; }
+        .nav-btn svg { width: 26px; height: 26px; }
+
+        .nav-btn svg path, .nav-btn svg polyline,
+        .nav-btn svg circle, .nav-btn svg line {
+            stroke: #333; stroke-width: 2; fill: none;
+            stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .nav-btn.aktywny svg path, .nav-btn.aktywny svg polyline,
+        .nav-btn.aktywny svg circle, .nav-btn.aktywny svg line {
+            stroke: white;
+        }
+
+        .scroll-content {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
     </style>
 </head>
 <body>
-    <button id="btnPowrot" onclick="window.location.href='menu.html'">← Menu</button>
-
+    <!-- NAGŁÓWEK -->
     <div class="profil-header">
-        <div class="avatar-container">
-            <div class="avatar" id="avatar">🚶</div>
-            <div class="avatar-edit" onclick="document.getElementById('inputZdjecie').click()">✏️</div>
-            <input type="file" id="inputZdjecie" accept="image/*" style="display:none" onchange="zmienZdjecie(event)">
+        <div class="profil-top">
+            <div class="avatar-container">
+                <div class="avatar" id="avatar">🚶</div>
+                <div class="avatar-edit" onclick="document.getElementById('inputZdjecie').click()">✏️</div>
+                <input type="file" id="inputZdjecie" accept="image/*" style="display:none" onchange="zmienZdjecie(event)">
+            </div>
+            <div class="profil-info">
+                <div class="profil-imie" id="profil-imie">Twój profil</div>
+                <div class="profil-miasto" id="profil-miasto"></div>
+            </div>
+            <button class="btn-edytuj" onclick="toggleEdycja()">Edytuj</button>
         </div>
-        <div class="profil-imie" id="profil-imie">Twój profil</div>
-        <div class="profil-miasto" id="profil-miasto"></div>
-        <div class="profil-edytuj" onclick="toggleEdycja()">✏️ Edytuj dane</div>
-    </div>
 
-    <div class="edycja-form" id="edycja-form">
-        <h3>Edytuj profil</h3>
-        <div class="pole">
-            <label>Imię</label>
-            <input type="text" id="input-imie" placeholder="np. Anna">
-        </div>
-        <div class="pole">
-            <label>Nazwisko</label>
-            <input type="text" id="input-nazwisko" placeholder="np. Kowalska">
-        </div>
-        <div class="pole">
-            <label>Miasto</label>
-            <input type="text" id="input-miasto" placeholder="np. Warszawa">
-        </div>
-        <button class="btn-zapisz" onclick="zapiszProfil()">💾 Zapisz</button>
-    </div>
-
-    <div class="sekcja">
-        <h2>📊 Moje statystyki</h2>
         <div class="statystyki">
             <div class="stat">
                 <div class="wartosc" id="stat-spacery">0</div>
@@ -312,12 +560,63 @@
         </div>
     </div>
 
-    <div class="sekcja">
-        <h2>🗺️ Moje trasy</h2>
-        <div id="lista-tras"></div>
+    <!-- FORMULARZ EDYCJI -->
+    <div class="edycja-form" id="edycja-form">
+        <h3>Edytuj profil</h3>
+        <div class="pole">
+            <label>Imię</label>
+            <input type="text" id="input-imie" placeholder="np. Anna">
+        </div>
+        <div class="pole">
+            <label>Nazwisko</label>
+            <input type="text" id="input-nazwisko" placeholder="np. Kowalska">
+        </div>
+        <div class="pole">
+            <label>Miasto</label>
+            <input type="text" id="input-miasto" placeholder="np. Wrocław">
+        </div>
+        <button class="btn-zapisz" onclick="zapiszProfil()">Zapisz</button>
     </div>
 
-    <!-- MODAL SZCZEGÓŁÓW -->
+    <!-- ZAKŁADKI -->
+    <div class="zakladki">
+        <button class="zakladka aktywna" onclick="pokazZakladke('aktywnosc')">Aktywność</button>
+        <button class="zakladka" onclick="pokazZakladke('moje-dni')">Moje dni</button>
+    </div>
+
+    <div class="scroll-content">
+        <!-- AKTYWNOŚĆ -->
+        <div class="zakladka-content aktywna" id="tab-aktywnosc">
+            <div class="lista-tras" id="lista-tras"></div>
+        </div>
+
+        <!-- MOJE DNI -->
+        <div class="zakladka-content" id="tab-moje-dni">
+            <div class="kalendarz-wrapper">
+                <div class="kalendarz-nav">
+                    <button class="btn-miesiac" onclick="poprzedniMiesiac()">‹</button>
+                    <h2 id="kalendarz-tytul"></h2>
+                    <button class="btn-miesiac" onclick="nastepnyMiesiac()">›</button>
+                </div>
+                <div class="dni-tygodnia">
+                    <div class="dzien-tyg">Pn</div>
+                    <div class="dzien-tyg">Wt</div>
+                    <div class="dzien-tyg">Śr</div>
+                    <div class="dzien-tyg">Cz</div>
+                    <div class="dzien-tyg">Pt</div>
+                    <div class="dzien-tyg">Sb</div>
+                    <div class="dzien-tyg">Nd</div>
+                </div>
+                <div class="kalendarz-grid" id="kalendarz-grid"></div>
+                <div class="legenda">
+                    <div class="legenda-kropka"></div>
+                    <span>Dzień ze spacerem</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL MAPY -->
     <div id="modal">
         <div id="modal-naglowek">
             <button onclick="zamknijModal()">←</button>
@@ -325,23 +624,55 @@
         </div>
         <div id="modal-mapa"></div>
         <div id="modal-notatka">
-            <h3 id="notatka-tytul">📝 Notatka do punktu</h3>
-            <textarea id="notatka-input" placeholder="Wpisz swoją notatkę..."></textarea>
+            <h3 id="notatka-tytul">Notatka</h3>
+            <textarea id="notatka-input" placeholder="Wpisz notatkę..."></textarea>
             <div class="notatka-przyciski">
                 <button class="btn-anuluj-notatke" onclick="zamknijNotatke()">Anuluj</button>
-                <button class="btn-zapisz-notatke" onclick="zapiszNotatke()">💾 Zapisz notatkę</button>
+                <button class="btn-zapisz-notatke" onclick="zapiszNotatke()">Zapisz</button>
             </div>
         </div>
     </div>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-btn">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 12h18M12 3l9 9-9 9"/>
+            </svg>
+        </a>
+        <a href="leaderboard.html" class="nav-btn">
+            <svg viewBox="0 0 24 24">
+                <polyline points="18 20 18 10"/>
+                <polyline points="12 20 12 4"/>
+                <polyline points="6 20 6 14"/>
+            </svg>
+        </a>
+        <a href="profile.html" class="nav-btn aktywny">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+        </a>
+    </nav>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         const profil = JSON.parse(localStorage.getItem('profil') || '{}');
         let wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
-
         let modalMapa = null;
         let aktywnyWaypointIndex = null;
         let aktywnyWynikIndex = null;
+
+        // Kalendarz
+        let aktualnyRok = new Date().getFullYear();
+        let aktualnyMiesiac = new Date().getMonth();
+
+        function pokazZakladke(nazwa) {
+            document.querySelectorAll('.zakladka').forEach(z => z.classList.remove('aktywna'));
+            document.querySelectorAll('.zakladka-content').forEach(z => z.classList.remove('aktywna'));
+            document.querySelector(`.zakladka-content#tab-${nazwa}`).classList.add('aktywna');
+            event.target.classList.add('aktywna');
+            if (nazwa === 'moje-dni') renderujKalendarz();
+        }
 
         function wczytajProfil() {
             if (profil.imie) {
@@ -402,7 +733,7 @@
         }
 
         function usunTrase(index) {
-            if (!confirm('Usunąć tę trasę z historii?')) return;
+            if (!confirm('Usunąć tę trasę?')) return;
             wyniki.splice(index, 1);
             localStorage.setItem('wyniki', JSON.stringify(wyniki));
             location.reload();
@@ -410,96 +741,66 @@
 
         function wczytajTrasy() {
             const lista = document.getElementById('lista-tras');
-
             if (wyniki.length === 0) {
-                lista.innerHTML = `
-                    <div class="pusty">
-                        <span class="emoji">🚶</span>
-                        Brak tras – czas wyjść na spacer!
-                    </div>`;
+                lista.innerHTML = `<div class="pusty">Brak tras – czas wyjść na spacer! 🚶</div>`;
                 return;
             }
 
             wyniki.forEach((wynik, index) => {
                 const div = document.createElement('div');
                 div.className = 'trasa-karta';
-
                 const takCount = wynik.waypointy ? wynik.waypointy.filter(w => w.typ === 'tak').length : 0;
                 const nieCount = wynik.waypointy ? wynik.waypointy.filter(w => w.typ === 'nie').length : 0;
                 const procent = wynik.procent || 100;
 
                 div.innerHTML = `
                     <div class="trasa-info">
-                        <div class="trasa-naglowek">
-                            <div class="trasa-nazwa">${wynik.nazwa || 'Trasa własna'}</div>
+                        <div class="trasa-nazwa">
+                            ${wynik.nazwa || 'Trasa własna'}
                             <button class="btn-usun-trase" onclick="usunTrase(${index})">🗑️</button>
                         </div>
                         <div class="trasa-data">📅 ${wynik.data} · ${wynik.godzina}</div>
-                        <div class="trasa-procent">
-                            <div class="procent-bar">
-                                <div class="procent-fill" style="width:${procent}%"></div>
+                        <div class="trasa-stats">
+                            <div class="trasa-stat">
+                                <div class="wartosc">${wynik.dystans}</div>
+                                <div class="label">km</div>
                             </div>
-                            <div class="procent-tekst">${procent}% trasy ukończone</div>
+                            <div class="trasa-stat">
+                                <div class="wartosc">${wynik.czas}</div>
+                                <div class="label">czas</div>
+                            </div>
+                            <div class="trasa-stat">
+                                <div class="wartosc">${wynik.predkosc}</div>
+                                <div class="label">km/h</div>
+                            </div>
                         </div>
-                        <div class="trasa-stat">
-                            <div class="wartosc">${wynik.czas}</div>
-                            <div class="label">Czas</div>
+                        <div class="procent-bar">
+                            <div class="procent-fill" style="width:${procent}%"></div>
                         </div>
-                        <div class="trasa-stat">
-                            <div class="wartosc">${wynik.dystans}</div>
-                            <div class="label">km</div>
-                        </div>
-                        <div class="trasa-stat">
-                            <div class="wartosc">${wynik.predkosc}</div>
-                            <div class="label">km/h śr.</div>
-                        </div>
+                        <div class="procent-tekst">${procent}% trasy ukończone</div>
                     </div>
-                    <div class="trasa-mapa-podglad" id="mapa-${index}" onclick="otworzModal(${index})">
-                        <div class="mapa-overlay">🔍 Kliknij żeby powiększyć</div>
-                    </div>
+                    <div class="trasa-mapa" id="mapa-${index}" onclick="otworzModal(${index})" style="cursor:pointer;"></div>
                     ${(takCount > 0 || nieCount > 0) ? `
-                    <div class="trasa-waypoints">
-                        ✅ TAK: ${takCount}x &nbsp;&nbsp; ❌ NIE: ${nieCount}x
-                    </div>` : ''}
+                    <div class="trasa-waypoints">✅ TAK: ${takCount}x &nbsp; ❌ NIE: ${nieCount}x</div>` : ''}
                 `;
-
                 lista.appendChild(div);
 
-                // Mała podglądowa mapka (nieinteraktywna)
                 if (wynik.trasa && wynik.trasa.length > 1) {
                     setTimeout(() => {
                         const mapa = L.map(`mapa-${index}`, {
-                            zoomControl: false,
-                            dragging: false,
-                            scrollWheelZoom: false,
-                            doubleClickZoom: false,
-                            touchZoom: false,
-                            tap: false
+                            zoomControl: false, dragging: false,
+                            scrollWheelZoom: false, doubleClickZoom: false,
+                            touchZoom: false, tap: false
                         });
-
                         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
-
-                        const linia = L.polyline(wynik.trasa, {
-                            color: '#4CAF50', weight: 4
-                        }).addTo(mapa);
-
+                        const linia = L.polyline(wynik.trasa, { color: '#2d6a2d', weight: 4 }).addTo(mapa);
                         mapa.fitBounds(linia.getBounds(), { padding: [20, 20] });
-
-                        L.circleMarker(wynik.trasa[0], {
-                            radius: 6, fillColor: '#2196F3',
-                            color: 'white', weight: 2, fillOpacity: 1
-                        }).addTo(mapa);
-
-                        L.circleMarker(wynik.trasa[wynik.trasa.length - 1], {
-                            radius: 6, fillColor: '#f44336',
-                            color: 'white', weight: 2, fillOpacity: 1
-                        }).addTo(mapa);
-
+                        L.circleMarker(wynik.trasa[0], { radius: 6, fillColor: '#111', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
+                        L.circleMarker(wynik.trasa[wynik.trasa.length - 1], { radius: 6, fillColor: '#7B1F1F', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
                         if (wynik.waypointy) {
                             wynik.waypointy.forEach(wp => {
                                 L.circleMarker([wp.pozycja.lat, wp.pozycja.lng], {
-                                    radius: 5,
-                                    fillColor: wp.typ === 'tak' ? 'green' : 'red',
+                                    radius: 5, fillColor: wp.typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
                                     color: 'white', weight: 2, fillOpacity: 0.9
                                 }).addTo(mapa);
                             });
@@ -507,76 +808,108 @@
                     }, 100);
                 } else {
                     document.getElementById(`mapa-${index}`).innerHTML =
-                        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#aaa;font-size:13px;">Brak danych trasy</div>';
+                        '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#ccc;font-size:13px;font-family:Montserrat">Brak danych trasy</div>';
                 }
             });
         }
 
-        // Otwórz modal z interaktywną mapą
+        // KALENDARZ
+        function renderujKalendarz() {
+            const nazwyMiesiecy = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec',
+                'Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
+
+            document.getElementById('kalendarz-tytul').textContent =
+                `${nazwyMiesiecy[aktualnyMiesiac]} ${aktualnyRok}`;
+
+            const dnizSpacerem = new Set();
+            wyniki.forEach(w => {
+                if (w.data) {
+                    const czesci = w.data.split('.');
+                    if (czesci.length === 3) {
+                        const d = parseInt(czesci[0]);
+                        const m = parseInt(czesci[1]) - 1;
+                        const r = parseInt(czesci[2]);
+                        if (m === aktualnyMiesiac && r === aktualnyRok) {
+                            dnizSpacerem.add(d);
+                        }
+                    }
+                }
+            });
+
+            const pierwszyDzien = new Date(aktualnyRok, aktualnyMiesiac, 1);
+            const ostatniDzien = new Date(aktualnyRok, aktualnyMiesiac + 1, 0);
+            const dzisiaj = new Date();
+
+            let poczatekTygodnia = pierwszyDzien.getDay();
+            if (poczatekTygodnia === 0) poczatekTygodnia = 7;
+
+            const grid = document.getElementById('kalendarz-grid');
+            grid.innerHTML = '';
+
+            for (let i = 1; i < poczatekTygodnia; i++) {
+                const el = document.createElement('div');
+                el.className = 'dzien pusty';
+                grid.appendChild(el);
+            }
+
+            for (let d = 1; d <= ostatniDzien.getDate(); d++) {
+                const el = document.createElement('div');
+                el.className = 'dzien';
+                el.textContent = d;
+
+                const czyDzisiaj = d === dzisiaj.getDate() &&
+                    aktualnyMiesiac === dzisiaj.getMonth() &&
+                    aktualnyRok === dzisiaj.getFullYear();
+
+                if (dnizSpacerem.has(d)) el.classList.add('spacer');
+                else if (czyDzisiaj) el.classList.add('dzisiaj');
+
+                grid.appendChild(el);
+            }
+        }
+
+        function poprzedniMiesiac() {
+            aktualnyMiesiac--;
+            if (aktualnyMiesiac < 0) { aktualnyMiesiac = 11; aktualnyRok--; }
+            renderujKalendarz();
+        }
+
+        function nastepnyMiesiac() {
+            aktualnyMiesiac++;
+            if (aktualnyMiesiac > 11) { aktualnyMiesiac = 0; aktualnyRok++; }
+            renderujKalendarz();
+        }
+
+        // MODAL
         function otworzModal(index) {
             const wynik = wyniki[index];
             if (!wynik.trasa || wynik.trasa.length < 2) return;
-
             aktywnyWynikIndex = index;
             document.getElementById('modal-tytul').textContent = wynik.nazwa || 'Szczegóły trasy';
             document.getElementById('modal').classList.add('otwarty');
             document.getElementById('modal-notatka').style.display = 'none';
-
-            // Usuń starą mapę jeśli istnieje
-            if (modalMapa) {
-                modalMapa.remove();
-                modalMapa = null;
-            }
-
-            // Stwórz nową interaktywną mapę
+            if (modalMapa) { modalMapa.remove(); modalMapa = null; }
             setTimeout(() => {
                 modalMapa = L.map('modal-mapa');
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(modalMapa);
-
-                const linia = L.polyline(wynik.trasa, {
-                    color: '#4CAF50', weight: 5
-                }).addTo(modalMapa);
-
+                const linia = L.polyline(wynik.trasa, { color: '#2d6a2d', weight: 5 }).addTo(modalMapa);
                 modalMapa.fitBounds(linia.getBounds(), { padding: [40, 40] });
-
-                // Start
-                L.circleMarker(wynik.trasa[0], {
-                    radius: 10, fillColor: '#2196F3',
-                    color: 'white', weight: 2, fillOpacity: 1
-                }).addTo(modalMapa).bindPopup('🏁 Start');
-
-                // Koniec
-                L.circleMarker(wynik.trasa[wynik.trasa.length - 1], {
-                    radius: 10, fillColor: '#f44336',
-                    color: 'white', weight: 2, fillOpacity: 1
-                }).addTo(modalMapa).bindPopup('🏁 Koniec');
-
-                // Waypoints z notatkami – klikalne!
+                L.circleMarker(wynik.trasa[0], { radius: 10, fillColor: '#111', color: 'white', weight: 2, fillOpacity: 1 }).addTo(modalMapa).bindPopup('Start');
+                L.circleMarker(wynik.trasa[wynik.trasa.length - 1], { radius: 10, fillColor: '#7B1F1F', color: 'white', weight: 2, fillOpacity: 1 }).addTo(modalMapa).bindPopup('Koniec');
                 if (wynik.waypointy) {
                     wynik.waypointy.forEach((wp, wpIndex) => {
                         const marker = L.circleMarker([wp.pozycja.lat, wp.pozycja.lng], {
-                            radius: 10,
-                            fillColor: wp.typ === 'tak' ? 'green' : 'red',
+                            radius: 10, fillColor: wp.typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
                             color: 'white', weight: 2, fillOpacity: 0.9
                         }).addTo(modalMapa);
-
-                        // Popup z notatką i przyciskiem edycji
-                        const notatka = wp.notatka || '';
                         const popupContent = document.createElement('div');
-                        popupContent.style.cssText = 'min-width:160px;';
+                        popupContent.style.cssText = 'min-width:160px;font-family:Montserrat';
                         popupContent.innerHTML = `
-                            <div style="font-weight:700;margin-bottom:6px;">
-                                ${wp.typ === 'tak' ? '✅ TAK' : '❌ NIE'} · ${wp.czas}
-                            </div>
-                            <div id="notatka-tekst-${wpIndex}" style="font-size:13px;color:#555;margin-bottom:8px;">
-                                ${notatka || '<i style="color:#aaa">Brak notatki</i>'}
-                            </div>
-                            <button onclick="edytujNotatke(${index}, ${wpIndex})"
-                                style="width:100%;padding:8px;background:#4CAF50;color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;">
-                                ✏️ ${notatka ? 'Edytuj notatkę' : 'Dodaj notatkę'}
-                            </button>
-                        `;
-
+                            <div style="font-weight:700;margin-bottom:6px;">${wp.typ === 'tak' ? '✅ TAK' : '❌ NIE'} · ${wp.czas}</div>
+                            <div style="font-size:13px;color:#555;margin-bottom:8px;">${wp.notatka || '<i style="color:#aaa">Brak notatki</i>'}</div>
+                            <button onclick="edytujNotatke(${index}, ${wpIndex})" style="width:100%;padding:8px;background:#111;color:white;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-family:Montserrat">
+                                ✏️ ${wp.notatka ? 'Edytuj' : 'Dodaj notatkę'}
+                            </button>`;
                         marker.bindPopup(popupContent);
                     });
                 }
@@ -585,20 +918,16 @@
 
         function zamknijModal() {
             document.getElementById('modal').classList.remove('otwarty');
-            if (modalMapa) {
-                modalMapa.remove();
-                modalMapa = null;
-            }
+            if (modalMapa) { modalMapa.remove(); modalMapa = null; }
         }
 
-        // Edytuj notatkę przy waypoincie
         function edytujNotatke(wynikIndex, wpIndex) {
             aktywnyWynikIndex = wynikIndex;
             aktywnyWaypointIndex = wpIndex;
             const wp = wyniki[wynikIndex].waypointy[wpIndex];
             document.getElementById('notatka-input').value = wp.notatka || '';
             document.getElementById('notatka-tytul').textContent =
-                `📝 ${wp.typ === 'tak' ? '✅ TAK' : '❌ NIE'} · ${wp.czas}`;
+                `${wp.typ === 'tak' ? '✅ TAK' : '❌ NIE'} · ${wp.czas}`;
             document.getElementById('modal-notatka').style.display = 'block';
         }
 
@@ -611,8 +940,6 @@
             wyniki[aktywnyWynikIndex].waypointy[aktywnyWaypointIndex].notatka = tekst;
             localStorage.setItem('wyniki', JSON.stringify(wyniki));
             zamknijNotatke();
-
-            // Odśwież popup
             alert('✅ Notatka zapisana!');
             zamknijModal();
             setTimeout(() => otworzModal(aktywnyWynikIndex), 200);
