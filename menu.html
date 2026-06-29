@@ -20,45 +20,39 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px 24px;
-        }
-
-        .logo-blok {
-            width: 65%;
-            max-width: 260px;
-            display: flex;
-            flex-direction: column;
             align-items: flex-start;
+            padding: 40px 28px 0;
         }
 
         .logo-img {
-            width: 100%;
+            width: 70%;
+            max-width: 280px;
         }
 
         .tagline {
-            width: 100%;
-            font-size: 13px;
+            width: 70%;
+            max-width: 280px;
+            font-size: 14px;
             font-weight: 500;
             color: #888;
             letter-spacing: 1px;
-            margin-top: 10px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .tagline span {
-            display: block;
-            width: 100%;
-            border-bottom: 1px solid #e8e8e8;
-            padding-bottom: 10px;
+            margin-top: 14px;
         }
 
         .mapa-wrapper {
-            width: 65%;
-            max-width: 260px;
-            margin-top: 20px;
+            width: 100%;
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            margin-top: 16px;
+        }
+
+        .mapa-svg {
+            position: absolute;
+            bottom: 0;
+            right: -20px;
+            width: 110%;
+            height: auto;
         }
 
         .nav-bar {
@@ -67,7 +61,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 14px 0 14px;
+            padding: 14px 0;
             flex-shrink: 0;
         }
 
@@ -109,55 +103,47 @@
 </head>
 <body>
     <div class="hero">
-        <div class="logo-blok">
-            <img src="logo_blink.png" alt="blink! blink!" class="logo-img">
-            <div class="tagline"><span>w Twoim kierunku</span></div>
-        </div>
+        <img src="logo_blink.png" alt="blink! blink!" class="logo-img">
+        <div class="tagline">w Twoim kierunku</div>
 
         <div class="mapa-wrapper">
-            <svg width="100%" viewBox="0 0 260 220" xmlns="http://www.w3.org/2000/svg">
+            <svg class="mapa-svg" viewBox="0 0 400 320" xmlns="http://www.w3.org/2000/svg">
+                <!-- Zielone plamy -->
+                <ellipse cx="60" cy="250" rx="70" ry="52"
+                    fill="#c8d9b0" opacity="0.65" transform="rotate(-10 60 250)"/>
+                <ellipse cx="180" cy="280" rx="60" ry="40"
+                    fill="#c8d9b0" opacity="0.6" transform="rotate(8 180 280)"/>
+                <ellipse cx="320" cy="260" rx="68" ry="48"
+                    fill="#c8d9b0" opacity="0.65" transform="rotate(-5 320 260)"/>
+                <ellipse cx="390" cy="200" rx="40" ry="30"
+                    fill="#c8d9b0" opacity="0.5" transform="rotate(15 390 200)"/>
 
-                <!-- Zielone plamy organiczne jak na szkicu -->
-                <ellipse cx="30" cy="175" rx="42" ry="35" fill="#c8d9b0" opacity="0.65"
-                    transform="rotate(-15 30 175)"/>
-                <ellipse cx="100" cy="190" rx="38" ry="28" fill="#c8d9b0" opacity="0.6"
-                    transform="rotate(10 100 190)"/>
-                <ellipse cx="185" cy="180" rx="45" ry="32" fill="#c8d9b0" opacity="0.65"
-                    transform="rotate(-5 185 180)"/>
-                <ellipse cx="240" cy="155" rx="32" ry="25" fill="#c8d9b0" opacity="0.55"
-                    transform="rotate(20 240 155)"/>
-                <ellipse cx="145" cy="210" rx="35" ry="20" fill="#c8d9b0" opacity="0.5"/>
+                <!-- Drogi -->
+                <path d="M 0 170 C 80 162 160 170 240 165 C 300 161 360 168 400 163"
+                    fill="none" stroke="#e0e0e0" stroke-width="14" stroke-linecap="round"/>
+                <path d="M 160 0 C 158 70 162 140 160 200 C 158 245 160 280 160 320"
+                    fill="none" stroke="#e0e0e0" stroke-width="11" stroke-linecap="round"/>
+                <path d="M 0 90 C 60 108 110 135 160 162 C 210 188 265 220 320 255 C 360 278 390 295 400 305"
+                    fill="none" stroke="#e0e0e0" stroke-width="9" stroke-linecap="round"/>
+                <path d="M 260 0 C 258 55 262 110 260 165 C 258 210 260 260 260 320"
+                    fill="none" stroke="#e2e2e2" stroke-width="7" stroke-linecap="round"/>
 
-                <!-- Drogi szare – subtelne -->
-                <!-- Pozioma -->
-                <path d="M 0 130 C 60 125 120 132 180 128 C 220 125 250 130 260 128"
-                    fill="none" stroke="#e0e0e0" stroke-width="10" stroke-linecap="round"/>
-                <!-- Ukośna lewa -->
-                <path d="M 0 80 C 40 95 70 115 95 135 C 120 155 140 175 155 200"
-                    fill="none" stroke="#e0e0e0" stroke-width="8" stroke-linecap="round"/>
-                <!-- Pionowa prawa -->
-                <path d="M 190 0 C 188 50 192 100 190 150 C 188 180 190 200 190 220"
-                    fill="none" stroke="#e0e0e0" stroke-width="7" stroke-linecap="round"/>
-                <!-- Ukośna prawa -->
-                <path d="M 130 0 C 135 40 138 80 145 120 C 152 155 160 180 165 210"
-                    fill="none" stroke="#e2e2e2" stroke-width="6" stroke-linecap="round"/>
+                <!-- Trasa – zaczyna się od lewej góry (od napisu) -->
+                <path d="M 10 5 C 30 35 55 65 80 95 C 108 128 135 152 168 168 C 200 183 235 178 268 188 C 300 198 330 215 355 240"
+                    fill="none" stroke="#bbb" stroke-width="3.5" stroke-linecap="round"/>
 
-                <!-- TRASA – organiczna, z góry w dół i prawo -->
-                <path d="M 25 18 C 35 45 50 70 68 92 C 86 114 108 128 138 138 C 165 147 195 142 222 155 C 238 163 248 175 252 190"
-                    fill="none" stroke="#bbb" stroke-width="3" stroke-linecap="round"/>
-
-                <!-- Start – zielony -->
-                <circle cx="25" cy="18" r="7" fill="white" stroke="#2d6a2d" stroke-width="2.5"/>
-                <circle cx="25" cy="18" r="3.5" fill="#2d6a2d"/>
+                <!-- Start zielony -->
+                <circle cx="10" cy="5" r="9" fill="white" stroke="#2d6a2d" stroke-width="2.5"/>
+                <circle cx="10" cy="5" r="4.5" fill="#2d6a2d"/>
 
                 <!-- Kropki pośrednie -->
-                <circle cx="68" cy="92" r="5.5" fill="#7B1F1F"/>
-                <circle cx="138" cy="138" r="5.5" fill="#2d6a2d"/>
-                <circle cx="222" cy="155" r="5.5" fill="#7B1F1F"/>
+                <circle cx="80" cy="95" r="7" fill="#7B1F1F"/>
+                <circle cx="168" cy="168" r="7" fill="#2d6a2d"/>
+                <circle cx="268" cy="188" r="7" fill="#7B1F1F"/>
 
-                <!-- Koniec – bordowy -->
-                <circle cx="252" cy="190" r="7" fill="white" stroke="#7B1F1F" stroke-width="2.5"/>
-                <circle cx="252" cy="190" r="3.5" fill="#7B1F1F"/>
+                <!-- Koniec bordowy -->
+                <circle cx="355" cy="240" r="9" fill="white" stroke="#7B1F1F" stroke-width="2.5"/>
+                <circle cx="355" cy="240" r="4.5" fill="#7B1F1F"/>
             </svg>
         </div>
     </div>
