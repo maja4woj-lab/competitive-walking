@@ -3,207 +3,281 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Moje wyniki</title>
+    <title>Rywalizacja</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: sans-serif;
-            background: #f0f4f0;
+            font-family: 'Montserrat', sans-serif;
+            background: #f9f9f9;
             min-height: 100vh;
-            padding: 20px;
+            display: flex;
+            flex-direction: column;
         }
 
-        #btnPowrot {
-            background: none;
-            border: none;
-            font-size: 14px;
-            cursor: pointer;
-            color: #555;
-            margin-bottom: 20px;
-            display: block;
-        }
-
-        h1 {
-            font-size: 22px;
-            color: #2d5a27;
-            margin-bottom: 4px;
-        }
-
-        .subtitle {
-            color: #888;
-            font-size: 13px;
-            margin-bottom: 24px;
-        }
-
-        .statystyki-top {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
-        }
-
-        .stat-box {
+        .naglowek {
+            padding: 48px 28px 24px;
             background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
         }
 
-        .stat-box .wartosc {
+        .naglowek h1 {
             font-size: 26px;
             font-weight: 700;
-            color: #2d5a27;
+            color: #111;
         }
 
-        .stat-box .label {
-            font-size: 12px;
-            color: #888;
+        .naglowek p {
+            font-size: 14px;
+            color: #aaa;
             margin-top: 4px;
+            font-weight: 500;
         }
 
-        h2 {
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 12px;
+        .lista {
+            flex: 1;
+            padding: 20px 28px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .wynik-karta {
+        .karta {
             background: white;
-            border-radius: 16px;
-            padding: 16px 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-            margin-bottom: 12px;
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 8px;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+        }
+
+        .karta-top {
+            display: flex;
             align-items: center;
+            gap: 14px;
+            margin-bottom: 16px;
         }
 
-        .wynik-karta .data {
-            font-size: 13px;
-            color: #888;
-            grid-column: 1 / -1;
-            margin-bottom: 4px;
-        }
-
-        .wynik-karta .wartosc {
-            font-size: 18px;
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
             font-weight: 700;
-            color: #2d5a27;
+            color: white;
+            flex-shrink: 0;
         }
 
-        .wynik-karta .label {
-            font-size: 11px;
-            color: #888;
+        .avatar-jan { background: #2d6a2d; }
+        .avatar-agata { background: #7B1F1F; }
+        .avatar-ty { background: #222; }
+
+        .karta-info { flex: 1; }
+
+        .karta-imie {
+            font-size: 17px;
+            font-weight: 700;
+            color: #111;
         }
 
-        .pusty {
-            text-align: center;
-            color: #aaa;
-            margin-top: 60px;
-            font-size: 15px;
-        }
-
-        .pusty .emoji {
-            font-size: 48px;
-            display: block;
-            margin-bottom: 12px;
-        }
-
-        #btnUsun {
-            margin-top: 24px;
-            width: 100%;
-            padding: 12px;
-            background: none;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            color: #aaa;
+        .karta-trasa {
             font-size: 13px;
-            cursor: pointer;
+            color: #aaa;
+            margin-top: 2px;
+            font-weight: 500;
         }
 
-        #btnUsun:hover { background: #fff0f0; color: #f44336; border-color: #f44336; }
+        .karta-km {
+            font-size: 22px;
+            font-weight: 700;
+            color: #111;
+            text-align: right;
+        }
+
+        .karta-km span {
+            font-size: 13px;
+            font-weight: 500;
+            color: #aaa;
+        }
+
+        /* Pasek postępu */
+        .pasek-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pasek {
+            flex: 1;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .pasek-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        .fill-jan { background: #2d6a2d; }
+        .fill-agata { background: #7B1F1F; }
+        .fill-ty { background: #222; }
+
+        .pasek-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #aaa;
+            width: 40px;
+            text-align: right;
+        }
+
+        /* Twoje statystyki */
+        .ty-karta {
+            border: 2px solid #111;
+        }
+
+        .nav-bar {
+            background: white;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            padding: 14px 0;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            border: none;
+            background: none;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-btn.aktywny { background: #2d6a2d; }
+        .nav-btn svg { width: 26px; height: 26px; }
+
+        .nav-btn svg path, .nav-btn svg polyline,
+        .nav-btn svg circle, .nav-btn svg line {
+            stroke: #333; stroke-width: 2; fill: none;
+            stroke-linecap: round; stroke-linejoin: round;
+        }
+
+        .nav-btn.aktywny svg path, .nav-btn.aktywny svg polyline,
+        .nav-btn.aktywny svg circle, .nav-btn.aktywny svg line {
+            stroke: white;
+        }
     </style>
 </head>
 <body>
-    <button id="btnPowrot" onclick="window.location.href='menu.html'">← Menu</button>
-
-    <h1>🏆 Moje wyniki</h1>
-    <p class="subtitle">Twój osobisty progres</p>
-
-    <div class="statystyki-top">
-        <div class="stat-box">
-            <div class="wartosc" id="lacznie-spacery">0</div>
-            <div class="label">Spacerów</div>
-        </div>
-        <div class="stat-box">
-            <div class="wartosc" id="lacznie-km">0.0</div>
-            <div class="label">km łącznie</div>
-        </div>
-        <div class="stat-box">
-            <div class="wartosc" id="najlepszy-dystans">—</div>
-            <div class="label">Najdłuższy spacer</div>
-        </div>
-        <div class="stat-box">
-            <div class="wartosc" id="najlepsza-predkosc">—</div>
-            <div class="label">Maks. prędkość km/h</div>
-        </div>
+    <div class="naglowek">
+        <h1>Rywalizacja</h1>
+        <p>Porównaj się ze znajomymi</p>
     </div>
 
-    <h2>Historia spacerów</h2>
-    <div id="lista"></div>
+    <div class="lista">
+
+        <!-- JAN -->
+        <div class="karta">
+            <div class="karta-top">
+                <div class="avatar avatar-jan">J</div>
+                <div class="karta-info">
+                    <div class="karta-imie">Jan</div>
+                    <div class="karta-trasa">Ostatnia trasa: Rynek → Park Szczytniki</div>
+                </div>
+                <div class="karta-km">2,2 <span>km</span></div>
+            </div>
+            <div class="pasek-wrapper">
+                <div class="pasek">
+                    <div class="pasek-fill fill-jan" style="width: 100%"></div>
+                </div>
+                <div class="pasek-label">2,2 km</div>
+            </div>
+        </div>
+
+        <!-- AGATA -->
+        <div class="karta">
+            <div class="karta-top">
+                <div class="avatar avatar-agata">A</div>
+                <div class="karta-info">
+                    <div class="karta-imie">Agata</div>
+                    <div class="karta-trasa">Ostatnia trasa: Hala Stulecia → Pergola</div>
+                </div>
+                <div class="karta-km">1,5 <span>km</span></div>
+            </div>
+            <div class="pasek-wrapper">
+                <div class="pasek">
+                    <div class="pasek-fill fill-agata" style="width: 68%"></div>
+                </div>
+                <div class="pasek-label">1,5 km</div>
+            </div>
+        </div>
+
+        <!-- TY -->
+        <div class="karta ty-karta">
+            <div class="karta-top">
+                <div class="avatar avatar-ty">Ty</div>
+                <div class="karta-info">
+                    <div class="karta-imie">Ty</div>
+                    <div class="karta-trasa" id="twoja-trasa">Brak tras – czas wyjść! 🚶</div>
+                </div>
+                <div class="karta-km" id="twoje-km">0,0 <span>km</span></div>
+            </div>
+            <div class="pasek-wrapper">
+                <div class="pasek">
+                    <div class="pasek-fill fill-ty" id="twoj-pasek" style="width: 0%"></div>
+                </div>
+                <div class="pasek-label" id="twoj-label">0 km</div>
+            </div>
+        </div>
+
+    </div>
+
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-btn">
+            <svg viewBox="0 0 24 24">
+                <path d="M3 12h18M12 3l9 9-9 9"/>
+            </svg>
+        </a>
+        <a href="leaderboard.html" class="nav-btn aktywny">
+            <svg viewBox="0 0 24 24">
+                <polyline points="18 20 18 10"/>
+                <polyline points="12 20 12 4"/>
+                <polyline points="6 20 6 14"/>
+            </svg>
+        </a>
+        <a href="profile.html" class="nav-btn">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="4"/>
+                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+            </svg>
+        </a>
+    </nav>
 
     <script>
+        // Wczytaj wyniki użytkownika
         const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
-        const lista = document.getElementById('lista');
 
-        if (wyniki.length === 0) {
-            lista.innerHTML = `
-                <div class="pusty">
-                    <span class="emoji">🚶</span>
-                    Brak spacerów – czas wyjść na zewnątrz!
-                </div>`;
-        } else {
-            // Statystyki ogólne
-            const lacznyDystans = wyniki.reduce((s, w) => s + parseFloat(w.dystans), 0);
-            const najDystans = Math.max(...wyniki.map(w => parseFloat(w.dystans)));
-            const najPredkosc = Math.max(...wyniki.map(w => parseFloat(w.predkosc)));
+        if (wyniki.length > 0) {
+            const ostatni = wyniki[0];
+            const lacznyKm = wyniki.reduce((s, w) => s + parseFloat(w.dystans), 0);
 
-            document.getElementById('lacznie-spacery').textContent = wyniki.length;
-            document.getElementById('lacznie-km').textContent = lacznyDystans.toFixed(1);
-            document.getElementById('najlepszy-dystans').textContent = najDystans.toFixed(1) + ' km';
-            document.getElementById('najlepsza-predkosc').textContent = najPredkosc;
+            document.getElementById('twoja-trasa').textContent =
+                `Ostatnia trasa: ${ostatni.nazwa || 'Własna trasa'} · ${ostatni.dystans} km`;
+            document.getElementById('twoje-km').innerHTML =
+                `${lacznyKm.toFixed(1)} <span>km</span>`;
 
-            // Lista spacerów
-            wyniki.forEach((w, i) => {
-                lista.innerHTML += `
-                    <div class="wynik-karta">
-                        <div class="data">📅 ${w.data} · ${w.godzina}</div>
-                        <div>
-                            <div class="wartosc">${w.czas}</div>
-                            <div class="label">Czas</div>
-                        </div>
-                        <div>
-                            <div class="wartosc">${w.dystans}</div>
-                            <div class="label">km</div>
-                        </div>
-                        <div>
-                            <div class="wartosc">${w.predkosc}</div>
-                            <div class="label">km/h śr.</div>
-                        </div>
-                    </div>`;
-            });
-
-            lista.innerHTML += `<button id="btnUsun" onclick="usunWyniki()">🗑️ Usuń wszystkie wyniki</button>`;
-        }
-
-        function usunWyniki() {
-            if (confirm('Na pewno chcesz usunąć wszystkie wyniki?')) {
-                localStorage.removeItem('wyniki');
-                location.reload();
-            }
+            const procent = Math.min(100, (lacznyKm / 2.2) * 100);
+            document.getElementById('twoj-pasek').style.width = procent + '%';
+            document.getElementById('twoj-label').textContent = lacznyKm.toFixed(1) + ' km';
         }
     </script>
 </body>
