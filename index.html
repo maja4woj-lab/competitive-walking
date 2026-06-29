@@ -18,7 +18,6 @@
             overflow: hidden;
         }
 
-        /* NAGŁÓWEK */
         .naglowek {
             background: white;
             padding: 48px 28px 0;
@@ -26,10 +25,7 @@
             flex-shrink: 0;
         }
 
-        /* ZAKŁADKI */
-        .zakladki {
-            display: flex;
-        }
+        .zakladki { display: flex; }
 
         .zakladka {
             flex: 1;
@@ -56,7 +52,7 @@
         .zakladka-content {
             display: none;
             flex: 1;
-            overflow-y: auto;
+            overflow: hidden;
             flex-direction: column;
         }
 
@@ -67,37 +63,16 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Nawigacja między trasami */
-        .trasa-nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px 20px 8px;
-            flex-shrink: 0;
-        }
-
-        .btn-strzalka {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-        }
-
-        .trasa-licznik {
-            font-size: 13px;
-            color: #aaa;
-            font-weight: 500;
-        }
-
-        /* Karta trasy */
         .trasa-karta {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 0 20px 20px;
+            padding: 0 20px 12px;
             gap: 12px;
+            overflow-y: auto;
         }
 
         .trasa-nazwa {
@@ -110,7 +85,7 @@
 
         .trasa-mapa {
             flex: 1;
-            min-height: 220px;
+            min-height: 180px;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 1px 6px rgba(0,0,0,0.08);
@@ -146,32 +121,33 @@
 
         .btn-nawiguj:hover { background: #245520; }
 
-        /* BLE STATUS */
+        /* BLE PRZYCISKI */
         .ble-pasek {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
+            gap: 10px;
+            padding: 10px 20px 12px;
             background: white;
             border-top: 1px solid #f0f0f0;
             flex-shrink: 0;
         }
 
-        .ble-wskazniki { display: flex; gap: 12px; font-size: 13px; font-weight: 500; }
-
-        .ble-przyciski { display: flex; gap: 8px; }
-
-        .btn-ble {
-            padding: 6px 14px;
-            background: #f5f5f5;
-            border: 1px solid #eee;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: 600;
+        .btn-ble-duzy {
+            flex: 1;
+            padding: 18px;
+            border: none;
+            border-radius: 16px;
+            font-size: 15px;
+            font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
+            color: white;
+            background: #c0392b;
+            transition: background 0.2s;
         }
 
+        .btn-ble-duzy.polaczony { background: #2d6a2d; }
+
+        /* PUSTA LISTA */
         .pusta-lista {
             flex: 1;
             display: flex;
@@ -206,6 +182,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
 
         .pola-adresow {
@@ -225,8 +202,7 @@
         }
 
         .pole-ikona {
-            width: 32px;
-            height: 32px;
+            width: 32px; height: 32px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -240,8 +216,7 @@
 
         .pole-ikona svg { width: 16px; height: 16px; }
         .pole-ikona svg path, .pole-ikona svg circle {
-            stroke: white; stroke-width: 2; fill: none;
-            stroke-linecap: round;
+            stroke: white; stroke-width: 2; fill: none; stroke-linecap: round;
         }
 
         .pole-input {
@@ -280,7 +255,6 @@
             cursor: pointer;
         }
 
-        /* Wyniki wyszukiwania */
         #wyniki-wyszukiwania {
             position: fixed;
             left: 20px; right: 20px;
@@ -299,21 +273,14 @@
             font-size: 14px;
             border-bottom: 1px solid #f5f5f5;
             font-weight: 500;
+            color: #111;
         }
 
         .wynik-item:hover { background: #f9f9f9; }
         .wynik-item:last-child { border-bottom: none; }
 
-        .wynik-nazwa { color: #111; }
-        .wynik-adres { font-size: 12px; color: #aaa; margin-top: 2px; }
+        #mapa-nowa { flex: 1; min-height: 150px; }
 
-        /* Mapa nowej trasy */
-        #mapa-nowa {
-            flex: 1;
-            min-height: 200px;
-        }
-
-        /* Panel dolny po wyznaczeniu trasy */
         .panel-wyznaczona {
             background: white;
             border-top: 1px solid #f0f0f0;
@@ -374,7 +341,6 @@
             cursor: pointer;
         }
 
-        /* POPUP NA MAPIE */
         .popup-mapa {
             display: flex;
             flex-direction: column;
@@ -442,24 +408,15 @@
     <!-- MOJE TRASY -->
     <div class="zakladka-content aktywna" id="tab-moje-trasy">
         <div class="moje-trasy-wrapper" id="moje-trasy-wrapper"></div>
-
-        <!-- BLE -->
         <div class="ble-pasek">
-            <div class="ble-wskazniki">
-                <span id="ble-left-2">🔴 Lewa</span>
-                <span id="ble-right-2">🔴 Prawa</span>
-            </div>
-            <div class="ble-przyciski">
-                <button class="btn-ble" onclick="polaczRaczke('LEFT')">Lewa</button>
-                <button class="btn-ble" onclick="polaczRaczke('RIGHT')">Prawa</button>
-            </div>
+            <button id="btn-lewa-1" class="btn-ble-duzy" onclick="polaczBLE('LEFT')">lewy kierunkowskaz</button>
+            <button id="btn-prawa-1" class="btn-ble-duzy" onclick="polaczBLE('RIGHT')">prawy kierunkowskaz</button>
         </div>
     </div>
 
     <!-- NOWA TRASA -->
     <div class="zakladka-content" id="tab-nowa-trasa">
         <div class="nowa-trasa-wrapper">
-            <!-- Pola adresów -->
             <div class="pola-adresow">
                 <div class="pole-adres">
                     <div class="pole-ikona ikona-start">
@@ -495,10 +452,8 @@
                 </button>
             </div>
 
-            <!-- Mapa -->
             <div id="mapa-nowa"></div>
 
-            <!-- Panel po wyznaczeniu -->
             <div class="panel-wyznaczona" id="panel-wyznaczona">
                 <div class="trasa-info-row">
                     <div class="trasa-info-stat">
@@ -518,20 +473,12 @@
             </div>
         </div>
 
-        <!-- BLE -->
         <div class="ble-pasek">
-            <div class="ble-wskazniki">
-                <span id="ble-left-3">🔴 Lewa</span>
-                <span id="ble-right-3">🔴 Prawa</span>
-            </div>
-            <div class="ble-przyciski">
-                <button class="btn-ble" onclick="polaczRaczke('LEFT')">Lewa</button>
-                <button class="btn-ble" onclick="polaczRaczke('RIGHT')">Prawa</button>
-            </div>
+            <button id="btn-lewa-2" class="btn-ble-duzy" onclick="polaczBLE('LEFT')">lewy kierunkowskaz</button>
+            <button id="btn-prawa-2" class="btn-ble-duzy" onclick="polaczBLE('RIGHT')">prawy kierunkowskaz</button>
         </div>
     </div>
 
-    <!-- Wyniki wyszukiwania -->
     <div id="wyniki-wyszukiwania"></div>
 
     <nav class="nav-bar">
@@ -574,6 +521,38 @@
             if (nazwa === 'nowa-trasa') inicjujMapeNowa();
         }
 
+        // BLE
+        async function polaczBLE(strona) {
+            const ok = await polaczRaczke(strona);
+            aktualizujBtns();
+        }
+
+        function aktualizujBtns() {
+            const lewaPolaczona = czyPolaczenoLeft();
+            const prawaPolaczona = czyPolaczenoRight();
+
+            ['btn-lewa-1', 'btn-lewa-2'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.classList.toggle('polaczony', lewaPolaczona);
+                }
+            });
+
+            ['btn-prawa-1', 'btn-prawa-2'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.classList.toggle('polaczony', prawaPolaczona);
+                }
+            });
+        }
+
+        // Nadpisz funkcję z bluetooth.js żeby aktualizowała przyciski
+        const oryginalnaAktualizuj = typeof aktualizujStatusBLE === 'function' ? aktualizujStatusBLE : () => {};
+        window.aktualizujStatusBLE = function() {
+            oryginalnaAktualizuj();
+            aktualizujBtns();
+        };
+
         // MOJE TRASY
         function wczytajMojeTrasy() {
             const wrapper = document.getElementById('moje-trasy-wrapper');
@@ -598,32 +577,34 @@
             const trasa = zapisane[index];
             wrapper.innerHTML = '';
 
-            // Nawigacja
+            // Nawigacja strzałkami
             const nav = document.createElement('div');
-            nav.className = 'strzalki';
             nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 20px 0;flex-shrink:0;';
             nav.innerHTML = `
-                <button class="btn-strzalka" onclick="zmienSlide(-1)" style="background:none;border:none;cursor:pointer;">
-                    <svg viewBox="0 0 24 24" width="40" height="40"><polygon points="16,4 6,12 16,20" fill="${index > 0 ? '#333' : '#ddd'}"/></svg>
+                <button onclick="zmienSlide(-1)" style="background:none;border:none;cursor:pointer;">
+                    <svg viewBox="0 0 24 24" width="40" height="40">
+                        <polygon points="16,4 6,12 16,20" fill="${index > 0 ? '#333' : '#ddd'}"/>
+                    </svg>
                 </button>
                 <span style="font-size:13px;color:#aaa;font-weight:500;">${index + 1} / ${zapisane.length}</span>
-                <button class="btn-strzalka" onclick="zmienSlide(1)" style="background:none;border:none;cursor:pointer;">
-                    <svg viewBox="0 0 24 24" width="40" height="40"><polygon points="8,4 18,12 8,20" fill="${index < zapisane.length - 1 ? '#333' : '#ddd'}"/></svg>
+                <button onclick="zmienSlide(1)" style="background:none;border:none;cursor:pointer;">
+                    <svg viewBox="0 0 24 24" width="40" height="40">
+                        <polygon points="8,4 18,12 8,20" fill="${index < zapisane.length - 1 ? '#333' : '#ddd'}"/>
+                    </svg>
                 </button>
             `;
             wrapper.appendChild(nav);
 
-            // Karta
+            // Karta trasy
             const karta = document.createElement('div');
             karta.className = 'trasa-karta';
-            karta.style.cssText = 'flex:1;display:flex;flex-direction:column;padding:12px 20px 16px;gap:12px;overflow:hidden;';
 
             karta.innerHTML = `
                 <div class="trasa-nazwa">${trasa.nazwa}</div>
-                <div id="mapa-saved-${index}" style="flex:1;min-height:180px;border-radius:16px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,0.08);"></div>
+                <div id="mapa-saved-${index}" class="trasa-mapa"></div>
                 <div class="trasa-meta">
                     Kilometry: <strong>${trasa.dystans} km</strong><br>
-                    Przystanki: <strong>${trasa.adresy ? trasa.adresy.length - 2 : 0}</strong><br>
+                    Przystanki: <strong>${trasa.adresy ? Math.max(0, trasa.adresy.length - 2) : 0}</strong><br>
                     ${trasa.adresy ? `Trasa: <strong>${trasa.adresy[0]} → ${trasa.adresy[trasa.adresy.length-1]}</strong>` : ''}
                 </div>
                 <button class="btn-nawiguj" onclick="nawigujZapisana(${index})">Nawiguj tą trasą!</button>
@@ -640,7 +621,6 @@
                 });
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
                 mapkiTras[index] = mapa;
-
                 if (trasa.punkty && trasa.punkty.length > 1) {
                     rysujTraseNaMapce(mapa, trasa);
                 }
@@ -678,7 +658,7 @@
             window.location.href = 'navigate.html';
         }
 
-        // NOWA TRASA – MAPA
+        // NOWA TRASA
         function inicjujMapeNowa() {
             if (mapaNowa) return;
             setTimeout(() => {
@@ -785,7 +765,6 @@
                 }).catch(() => {});
         }
 
-        // WYSZUKIWANIE ADRESU
         function szukajAdres(wartosc, inputId) {
             clearTimeout(szukanieTimeout);
             if (wartosc.length < 3) { ukryjWyniki(); return; }
@@ -815,7 +794,7 @@
                 const item = document.createElement('div');
                 item.className = 'wynik-item';
                 const nazwa = w.display_name.split(',').slice(0, 2).join(',');
-                item.innerHTML = `<div class="wynik-nazwa">${nazwa}</div>`;
+                item.innerHTML = `<div>${nazwa}</div>`;
                 item.onclick = () => wybierzWynik(w, inputId);
                 div.appendChild(item);
             });
@@ -846,7 +825,6 @@
             }
         });
 
-        // PRZYSTANKI
         function dodajPrzystanek() {
             przystankiCount++;
             const id = `przystanek-${przystankiCount}`;
@@ -886,7 +864,6 @@
             przystankiIds = przystankiIds.filter(i => i !== id);
         }
 
-        // WYZNACZ TRASĘ
         async function wyznaczTrase() {
             if (!punkty['start'] && !mojaPozycja) { alert('Wpisz adres startowy!'); return; }
             if (!punkty['koniec']) { alert('Wpisz adres końcowy!'); return; }
@@ -952,18 +929,6 @@
             if (nazwa) aktualnaTrasa.nazwa = nazwa;
             localStorage.setItem('aktywnaTrasa', JSON.stringify(aktualnaTrasa));
             window.location.href = 'navigate.html';
-        }
-
-        // BLE
-        function aktualizujStatusBLE() {
-            ['ble-left-2', 'ble-left-3'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = czyPolaczenoLeft() ? '🟢 Lewa' : '🔴 Lewa';
-            });
-            ['ble-right-2', 'ble-right-3'].forEach(id => {
-                const el = document.getElementById(id);
-                if (el) el.textContent = czyPolaczenoRight() ? '🟢 Prawa' : '🔴 Prawa';
-            });
         }
 
         // INIT
