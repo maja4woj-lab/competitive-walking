@@ -11,14 +11,14 @@
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background: #f9f9f9;
+            background: white;
             height: 100vh;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        #map { flex: 1; min-height: 0; }
+        #map { height: 42vh; flex-shrink: 0; }
 
         #btnPowrot {
             position: absolute;
@@ -27,32 +27,31 @@
             background: white;
             border: none;
             border-radius: 12px;
-            padding: 10px;
+            padding: 8px;
             cursor: pointer;
             box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
         #panel-dol {
+            flex: 1;
             background: white;
             border-top: 1px solid #f0f0f0;
-            padding: 12px 20px 16px;
+            padding: 10px 16px 12px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            flex-shrink: 0;
+            gap: 8px;
+            overflow: hidden;
         }
 
         #instrukcja-box {
             background: #f9f9f9;
-            border-radius: 14px;
-            padding: 14px 18px;
+            border-radius: 12px;
+            padding: 10px 14px;
             border-left: 4px solid #2d6a2d;
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             color: #111;
+            flex-shrink: 0;
         }
 
         .dystans-row {
@@ -60,42 +59,39 @@
             align-items: center;
             justify-content: space-between;
             padding: 0 4px;
-        }
-
-        .dystans-box {
-            text-align: center;
+            flex-shrink: 0;
         }
 
         .dystans-box .wartosc {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: #111;
         }
 
         .dystans-box .label {
-            font-size: 12px;
+            font-size: 11px;
             color: #aaa;
             font-weight: 500;
         }
 
         #dystans-pozostal {
-            font-size: 13px;
+            font-size: 12px;
             color: #aaa;
             font-weight: 500;
-            text-align: center;
         }
 
         .ble-pasek {
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            flex-shrink: 0;
         }
 
         .btn-ble-duzy {
             flex: 1;
-            padding: 14px;
+            padding: 12px 8px;
             border: none;
-            border-radius: 14px;
-            font-size: 14px;
+            border-radius: 12px;
+            font-size: 13px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
@@ -107,42 +103,45 @@
         .btn-ble-duzy.polaczony { background: #2d6a2d; }
 
         #btnStart {
-            padding: 16px;
+            padding: 14px;
             background: #2d6a2d;
             color: white;
             border: none;
-            border-radius: 16px;
-            font-size: 17px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
+            flex-shrink: 0;
         }
 
         #btnStart.stop { background: #c0392b; }
 
-        .btn-secondary {
-            padding: 12px;
+        #btnZakoncz {
+            padding: 11px;
             background: #f9f9f9;
-            color: #555;
-            border: 1.5px solid #eee;
-            border-radius: 14px;
+            color: #111;
+            border: 1.5px solid #ddd;
+            border-radius: 12px;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
             display: none;
+            flex-shrink: 0;
         }
 
         #btnTest {
-            padding: 12px;
+            padding: 9px;
             background: #f9f9f9;
             color: #aaa;
             border: 1.5px solid #eee;
-            border-radius: 14px;
-            font-size: 13px;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
+            flex-shrink: 0;
         }
     </style>
 </head>
@@ -150,7 +149,7 @@
     <div id="map"></div>
 
     <button id="btnPowrot" onclick="window.location.href='menu.html'">
-        <svg viewBox="0 0 24 24" width="32" height="32">
+        <svg viewBox="0 0 24 24" width="28" height="28">
             <polygon points="16,4 6,12 16,20" fill="#ccc"/>
         </svg>
     </button>
@@ -172,7 +171,7 @@
         </div>
 
         <button id="btnStart" onclick="toggleStart()">▶ Start</button>
-        <button id="btnZakoncz" class="btn-secondary" onclick="zakonczTrase()">Zakończ trasę</button>
+        <button id="btnZakoncz" onclick="zakonczTrase()">Zakończ trasę</button>
         <button id="btnTest" onclick="testKierunkowskazow()">Test kierunkowskazów</button>
     </div>
 
@@ -293,24 +292,17 @@
         async function pobierzTrase(start, cel) {
             if (!start || !cel) return;
             document.getElementById('instrukcja-box').textContent = '⏳ Szukam trasy...';
-
             const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${start.lng},${start.lat}&end=${cel.lng},${cel.lat}`;
-
             try {
                 const response = await fetch(url);
                 const data = await response.json();
                 const wspolrzedne = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
                 const dystans = (data.features[0].properties.summary.distance / 1000).toFixed(2);
                 const czas = Math.round(data.features[0].properties.summary.duration / 60);
-                const kroki = data.features[0].properties.segments[0].steps;
-
                 liniaTrasy = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 5 }).addTo(map);
                 map.fitBounds(liniaTrasy.getBounds(), { padding: [40, 40] });
-                przetworzKroki(kroki, wspolrzedne);
-
-                document.getElementById('instrukcja-box').textContent =
-                    `Trasa gotowa! ${dystans} km · ok. ${czas} min`;
-
+                przetworzKroki(data.features[0].properties.segments[0].steps, wspolrzedne);
+                document.getElementById('instrukcja-box').textContent = `Trasa gotowa! ${dystans} km · ok. ${czas} min`;
             } catch(err) {
                 document.getElementById('instrukcja-box').textContent = '❌ Błąd trasy';
             }
@@ -362,7 +354,7 @@
             } else if (txt.includes('right') || txt.includes('slight right') || txt.includes('sharp right')) {
                 await kierunkowskazPrawo(true);
                 setTimeout(() => { kierunkowskazPrawo(false); kierunkowskazAktywny = false; }, 4000);
-            } else if (txt.includes('uturn') || txt.includes('u-turn') || txt.includes('zawróć')) {
+            } else if (txt.includes('uturn') || txt.includes('u-turn')) {
                 await kierunkowskazLewo(true);
                 setTimeout(async () => {
                     await kierunkowskazLewo(false);
@@ -410,44 +402,22 @@
             if (krokiPunkty.length > 0) {
                 const krok = krokiPunkty[0];
                 const odleglosc = nowaPozycja.distanceTo(krok.latlng);
-
                 document.getElementById('instrukcja-box').textContent = `➡️ ${krok.instrukcja}`;
                 document.getElementById('dystans-pozostal').textContent = `Za ${Math.round(odleglosc)}m`;
 
                 if (odleglosc < 30 && !kierunkowskazAktywny) {
                     aktualizujKierunkowskazy(krok.instrukcja);
                 }
-
                 if (odleglosc < 15) {
                     krokiPunkty.shift();
                     kierunkowskazAktywny = false;
-                    if (krokiPunkty.length > 0) {
-                        document.getElementById('instrukcja-box').textContent = `➡️ ${krokiPunkty[0].instrukcja}`;
-                    } else {
-                        document.getElementById('instrukcja-box').textContent = 'Idź prosto do celu';
-                    }
+                    document.getElementById('instrukcja-box').textContent =
+                        krokiPunkty.length > 0 ? `➡️ ${krokiPunkty[0].instrukcja}` : 'Idź prosto do celu';
                 }
             }
 
-            if (celPozycja && nowaPozycja.distanceTo(celPozycja) < 20) {
-                zakonczTrase();
-            }
-
+            if (celPozycja && nowaPozycja.distanceTo(celPozycja) < 20) zakonczTrase();
             mojaPozycja = nowaPozycja;
-        }
-
-        function obliczPredkosc(nowaPozycja) {
-            const teraz = Date.now();
-            if (ostatniaPozycjaGPS && ostatniCzasGPS) {
-                const d = ostatniaPozycjaGPS.distanceTo(nowaPozycja);
-                const t = (teraz - ostatniCzasGPS) / 1000;
-                ostatniaPozycjaGPS = nowaPozycja;
-                ostatniCzasGPS = teraz;
-                return (d / t * 3.6).toFixed(1);
-            }
-            ostatniaPozycjaGPS = nowaPozycja;
-            ostatniCzasGPS = teraz;
-            return '0.0';
         }
 
         function zatrzymaj() {
@@ -456,9 +426,8 @@
             liniaUkonczona = null;
             kierunkowskazAktywny = false;
             wylaczObie();
-            const btn = document.getElementById('btnStart');
-            btn.textContent = '▶ Start';
-            btn.classList.remove('stop');
+            document.getElementById('btnStart').textContent = '▶ Start';
+            document.getElementById('btnStart').classList.remove('stop');
             document.getElementById('btnZakoncz').style.display = 'none';
         }
 
@@ -468,19 +437,14 @@
 
             let procent = 100;
             if (aktywnaTrasa && aktywnaTrasa.dystans) {
-                const planowany = parseFloat(aktywnaTrasa.dystans);
-                const przebyta = dystansPrzebyta / 1000;
-                procent = Math.min(100, Math.round((przebyta / planowany) * 100));
+                procent = Math.min(100, Math.round(((dystansPrzebyta / 1000) / parseFloat(aktywnaTrasa.dystans)) * 100));
             }
 
             const sekundy = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
-            const mm = String(Math.floor(sekundy / 60)).padStart(2, '0');
-            const ss = String(sekundy % 60).padStart(2, '0');
-
             const wynik = {
                 data: new Date().toLocaleDateString('pl-PL'),
                 godzina: new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'}),
-                czas: `${mm}:${ss}`,
+                czas: `${String(Math.floor(sekundy/60)).padStart(2,'0')}:${String(sekundy%60).padStart(2,'0')}`,
                 dystans: (dystansPrzebyta / 1000).toFixed(2),
                 predkosc: '0.0',
                 trasa: trasaWspolrzedne,
@@ -492,35 +456,27 @@
             const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
             wyniki.unshift(wynik);
             localStorage.setItem('wyniki', JSON.stringify(wyniki));
-
-            alert(`Zapisano!\n${wynik.nazwa}\n${wynik.dystans} km (${procent}% trasy)`);
+            alert(`Zapisano!\n${wynik.nazwa}\n${wynik.dystans} km (${procent}%)`);
             window.location.href = 'menu.html';
         }
 
         function dodajWaypoint(typ) {
             if (!mojaPozycja) return;
-            const kolor = typ === 'tak' ? '#2d6a2d' : '#7B1F1F';
-
             L.circleMarker(mojaPozycja, {
-                radius: 10, fillColor: kolor,
+                radius: 10,
+                fillColor: typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
                 color: 'white', weight: 2, fillOpacity: 0.9
             }).addTo(map).bindPopup(
                 `${typ === 'tak' ? 'TAK' : 'NIE'} · ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'})}`
             );
-
             waypointy.push({
-                typ: typ,
-                pozycja: mojaPozycja,
+                typ, pozycja: mojaPozycja,
                 czas: new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'})
             });
         }
 
         async function polaczBLEnav(strona) {
             await polaczRaczke(strona);
-            aktualizujBtnsNav();
-        }
-
-        function aktualizujBtnsNav() {
             const lewa = document.getElementById('btn-lewa-nav');
             const prawa = document.getElementById('btn-prawa-nav');
             if (lewa) lewa.classList.toggle('polaczony', czyPolaczenoLeft());
