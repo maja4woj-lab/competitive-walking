@@ -60,6 +60,13 @@
             font-weight: 700;
             color: white;
             flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .avatar-jan { background: #89AC76; }
@@ -97,7 +104,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 16px 0 20px;
+            padding: 12px 0 16px;
             flex-shrink: 0;
         }
 
@@ -135,6 +142,7 @@
     </div>
 
     <div class="lista">
+        <!-- JAN -->
         <div class="karta">
             <div class="karta-top">
                 <div class="avatar avatar-jan">J</div>
@@ -152,6 +160,7 @@
             </div>
         </div>
 
+        <!-- AGATA -->
         <div class="karta">
             <div class="karta-top">
                 <div class="avatar avatar-agata">A</div>
@@ -169,11 +178,12 @@
             </div>
         </div>
 
+        <!-- TY -->
         <div class="karta ty-karta">
             <div class="karta-top">
-                <div class="avatar avatar-ty">Ty</div>
+                <div class="avatar avatar-ty" id="avatar-ty">Ty</div>
                 <div class="karta-info">
-                    <div class="karta-imie">Ty</div>
+                    <div class="karta-imie" id="twoje-imie">Ty</div>
                     <div class="karta-trasa" id="twoja-trasa">Brak tras – czas wyjść!</div>
                 </div>
                 <div class="karta-km" id="twoje-km">0,0 <span>km</span></div>
@@ -200,13 +210,30 @@
     </nav>
 
     <script>
+        // Wczytaj profil i wyniki
+        const profil = JSON.parse(localStorage.getItem('profil') || '{}');
         const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
+
+        // Zdjęcie profilowe
+        const avatarTy = document.getElementById('avatar-ty');
+        if (profil.zdjecie) {
+            avatarTy.innerHTML = `<img src="${profil.zdjecie}" alt="avatar">`;
+        }
+
+        // Imię
+        if (profil.imie) {
+            document.getElementById('twoje-imie').textContent =
+                `${profil.imie} ${profil.nazwisko || ''}`.trim();
+        }
+
+        // Wyniki
         if (wyniki.length > 0) {
             const ostatni = wyniki[0];
             const lacznyKm = wyniki.reduce((s, w) => s + parseFloat(w.dystans), 0);
             document.getElementById('twoja-trasa').textContent =
                 `${ostatni.nazwa || 'Własna trasa'} · ${ostatni.dystans} km`;
-            document.getElementById('twoje-km').innerHTML = `${lacznyKm.toFixed(1)} <span>km</span>`;
+            document.getElementById('twoje-km').innerHTML =
+                `${lacznyKm.toFixed(1)} <span>km</span>`;
             const procent = Math.min(100, (lacznyKm / 2.2) * 100);
             document.getElementById('twoj-pasek').style.width = procent + '%';
             document.getElementById('twoj-label').textContent = lacznyKm.toFixed(1) + ' km';
