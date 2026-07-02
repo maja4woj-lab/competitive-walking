@@ -58,7 +58,6 @@
 
         .zakladka-content.aktywna { display: flex; }
 
-        /* MOJE TRASY */
         .moje-trasy-wrapper {
             flex: 1;
             display: flex;
@@ -119,7 +118,6 @@
             flex-shrink: 0;
         }
 
-        /* BLE */
         .ble-pasek {
             display: flex;
             gap: 10px;
@@ -145,7 +143,6 @@
 
         .btn-ble-duzy.polaczony { background: #2d6a2d; }
 
-        /* PUSTA LISTA */
         .pusta-lista {
             flex: 1;
             display: flex;
@@ -170,7 +167,6 @@
             cursor: pointer;
         }
 
-        /* NOWA TRASA */
         .nowa-trasa-wrapper {
             flex: 1;
             display: flex;
@@ -281,7 +277,6 @@
 
         #mapa-nowa { flex: 1; min-height: 100px; }
 
-        /* Panel po wyznaczeniu – zastępuje pola adresów */
         .panel-wyznaczona {
             background: white;
             border-top: 1px solid #f0f0f0;
@@ -377,7 +372,6 @@
             color: white;
         }
 
-        /* NAV */
         .nav-bar {
             background: white;
             border-top: 1px solid #f0f0f0;
@@ -423,7 +417,6 @@
         </div>
     </div>
 
-    <!-- MOJE TRASY -->
     <div class="zakladka-content aktywna" id="tab-moje-trasy">
         <div class="moje-trasy-wrapper" id="moje-trasy-wrapper"></div>
         <div class="ble-pasek">
@@ -432,11 +425,9 @@
         </div>
     </div>
 
-    <!-- NOWA TRASA -->
     <div class="zakladka-content" id="tab-nowa-trasa">
         <div class="nowa-trasa-wrapper">
 
-            <!-- Pola adresów -->
             <div class="pola-adresow" id="pola-adresow">
                 <div class="pole-adres">
                     <div class="pole-ikona ikona-start">
@@ -470,10 +461,8 @@
                 <button class="btn-wyznacz" onclick="wyznaczTrase()">Wyznacz trasę</button>
             </div>
 
-            <!-- Mapa -->
             <div id="mapa-nowa"></div>
 
-            <!-- Panel po wyznaczeniu – pojawia się zamiast pól adresów -->
             <div class="panel-wyznaczona" id="panel-wyznaczona">
                 <div class="panel-naglowek">
                     <div class="trasa-info-row" style="flex:1;">
@@ -630,8 +619,7 @@
                 let wspolrzedne = [];
                 for (let i = 0; i < trasa.punkty.length - 1; i++) {
                     const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${trasa.punkty[i].lng},${trasa.punkty[i].lat}&end=${trasa.punkty[i+1].lng},${trasa.punkty[i+1].lat}`;
-                    const r = await fetch(url);
-                    const d = await r.json();
+                    const d = await (await fetch(url)).json();
                     wspolrzedne = wspolrzedne.concat(d.features[0].geometry.coordinates.map(c => [c[1], c[0]]));
                 }
                 const linia = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 4 }).addTo(mapa);
@@ -676,15 +664,16 @@
                     const content = document.createElement('div');
                     content.className = 'popup-mapa';
 
-                    const btnCel = document.createElement('button');
-                    btnCel.className = 'popup-btn';
-                    btnCel.style.background = '#7B1F1F';
-                    btnCel.textContent = 'Ustaw jako cel';
-                    btnCel.onclick = () => {
-                        punkty['koniec'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany punkt' };
-                        document.getElementById('input-koniec').value = 'Wybrany punkt';
-                        postawMarker('koniec', e.latlng, '#7B1F1F');
-                        zamienNaAdres(e.latlng, 'koniec');
+                    // KOLEJNOŚĆ: Start → Przystanek → Cel
+                    const btnStart = document.createElement('button');
+                    btnStart.className = 'popup-btn';
+                    btnStart.style.background = '#111';
+                    btnStart.textContent = 'Ustaw jako start';
+                    btnStart.onclick = () => {
+                        punkty['start'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany start' };
+                        document.getElementById('input-start').value = 'Wybrany start';
+                        postawMarker('start', e.latlng, '#111');
+                        zamienNaAdres(e.latlng, 'start');
                         mapaNowa.closePopup(popupKlikniecia);
                     };
 
@@ -704,21 +693,22 @@
                         mapaNowa.closePopup(popupKlikniecia);
                     };
 
-                    const btnStart = document.createElement('button');
-                    btnStart.className = 'popup-btn';
-                    btnStart.style.background = '#111';
-                    btnStart.textContent = 'Ustaw jako start';
-                    btnStart.onclick = () => {
-                        punkty['start'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany start' };
-                        document.getElementById('input-start').value = 'Wybrany start';
-                        postawMarker('start', e.latlng, '#111');
-                        zamienNaAdres(e.latlng, 'start');
+                    const btnCel = document.createElement('button');
+                    btnCel.className = 'popup-btn';
+                    btnCel.style.background = '#7B1F1F';
+                    btnCel.textContent = 'Ustaw jako cel';
+                    btnCel.onclick = () => {
+                        punkty['koniec'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany punkt' };
+                        document.getElementById('input-koniec').value = 'Wybrany punkt';
+                        postawMarker('koniec', e.latlng, '#7B1F1F');
+                        zamienNaAdres(e.latlng, 'koniec');
                         mapaNowa.closePopup(popupKlikniecia);
                     };
 
-                    content.appendChild(btnCel);
-                    content.appendChild(btnPrzystanek);
                     content.appendChild(btnStart);
+                    content.appendChild(btnPrzystanek);
+                    content.appendChild(btnCel);
+
                     popupKlikniecia = L.popup({ closeButton: true }).setLatLng(e.latlng).setContent(content).openOn(mapaNowa);
                 });
             }, 200);
@@ -859,7 +849,7 @@
                     adresy: gotowe.map(p => p.nazwa)
                 };
 
-                // Schowaj pola adresów, pokaż panel wyznaczonej trasy
+                // Schowaj pola adresów, pokaż panel
                 document.getElementById('pola-adresow').style.display = 'none';
                 document.getElementById('panel-wyznaczona').classList.add('widoczny');
 
@@ -867,7 +857,6 @@
         }
 
         function zmienTrase() {
-            // Wróć do pól adresów
             document.getElementById('pola-adresow').style.display = 'flex';
             document.getElementById('panel-wyznaczona').classList.remove('widoczny');
             if (liniaTrasy) { mapaNowa.removeLayer(liniaTrasy); liniaTrasy = null; }
