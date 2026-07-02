@@ -20,7 +20,7 @@
 
         .naglowek {
             background: white;
-            padding: 48px 28px 0;
+            padding: 24px 28px 0;
             border-bottom: 1px solid #f0f0f0;
             flex-shrink: 0;
         }
@@ -29,7 +29,7 @@
 
         .zakladka {
             flex: 1;
-            padding: 16px;
+            padding: 14px;
             text-align: center;
             font-size: 15px;
             font-weight: 700;
@@ -70,62 +70,60 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 0 20px 12px;
-            gap: 12px;
+            padding: 0 16px 10px;
+            gap: 10px;
             overflow-y: auto;
         }
 
         .trasa-nazwa {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #111;
             text-align: center;
             letter-spacing: 0.5px;
+            padding-top: 8px;
         }
 
         .trasa-mapa {
             flex: 1;
-            min-height: 180px;
-            border-radius: 16px;
+            min-height: 160px;
+            border-radius: 14px;
             overflow: hidden;
             box-shadow: 0 1px 6px rgba(0,0,0,0.08);
         }
 
         .trasa-meta {
             background: white;
-            border-radius: 16px;
-            padding: 14px 18px;
+            border-radius: 14px;
+            padding: 12px 16px;
             box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-            font-size: 14px;
+            font-size: 13px;
             color: #777;
             font-weight: 500;
-            line-height: 2;
+            line-height: 1.8;
             flex-shrink: 0;
         }
 
         .trasa-meta strong { color: #111; font-weight: 700; }
 
         .btn-nawiguj {
-            padding: 18px;
+            padding: 16px;
             background: #2d6a2d;
             color: white;
             border: none;
-            border-radius: 16px;
-            font-size: 17px;
+            border-radius: 14px;
+            font-size: 16px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
-            letter-spacing: 0.5px;
             flex-shrink: 0;
         }
 
-        .btn-nawiguj:hover { background: #245520; }
-
-        /* BLE PRZYCISKI */
+        /* BLE */
         .ble-pasek {
             display: flex;
             gap: 10px;
-            padding: 10px 20px 12px;
+            padding: 8px 16px 10px;
             background: white;
             border-top: 1px solid #f0f0f0;
             flex-shrink: 0;
@@ -133,10 +131,10 @@
 
         .btn-ble-duzy {
             flex: 1;
-            padding: 18px;
+            padding: 14px;
             border: none;
-            border-radius: 16px;
-            font-size: 15px;
+            border-radius: 14px;
+            font-size: 14px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
@@ -158,19 +156,14 @@
             gap: 16px;
         }
 
-        .pusta-lista p {
-            font-size: 15px;
-            color: #ccc;
-            font-weight: 500;
-            text-align: center;
-        }
+        .pusta-lista p { font-size: 15px; color: #ccc; font-weight: 500; text-align: center; }
 
         .btn-nowa-trasa {
-            padding: 16px 32px;
+            padding: 14px 28px;
             background: #111;
             color: white;
             border: none;
-            border-radius: 16px;
+            border-radius: 14px;
             font-size: 15px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
@@ -187,10 +180,10 @@
 
         .pola-adresow {
             background: white;
-            padding: 16px 20px;
+            padding: 12px 16px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             border-bottom: 1px solid #f0f0f0;
             flex-shrink: 0;
         }
@@ -202,7 +195,7 @@
         }
 
         .pole-ikona {
-            width: 32px; height: 32px;
+            width: 30px; height: 30px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -214,31 +207,26 @@
         .ikona-przystanek { background: #2d6a2d; }
         .ikona-koniec { background: #7B1F1F; }
 
-        .pole-ikona svg { width: 16px; height: 16px; }
+        .pole-ikona svg { width: 14px; height: 14px; }
         .pole-ikona svg path, .pole-ikona svg circle {
             stroke: white; stroke-width: 2; fill: none; stroke-linecap: round;
         }
 
         .pole-input {
             flex: 1;
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1.5px solid #eee;
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 14px;
             font-family: 'Montserrat', sans-serif;
             outline: none;
         }
 
         .pole-input:focus { border-color: #2d6a2d; }
 
-        .btn-usun-pole {
-            background: none;
-            border: none;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
+        .btn-usun-pole { background: none; border: none; cursor: pointer; flex-shrink: 0; }
 
-        .przystanki-container { display: flex; flex-direction: column; gap: 10px; }
+        .przystanki-container { display: flex; flex-direction: column; gap: 8px; }
 
         .btn-przystanek {
             display: flex;
@@ -246,31 +234,43 @@
             gap: 8px;
             background: none;
             border: 1.5px dashed #2d6a2d;
-            border-radius: 12px;
-            padding: 10px 16px;
-            font-size: 14px;
+            border-radius: 10px;
+            padding: 8px 14px;
+            font-size: 13px;
             font-weight: 600;
             font-family: 'Montserrat', sans-serif;
             color: #2d6a2d;
             cursor: pointer;
         }
 
+        .btn-wyznacz {
+            padding: 12px;
+            background: #111;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+        }
+
         #wyniki-wyszukiwania {
             position: fixed;
-            left: 20px; right: 20px;
+            left: 16px; right: 16px;
             background: white;
-            border-radius: 16px;
+            border-radius: 14px;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             z-index: 1001;
             display: none;
-            max-height: 200px;
+            max-height: 180px;
             overflow-y: auto;
         }
 
         .wynik-item {
-            padding: 14px 16px;
+            padding: 12px 14px;
             cursor: pointer;
-            font-size: 14px;
+            font-size: 13px;
             border-bottom: 1px solid #f5f5f5;
             font-weight: 500;
             color: #111;
@@ -279,19 +279,37 @@
         .wynik-item:hover { background: #f9f9f9; }
         .wynik-item:last-child { border-bottom: none; }
 
-        #mapa-nowa { flex: 1; min-height: 150px; }
+        #mapa-nowa { flex: 1; min-height: 100px; }
 
+        /* Panel po wyznaczeniu – zastępuje pola adresów */
         .panel-wyznaczona {
             background: white;
             border-top: 1px solid #f0f0f0;
-            padding: 16px 20px;
+            padding: 12px 16px;
             display: none;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
             flex-shrink: 0;
         }
 
         .panel-wyznaczona.widoczny { display: flex; }
+
+        .panel-naglowek {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .btn-zmien-trase {
+            background: none;
+            border: none;
+            font-size: 13px;
+            font-weight: 600;
+            color: #aaa;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            text-decoration: underline;
+        }
 
         .trasa-info-row {
             display: flex;
@@ -299,14 +317,14 @@
         }
 
         .trasa-info-stat { text-align: center; }
-        .trasa-info-stat .wartosc { font-size: 22px; font-weight: 700; color: #111; }
-        .trasa-info-stat .label { font-size: 12px; color: #aaa; font-weight: 500; }
+        .trasa-info-stat .wartosc { font-size: 20px; font-weight: 700; color: #111; }
+        .trasa-info-stat .label { font-size: 11px; color: #aaa; font-weight: 500; }
 
         .pole-nazwa-trasy {
-            padding: 12px 14px;
+            padding: 10px 12px;
             border: 1.5px solid #eee;
-            border-radius: 12px;
-            font-size: 15px;
+            border-radius: 10px;
+            font-size: 14px;
             font-family: 'Montserrat', sans-serif;
             outline: none;
         }
@@ -317,10 +335,10 @@
 
         .btn-zapisz-trase {
             flex: 1;
-            padding: 14px;
+            padding: 13px;
             background: white;
             border: 2px solid #2d6a2d;
-            border-radius: 14px;
+            border-radius: 12px;
             font-size: 14px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
@@ -330,11 +348,11 @@
 
         .btn-nawiguj-nowa {
             flex: 2;
-            padding: 14px;
+            padding: 13px;
             background: #2d6a2d;
             border: none;
-            border-radius: 14px;
-            font-size: 15px;
+            border-radius: 12px;
+            font-size: 14px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             color: white;
@@ -366,7 +384,7 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 14px 0;
+            padding: 12px 0;
             flex-shrink: 0;
         }
 
@@ -374,7 +392,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 56px; height: 56px;
+            width: 52px; height: 52px;
             border-radius: 50%;
             border: none;
             background: none;
@@ -383,7 +401,7 @@
         }
 
         .nav-btn.aktywny { background: #2d6a2d; }
-        .nav-btn svg { width: 26px; height: 26px; }
+        .nav-btn svg { width: 24px; height: 24px; }
 
         .nav-btn svg path, .nav-btn svg polyline,
         .nav-btn svg circle, .nav-btn svg line {
@@ -417,7 +435,9 @@
     <!-- NOWA TRASA -->
     <div class="zakladka-content" id="tab-nowa-trasa">
         <div class="nowa-trasa-wrapper">
-            <div class="pola-adresow">
+
+            <!-- Pola adresów -->
+            <div class="pola-adresow" id="pola-adresow">
                 <div class="pole-adres">
                     <div class="pole-ikona ikona-start">
                         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/></svg>
@@ -441,29 +461,32 @@
                 </div>
 
                 <button class="btn-przystanek" onclick="dodajPrzystanek()">
-                    <svg viewBox="0 0 24 24" width="18" height="18">
+                    <svg viewBox="0 0 24 24" width="16" height="16">
                         <path d="M12 5v14M5 12h14" stroke="#2d6a2d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                     </svg>
                     Dodaj przystanek
                 </button>
 
-                <button onclick="wyznaczTrase()" style="padding:14px;background:#111;color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;font-family:Montserrat,sans-serif;cursor:pointer;">
-                    Wyznacz trasę
-                </button>
+                <button class="btn-wyznacz" onclick="wyznaczTrase()">Wyznacz trasę</button>
             </div>
 
+            <!-- Mapa -->
             <div id="mapa-nowa"></div>
 
+            <!-- Panel po wyznaczeniu – pojawia się zamiast pól adresów -->
             <div class="panel-wyznaczona" id="panel-wyznaczona">
-                <div class="trasa-info-row">
-                    <div class="trasa-info-stat">
-                        <div class="wartosc" id="nowa-dystans">—</div>
-                        <div class="label">km</div>
+                <div class="panel-naglowek">
+                    <div class="trasa-info-row" style="flex:1;">
+                        <div class="trasa-info-stat">
+                            <div class="wartosc" id="nowa-dystans">—</div>
+                            <div class="label">km</div>
+                        </div>
+                        <div class="trasa-info-stat">
+                            <div class="wartosc" id="nowa-czas">—</div>
+                            <div class="label">minut</div>
+                        </div>
                     </div>
-                    <div class="trasa-info-stat">
-                        <div class="wartosc" id="nowa-czas">—</div>
-                        <div class="label">minut</div>
-                    </div>
+                    <button class="btn-zmien-trase" onclick="zmienTrase()">Zmień trasę</button>
                 </div>
                 <input class="pole-nazwa-trasy" id="input-nazwa-trasy" type="text" placeholder="Nazwa trasy (opcjonalnie)">
                 <div class="przyciski-row">
@@ -511,7 +534,6 @@
         let aktualnySlide = 0;
         let mapkiTras = {};
 
-        // ZAKŁADKI
         function pokazZakladke(nazwa, btn) {
             document.querySelectorAll('.zakladka').forEach(z => z.classList.remove('aktywna'));
             document.querySelectorAll('.zakladka-content').forEach(z => z.classList.remove('aktywna'));
@@ -521,39 +543,22 @@
             if (nazwa === 'nowa-trasa') inicjujMapeNowa();
         }
 
-        // BLE
         async function polaczBLE(strona) {
-            const ok = await polaczRaczke(strona);
+            await polaczRaczke(strona);
             aktualizujBtns();
         }
 
         function aktualizujBtns() {
-            const lewaPolaczona = czyPolaczenoLeft();
-            const prawaPolaczona = czyPolaczenoRight();
-
             ['btn-lewa-1', 'btn-lewa-2'].forEach(id => {
                 const btn = document.getElementById(id);
-                if (btn) {
-                    btn.classList.toggle('polaczony', lewaPolaczona);
-                }
+                if (btn) btn.classList.toggle('polaczony', czyPolaczenoLeft());
             });
-
             ['btn-prawa-1', 'btn-prawa-2'].forEach(id => {
                 const btn = document.getElementById(id);
-                if (btn) {
-                    btn.classList.toggle('polaczony', prawaPolaczona);
-                }
+                if (btn) btn.classList.toggle('polaczony', czyPolaczenoRight());
             });
         }
 
-        // Nadpisz funkcję z bluetooth.js żeby aktualizowała przyciski
-        const oryginalnaAktualizuj = typeof aktualizujStatusBLE === 'function' ? aktualizujStatusBLE : () => {};
-        window.aktualizujStatusBLE = function() {
-            oryginalnaAktualizuj();
-            aktualizujBtns();
-        };
-
-        // MOJE TRASY
         function wczytajMojeTrasy() {
             const wrapper = document.getElementById('moje-trasy-wrapper');
             const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
@@ -577,41 +582,36 @@
             const trasa = zapisane[index];
             wrapper.innerHTML = '';
 
-            // Nawigacja strzałkami
             const nav = document.createElement('div');
-            nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:12px 20px 0;flex-shrink:0;';
+            nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 16px 0;flex-shrink:0;';
             nav.innerHTML = `
                 <button onclick="zmienSlide(-1)" style="background:none;border:none;cursor:pointer;">
-                    <svg viewBox="0 0 24 24" width="40" height="40">
+                    <svg viewBox="0 0 24 24" width="36" height="36">
                         <polygon points="16,4 6,12 16,20" fill="${index > 0 ? '#333' : '#ddd'}"/>
                     </svg>
                 </button>
-                <span style="font-size:13px;color:#aaa;font-weight:500;">${index + 1} / ${zapisane.length}</span>
+                <span style="font-size:12px;color:#aaa;font-weight:500;">${index + 1} / ${zapisane.length}</span>
                 <button onclick="zmienSlide(1)" style="background:none;border:none;cursor:pointer;">
-                    <svg viewBox="0 0 24 24" width="40" height="40">
+                    <svg viewBox="0 0 24 24" width="36" height="36">
                         <polygon points="8,4 18,12 8,20" fill="${index < zapisane.length - 1 ? '#333' : '#ddd'}"/>
                     </svg>
                 </button>
             `;
             wrapper.appendChild(nav);
 
-            // Karta trasy
             const karta = document.createElement('div');
             karta.className = 'trasa-karta';
-
             karta.innerHTML = `
                 <div class="trasa-nazwa">${trasa.nazwa}</div>
                 <div id="mapa-saved-${index}" class="trasa-mapa"></div>
                 <div class="trasa-meta">
                     Kilometry: <strong>${trasa.dystans} km</strong><br>
-                    Przystanki: <strong>${trasa.adresy ? Math.max(0, trasa.adresy.length - 2) : 0}</strong><br>
                     ${trasa.adresy ? `Trasa: <strong>${trasa.adresy[0]} → ${trasa.adresy[trasa.adresy.length-1]}</strong>` : ''}
                 </div>
                 <button class="btn-nawiguj" onclick="nawigujZapisana(${index})">Nawiguj tą trasą!</button>
             `;
             wrapper.appendChild(karta);
 
-            // Rysuj mapkę
             setTimeout(() => {
                 if (mapkiTras[index]) { mapkiTras[index].remove(); }
                 const mapa = L.map(`mapa-saved-${index}`, {
@@ -621,9 +621,7 @@
                 });
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapa);
                 mapkiTras[index] = mapa;
-                if (trasa.punkty && trasa.punkty.length > 1) {
-                    rysujTraseNaMapce(mapa, trasa);
-                }
+                if (trasa.punkty && trasa.punkty.length > 1) rysujTraseNaMapce(mapa, trasa);
             }, 100);
         }
 
@@ -634,21 +632,18 @@
                     const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${trasa.punkty[i].lng},${trasa.punkty[i].lat}&end=${trasa.punkty[i+1].lng},${trasa.punkty[i+1].lat}`;
                     const r = await fetch(url);
                     const d = await r.json();
-                    const seg = d.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
-                    wspolrzedne = wspolrzedne.concat(seg);
+                    wspolrzedne = wspolrzedne.concat(d.features[0].geometry.coordinates.map(c => [c[1], c[0]]));
                 }
                 const linia = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 4 }).addTo(mapa);
                 mapa.fitBounds(linia.getBounds(), { padding: [20, 20] });
-                L.circleMarker(wspolrzedne[0], { radius: 7, fillColor: '#111', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
-                L.circleMarker(wspolrzedne[wspolrzedne.length-1], { radius: 7, fillColor: '#7B1F1F', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
+                L.circleMarker(wspolrzedne[0], { radius: 6, fillColor: '#111', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
+                L.circleMarker(wspolrzedne[wspolrzedne.length-1], { radius: 6, fillColor: '#7B1F1F', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
             } catch(e) { console.error(e); }
         }
 
         function zmienSlide(kierunek) {
             const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
-            aktualnySlide += kierunek;
-            if (aktualnySlide < 0) aktualnySlide = 0;
-            if (aktualnySlide >= zapisane.length) aktualnySlide = zapisane.length - 1;
+            aktualnySlide = Math.max(0, Math.min(zapisane.length - 1, aktualnySlide + kierunek));
             renderujTrase(zapisane, aktualnySlide, document.getElementById('moje-trasy-wrapper'));
         }
 
@@ -658,23 +653,16 @@
             window.location.href = 'navigate.html';
         }
 
-        // NOWA TRASA
         function inicjujMapeNowa() {
             if (mapaNowa) return;
             setTimeout(() => {
                 mapaNowa = L.map('mapa-nowa').setView([51.1079, 17.0385], 13);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap'
-                }).addTo(mapaNowa);
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapaNowa);
 
                 mapaNowa.locate({ setView: true, maxZoom: 15, enableHighAccuracy: true });
                 mapaNowa.on('locationfound', function(e) {
                     mojaPozycja = e.latlng;
-                    L.circleMarker(e.latlng, {
-                        radius: 10, fillColor: '#111',
-                        color: 'white', weight: 3, fillOpacity: 1
-                    }).addTo(mapaNowa);
-
+                    L.circleMarker(e.latlng, { radius: 10, fillColor: '#111', color: 'white', weight: 3, fillOpacity: 1 }).addTo(mapaNowa);
                     if (!document.getElementById('input-start').value) {
                         punkty['start'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Moja lokalizacja' };
                         document.getElementById('input-start').value = 'Moja lokalizacja';
@@ -685,7 +673,6 @@
                 let popupKlikniecia = null;
                 mapaNowa.on('click', function(e) {
                     if (popupKlikniecia) mapaNowa.closePopup(popupKlikniecia);
-
                     const content = document.createElement('div');
                     content.className = 'popup-mapa';
 
@@ -709,8 +696,7 @@
                         przystankiCount++;
                         const id = `przystanek-${przystankiCount}`;
                         przystankiIds.push(id);
-                        const litery = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-                        const litera = litery[przystankiIds.length - 1];
+                        const litera = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[przystankiIds.length - 1];
                         punkty[id] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: `Przystanek ${litera}` };
                         postawMarker(id, e.latlng, '#2d6a2d');
                         dodajPrzystanekUI(id, litera, `Przystanek ${litera}`);
@@ -733,21 +719,14 @@
                     content.appendChild(btnCel);
                     content.appendChild(btnPrzystanek);
                     content.appendChild(btnStart);
-
-                    popupKlikniecia = L.popup({ closeButton: true })
-                        .setLatLng(e.latlng)
-                        .setContent(content)
-                        .openOn(mapaNowa);
+                    popupKlikniecia = L.popup({ closeButton: true }).setLatLng(e.latlng).setContent(content).openOn(mapaNowa);
                 });
             }, 200);
         }
 
         function postawMarker(id, latlng, kolor) {
             if (markery[id]) mapaNowa.removeLayer(markery[id]);
-            markery[id] = L.circleMarker(latlng, {
-                radius: 10, fillColor: kolor,
-                color: 'white', weight: 2.5, fillOpacity: 1
-            }).addTo(mapaNowa);
+            markery[id] = L.circleMarker(latlng, { radius: 10, fillColor: kolor, color: 'white', weight: 2.5, fillOpacity: 1 }).addTo(mapaNowa);
         }
 
         function zamienNaAdres(latlng, inputId) {
@@ -757,8 +736,7 @@
                     const adres = data.address;
                     const ladny = [adres.road, adres.house_number, adres.city || adres.town].filter(Boolean).join(', ');
                     if (ladny) {
-                        const input = document.getElementById(`input-${inputId}`) ||
-                                      document.querySelector(`[data-id="${inputId}"]`);
+                        const input = document.getElementById(`input-${inputId}`) || document.querySelector(`[data-id="${inputId}"]`);
                         if (input) input.value = ladny;
                         if (punkty[inputId]) punkty[inputId].nazwa = ladny;
                     }
@@ -774,8 +752,7 @@
         async function geokodujISzukaj(zapytanie, inputId) {
             try {
                 const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(zapytanie)}&limit=4&countrycodes=pl`;
-                const r = await fetch(url);
-                const data = await r.json();
+                const data = await (await fetch(url)).json();
                 pokazWyniki(data, inputId);
             } catch(e) {}
         }
@@ -783,18 +760,15 @@
         function pokazWyniki(wyniki, inputId) {
             const div = document.getElementById('wyniki-wyszukiwania');
             if (wyniki.length === 0) { ukryjWyniki(); return; }
-
-            const pola = document.querySelector('.pola-adresow');
+            const pola = document.getElementById('pola-adresow');
             const rect = pola.getBoundingClientRect();
             div.style.top = (rect.bottom + 4) + 'px';
             div.style.display = 'block';
             div.innerHTML = '';
-
             wyniki.forEach(w => {
                 const item = document.createElement('div');
                 item.className = 'wynik-item';
-                const nazwa = w.display_name.split(',').slice(0, 2).join(',');
-                item.innerHTML = `<div>${nazwa}</div>`;
+                item.innerHTML = `<div>${w.display_name.split(',').slice(0, 2).join(',')}</div>`;
                 item.onclick = () => wybierzWynik(w, inputId);
                 div.appendChild(item);
             });
@@ -804,14 +778,10 @@
             const latlng = { lat: parseFloat(wynik.lat), lng: parseFloat(wynik.lon) };
             const nazwa = wynik.display_name.split(',').slice(0, 2).join(',');
             punkty[inputId] = { ...latlng, nazwa };
-
-            const input = document.getElementById(`input-${inputId}`) ||
-                          document.querySelector(`[data-id="${inputId}"]`);
+            const input = document.getElementById(`input-${inputId}`) || document.querySelector(`[data-id="${inputId}"]`);
             if (input) input.value = nazwa;
-
             const kolor = inputId === 'start' ? '#111' : inputId === 'koniec' ? '#7B1F1F' : '#2d6a2d';
-            if (mapaNowa) postawMarker(inputId, latlng, kolor);
-            if (mapaNowa) mapaNowa.setView(latlng, 15);
+            if (mapaNowa) { postawMarker(inputId, latlng, kolor); mapaNowa.setView(latlng, 15); }
             ukryjWyniki();
         }
 
@@ -820,18 +790,14 @@
         }
 
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('#wyniki-wyszukiwania') && !e.target.closest('.pole-input')) {
-                ukryjWyniki();
-            }
+            if (!e.target.closest('#wyniki-wyszukiwania') && !e.target.closest('.pole-input')) ukryjWyniki();
         });
 
         function dodajPrzystanek() {
             przystankiCount++;
             const id = `przystanek-${przystankiCount}`;
             przystankiIds.push(id);
-            const litery = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const litera = litery[przystankiIds.length - 1];
-            dodajPrzystanekUI(id, litera, '');
+            dodajPrzystanekUI(id, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[przystankiIds.length - 1], '');
         }
 
         function dodajPrzystanekUI(id, litera, wartosc) {
@@ -840,15 +806,11 @@
             div.className = 'pole-adres';
             div.id = `row-${id}`;
             div.innerHTML = `
-                <div class="pole-ikona ikona-przystanek">
-                    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg>
-                </div>
-                <input class="pole-input" id="input-${id}" data-id="${id}"
-                    type="text" value="${wartosc}" placeholder="Przystanek ${litera}"
-                    onfocus="aktywnyInput='${id}'"
-                    oninput="szukajAdres(this.value, '${id}')">
+                <div class="pole-ikona ikona-przystanek"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/></svg></div>
+                <input class="pole-input" id="input-${id}" data-id="${id}" type="text" value="${wartosc}" placeholder="Przystanek ${litera}"
+                    onfocus="aktywnyInput='${id}'" oninput="szukajAdres(this.value, '${id}')">
                 <button class="btn-usun-pole" onclick="usunPrzystanek('${id}')">
-                    <svg viewBox="0 0 24 24" width="20" height="20">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
                         <line x1="18" y1="6" x2="6" y2="18" stroke="#ccc" stroke-width="2" stroke-linecap="round"/>
                         <line x1="6" y1="6" x2="18" y2="18" stroke="#ccc" stroke-width="2" stroke-linecap="round"/>
                     </svg>
@@ -867,34 +829,25 @@
         async function wyznaczTrase() {
             if (!punkty['start'] && !mojaPozycja) { alert('Wpisz adres startowy!'); return; }
             if (!punkty['koniec']) { alert('Wpisz adres końcowy!'); return; }
-
             if (!punkty['start'] && mojaPozycja) {
                 punkty['start'] = { lat: mojaPozycja.lat, lng: mojaPozycja.lng, nazwa: 'Moja lokalizacja' };
             }
 
-            const kolejnosc = ['start', ...przystankiIds, 'koniec'];
-            const gotowe = kolejnosc.filter(id => punkty[id]).map(id => punkty[id]);
-
+            const gotowe = ['start', ...przystankiIds, 'koniec'].filter(id => punkty[id]).map(id => punkty[id]);
             if (liniaTrasy) { mapaNowa.removeLayer(liniaTrasy); liniaTrasy = null; }
-            document.getElementById('panel-wyznaczona').classList.remove('widoczny');
 
             try {
-                let wspolrzedne = [];
-                let dystans = 0;
-                let czas = 0;
-
+                let wspolrzedne = [], dystans = 0, czas = 0;
                 for (let i = 0; i < gotowe.length - 1; i++) {
                     const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${gotowe[i].lng},${gotowe[i].lat}&end=${gotowe[i+1].lng},${gotowe[i+1].lat}`;
-                    const r = await fetch(url);
-                    const d = await r.json();
-                    const seg = d.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
-                    wspolrzedne = wspolrzedne.concat(seg);
+                    const d = await (await fetch(url)).json();
+                    wspolrzedne = wspolrzedne.concat(d.features[0].geometry.coordinates.map(c => [c[1], c[0]]));
                     dystans += d.features[0].properties.summary.distance;
                     czas += d.features[0].properties.summary.duration;
                 }
 
                 liniaTrasy = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 5 }).addTo(mapaNowa);
-                mapaNowa.fitBounds(liniaTrasy.getBounds(), { padding: [40, 120] });
+                mapaNowa.fitBounds(liniaTrasy.getBounds(), { padding: [20, 80] });
 
                 document.getElementById('nowa-dystans').textContent = (dystans / 1000).toFixed(2);
                 document.getElementById('nowa-czas').textContent = Math.round(czas / 60);
@@ -906,11 +859,18 @@
                     adresy: gotowe.map(p => p.nazwa)
                 };
 
+                // Schowaj pola adresów, pokaż panel wyznaczonej trasy
+                document.getElementById('pola-adresow').style.display = 'none';
                 document.getElementById('panel-wyznaczona').classList.add('widoczny');
 
-            } catch(e) {
-                alert('Błąd wyznaczania trasy');
-            }
+            } catch(e) { alert('Błąd wyznaczania trasy'); }
+        }
+
+        function zmienTrase() {
+            // Wróć do pól adresów
+            document.getElementById('pola-adresow').style.display = 'flex';
+            document.getElementById('panel-wyznaczona').classList.remove('widoczny');
+            if (liniaTrasy) { mapaNowa.removeLayer(liniaTrasy); liniaTrasy = null; }
         }
 
         function zapiszTrase() {
@@ -931,7 +891,6 @@
             window.location.href = 'navigate.html';
         }
 
-        // INIT
         wczytajMojeTrasy();
     </script>
 </body>
