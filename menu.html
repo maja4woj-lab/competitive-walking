@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
         body {
             font-family: 'Montserrat', sans-serif;
             background: white;
@@ -14,6 +15,7 @@
             display: flex;
             flex-direction: column;
         }
+
         .hero {
             flex: 1;
             display: flex;
@@ -23,21 +25,19 @@
             padding: 0 28px 16px;
             gap: 12px;
         }
+
         .logo-img { width: 65%; max-width: 240px; }
+
         .tagline {
             font-size: 16px;
             font-weight: 500;
             color: #888;
             letter-spacing: 0.5px;
         }
-        .mapa-wrapper {
-            width: 100%;
-            margin-top: 8px;
-        }
-        .mapa-wrapper img {
-            width: 100%;
-            display: block;
-        }
+
+        .mapa-wrapper { width: 100%; margin-top: 8px; }
+        .mapa-wrapper img { width: 100%; display: block; }
+
         .nav-bar {
             background: white;
             border-top: 1px solid #f0f0f0;
@@ -47,25 +47,28 @@
             padding: 14px 0;
             flex-shrink: 0;
         }
+
         .nav-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 56px;
-            height: 56px;
+            width: 56px; height: 56px;
             border-radius: 50%;
             border: none;
             background: none;
             cursor: pointer;
             text-decoration: none;
         }
-        .nav-btn.aktywny { background: #2d6a2d; }
+
+        .nav-btn.aktywny { background: #89AC76; }
         .nav-btn svg { width: 26px; height: 26px; }
+
         .nav-btn svg path, .nav-btn svg polyline,
         .nav-btn svg circle, .nav-btn svg line {
             stroke: #333; stroke-width: 2; fill: none;
             stroke-linecap: round; stroke-linejoin: round;
         }
+
         .nav-btn.aktywny svg path, .nav-btn.aktywny svg polyline,
         .nav-btn.aktywny svg circle, .nav-btn.aktywny svg line {
             stroke: white;
@@ -83,22 +86,13 @@
 
     <nav class="nav-bar">
         <a href="index.html" class="nav-btn aktywny">
-            <svg viewBox="0 0 24 24">
-                <path d="M3 12h18M12 3l9 9-9 9"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><path d="M3 12h18M12 3l9 9-9 9"/></svg>
         </a>
         <a href="leaderboard.html" class="nav-btn">
-            <svg viewBox="0 0 24 24">
-                <polyline points="18 20 18 10"/>
-                <polyline points="12 20 12 4"/>
-                <polyline points="6 20 6 14"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><polyline points="18 20 18 10"/><polyline points="12 20 12 4"/><polyline points="6 20 6 14"/></svg>
         </a>
         <a href="profile.html" class="nav-btn">
-            <svg viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4"/>
-                <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-            </svg>
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
         </a>
     </nav>
 </body>
