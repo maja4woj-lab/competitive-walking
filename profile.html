@@ -12,10 +12,10 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background: #f9f9f9;
-            min-height: 105vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
+            overflow: hidden;
         }
 
         .profil-header {
@@ -82,6 +82,7 @@
             padding: 20px;
             box-shadow: 0 1px 6px rgba(0,0,0,0.06);
             display: none;
+            flex-shrink: 0;
         }
 
         .edycja-form h3 { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 16px; }
@@ -107,9 +108,6 @@
             background: white;
             border-bottom: 1px solid #f0f0f0;
             flex-shrink: 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
         }
 
         .zakladka {
@@ -126,7 +124,11 @@
         .zakladka.aktywna { color: #111; border-bottom: 2px solid #89AC76; }
 
         .zakladka-content { display: none; }
-        .zakladka-content.aktywna { display: block; }
+        .zakladka-content.aktywna {
+            display: block;
+            overflow-y: auto;
+            flex: 1;
+        }
 
         /* KALENDARZ */
         .kalendarz-wrapper { padding: 16px 20px; }
@@ -288,6 +290,13 @@
         .nav-btn.aktywny svg circle, .nav-btn.aktywny svg line {
             stroke: white;
         }
+
+        .scroll-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -318,53 +327,55 @@
         <button class="btn-zapisz" onclick="zapiszProfil()">Zapisz</button>
     </div>
 
-    <div class="zakladki">
-        <button class="zakladka aktywna" onclick="pokazZakladke('aktywnosc', this)">Aktywność</button>
-        <button class="zakladka" onclick="pokazZakladke('moje-miejsca', this)">Moje miejsca</button>
-    </div>
+    <div class="scroll-area">
+        <div class="zakladki">
+            <button class="zakladka aktywna" onclick="pokazZakladke('aktywnosc', this)">Aktywność</button>
+            <button class="zakladka" onclick="pokazZakladke('moje-miejsca', this)">Moje miejsca</button>
+        </div>
 
-    <div id="tab-aktywnosc" class="zakladka-content aktywna">
-        <div class="kalendarz-wrapper">
-            <div class="kalendarz-nav">
-                <button class="btn-miesiac" onclick="poprzedniMiesiac()">
-                    <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="15 18 9 12 15 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-                </button>
-                <h2 id="kalendarz-tytul"></h2>
-                <button class="btn-miesiac" onclick="nastepnyMiesiac()">
-                    <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="9 18 15 12 9 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-                </button>
-            </div>
-            <div class="dni-tygodnia">
-                <div class="dzien-tyg">Pn</div><div class="dzien-tyg">Wt</div>
-                <div class="dzien-tyg">Śr</div><div class="dzien-tyg">Cz</div>
-                <div class="dzien-tyg">Pt</div><div class="dzien-tyg">Sb</div>
-                <div class="dzien-tyg">Nd</div>
-            </div>
-            <div class="kalendarz-grid" id="kalendarz-grid"></div>
-            <div class="legenda">
-                <div class="legenda-kropka"></div>
-                <span>Dzień ze spacerem – kliknij żeby zobaczyć trasę</span>
+        <div id="tab-aktywnosc" class="zakladka-content aktywna">
+            <div class="kalendarz-wrapper">
+                <div class="kalendarz-nav">
+                    <button class="btn-miesiac" onclick="poprzedniMiesiac()">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="15 18 9 12 15 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                    <h2 id="kalendarz-tytul"></h2>
+                    <button class="btn-miesiac" onclick="nastepnyMiesiac()">
+                        <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="9 18 15 12 9 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                    </button>
+                </div>
+                <div class="dni-tygodnia">
+                    <div class="dzien-tyg">Pn</div><div class="dzien-tyg">Wt</div>
+                    <div class="dzien-tyg">Śr</div><div class="dzien-tyg">Cz</div>
+                    <div class="dzien-tyg">Pt</div><div class="dzien-tyg">Sb</div>
+                    <div class="dzien-tyg">Nd</div>
+                </div>
+                <div class="kalendarz-grid" id="kalendarz-grid"></div>
+                <div class="legenda">
+                    <div class="legenda-kropka"></div>
+                    <span>Dzień ze spacerem – kliknij żeby zobaczyć trasę</span>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="tab-moje-miejsca" class="zakladka-content">
-        <div id="widok-wybor">
-            <div class="miejsca-wybor">
-                <button class="btn-miejsca btn-miejsca-zielone" onclick="pokazListeMiejsc('tak')">
-                    <div class="btn-miejsca-kropka"></div>
-                </button>
-                <button class="btn-miejsca btn-miejsca-czerwone" onclick="pokazListeMiejsc('nie')">
-                    <div class="btn-miejsca-kropka"></div>
-                </button>
+        <div id="tab-moje-miejsca" class="zakladka-content">
+            <div id="widok-wybor">
+                <div class="miejsca-wybor">
+                    <button class="btn-miejsca btn-miejsca-zielone" onclick="pokazListeMiejsc('tak')">
+                        <div class="btn-miejsca-kropka"></div>
+                    </button>
+                    <button class="btn-miejsca btn-miejsca-czerwone" onclick="pokazListeMiejsc('nie')">
+                        <div class="btn-miejsca-kropka"></div>
+                    </button>
+                </div>
             </div>
-        </div>
-        <div id="widok-lista" style="display:none;">
-            <button class="btn-powrot-miejsca" onclick="powrotDoWyboru()">
-                <svg viewBox="0 0 24 24" width="48" height="48"><polygon points="15,4 5,12 15,20" fill="#ccc"/></svg>
-                Wróć
-            </button>
-            <div class="miejsca-lista" id="miejsca-lista"></div>
+            <div id="widok-lista" style="display:none;">
+                <button class="btn-powrot-miejsca" onclick="powrotDoWyboru()">
+                    <svg viewBox="0 0 24 24" width="48" height="48"><polygon points="15,4 5,12 15,20" fill="#ccc"/></svg>
+                    Wróć
+                </button>
+                <div class="miejsca-lista" id="miejsca-lista"></div>
+            </div>
         </div>
     </div>
 
