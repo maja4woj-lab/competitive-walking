@@ -12,10 +12,10 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background: #f9f9f9;
-            height: 100vh;
+            min-height: 105vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .profil-header {
@@ -82,7 +82,6 @@
             padding: 20px;
             box-shadow: 0 1px 6px rgba(0,0,0,0.06);
             display: none;
-            flex-shrink: 0;
         }
 
         .edycja-form h3 { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 16px; }
@@ -108,6 +107,9 @@
             background: white;
             border-bottom: 1px solid #f0f0f0;
             flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .zakladka {
@@ -117,13 +119,13 @@
             color: #aaa; cursor: pointer;
             border-bottom: 2px solid transparent;
             font-family: 'Montserrat', sans-serif;
-            background: none;
+            background: white;
             border-top: none; border-left: none; border-right: none;
         }
 
         .zakladka.aktywna { color: #111; border-bottom: 2px solid #89AC76; }
 
-        .zakladka-content { display: none; flex: 1; overflow-y: auto; }
+        .zakladka-content { display: none; }
         .zakladka-content.aktywna { display: block; }
 
         /* KALENDARZ */
@@ -286,8 +288,6 @@
         .nav-btn.aktywny svg circle, .nav-btn.aktywny svg line {
             stroke: white;
         }
-
-        .scroll-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
     </style>
 </head>
 <body>
@@ -323,52 +323,48 @@
         <button class="zakladka" onclick="pokazZakladke('moje-miejsca', this)">Moje miejsca</button>
     </div>
 
-    <div class="scroll-area">
-        <!-- AKTYWNOŚĆ -->
-        <div class="zakladka-content aktywna" id="tab-aktywnosc">
-            <div class="kalendarz-wrapper">
-                <div class="kalendarz-nav">
-                    <button class="btn-miesiac" onclick="poprzedniMiesiac()">
-                        <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="15 18 9 12 15 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-                    </button>
-                    <h2 id="kalendarz-tytul"></h2>
-                    <button class="btn-miesiac" onclick="nastepnyMiesiac()">
-                        <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="9 18 15 12 9 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
-                    </button>
-                </div>
-                <div class="dni-tygodnia">
-                    <div class="dzien-tyg">Pn</div><div class="dzien-tyg">Wt</div>
-                    <div class="dzien-tyg">Śr</div><div class="dzien-tyg">Cz</div>
-                    <div class="dzien-tyg">Pt</div><div class="dzien-tyg">Sb</div>
-                    <div class="dzien-tyg">Nd</div>
-                </div>
-                <div class="kalendarz-grid" id="kalendarz-grid"></div>
-                <div class="legenda">
-                    <div class="legenda-kropka"></div>
-                    <span>Dzień ze spacerem – kliknij żeby zobaczyć trasę</span>
-                </div>
+    <div id="tab-aktywnosc" class="zakladka-content aktywna">
+        <div class="kalendarz-wrapper">
+            <div class="kalendarz-nav">
+                <button class="btn-miesiac" onclick="poprzedniMiesiac()">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="15 18 9 12 15 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                </button>
+                <h2 id="kalendarz-tytul"></h2>
+                <button class="btn-miesiac" onclick="nastepnyMiesiac()">
+                    <svg viewBox="0 0 24 24" width="16" height="16"><polyline points="9 18 15 12 9 6" stroke="#333" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                </button>
+            </div>
+            <div class="dni-tygodnia">
+                <div class="dzien-tyg">Pn</div><div class="dzien-tyg">Wt</div>
+                <div class="dzien-tyg">Śr</div><div class="dzien-tyg">Cz</div>
+                <div class="dzien-tyg">Pt</div><div class="dzien-tyg">Sb</div>
+                <div class="dzien-tyg">Nd</div>
+            </div>
+            <div class="kalendarz-grid" id="kalendarz-grid"></div>
+            <div class="legenda">
+                <div class="legenda-kropka"></div>
+                <span>Dzień ze spacerem – kliknij żeby zobaczyć trasę</span>
             </div>
         </div>
+    </div>
 
-        <!-- MOJE MIEJSCA -->
-        <div class="zakladka-content" id="tab-moje-miejsca">
-            <div id="widok-wybor">
-                <div class="miejsca-wybor">
-                    <button class="btn-miejsca btn-miejsca-zielone" onclick="pokazListeMiejsc('tak')">
-                        <div class="btn-miejsca-kropka"></div>
-                    </button>
-                    <button class="btn-miejsca btn-miejsca-czerwone" onclick="pokazListeMiejsc('nie')">
-                        <div class="btn-miejsca-kropka"></div>
-                    </button>
-                </div>
-            </div>
-            <div id="widok-lista" style="display:none;">
-                <button class="btn-powrot-miejsca" onclick="powrotDoWyboru()">
-                    <svg viewBox="0 0 24 24" width="48" height="48"><polygon points="15,4 5,12 15,20" fill="#ccc"/></svg>
-                    Wróć
+    <div id="tab-moje-miejsca" class="zakladka-content">
+        <div id="widok-wybor">
+            <div class="miejsca-wybor">
+                <button class="btn-miejsca btn-miejsca-zielone" onclick="pokazListeMiejsc('tak')">
+                    <div class="btn-miejsca-kropka"></div>
                 </button>
-                <div class="miejsca-lista" id="miejsca-lista"></div>
+                <button class="btn-miejsca btn-miejsca-czerwone" onclick="pokazListeMiejsc('nie')">
+                    <div class="btn-miejsca-kropka"></div>
+                </button>
             </div>
+        </div>
+        <div id="widok-lista" style="display:none;">
+            <button class="btn-powrot-miejsca" onclick="powrotDoWyboru()">
+                <svg viewBox="0 0 24 24" width="48" height="48"><polygon points="15,4 5,12 15,20" fill="#ccc"/></svg>
+                Wróć
+            </button>
+            <div class="miejsca-lista" id="miejsca-lista"></div>
         </div>
     </div>
 
@@ -493,9 +489,7 @@
 
             const grid = document.getElementById('kalendarz-grid');
             grid.innerHTML = '';
-
             for (let i = 1; i < poczatekTygodnia; i++) grid.appendChild(document.createElement('div'));
-
             for (let d = 1; d <= ostatniDzien.getDate(); d++) {
                 const el = document.createElement('div');
                 el.className = 'dzien';
