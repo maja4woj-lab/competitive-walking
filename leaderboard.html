@@ -11,10 +11,10 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background: #f9f9f9;
-            height: 100vh;
+            min-height: 110vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .naglowek {
@@ -33,7 +33,6 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
-            overflow-y: auto;
         }
 
         .karta {
@@ -41,7 +40,6 @@
             border-radius: 20px;
             padding: 18px 20px;
             box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-            flex-shrink: 0;
         }
 
         .karta-top {
@@ -209,22 +207,14 @@
         const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
 
         const avatarTy = document.getElementById('avatar-ty');
-        if (profil.zdjecie) {
-            avatarTy.innerHTML = `<img src="${profil.zdjecie}" alt="avatar">`;
-        }
-
-        if (profil.imie) {
-            document.getElementById('twoje-imie').textContent =
-                `${profil.imie} ${profil.nazwisko || ''}`.trim();
-        }
+        if (profil.zdjecie) avatarTy.innerHTML = `<img src="${profil.zdjecie}" alt="avatar">`;
+        if (profil.imie) document.getElementById('twoje-imie').textContent = `${profil.imie} ${profil.nazwisko || ''}`.trim();
 
         if (wyniki.length > 0) {
             const ostatni = wyniki[0];
             const lacznyKm = wyniki.reduce((s, w) => s + parseFloat(w.dystans), 0);
-            document.getElementById('twoja-trasa').textContent =
-                `${ostatni.nazwa || 'Własna trasa'} · ${ostatni.dystans} km`;
-            document.getElementById('twoje-km').innerHTML =
-                `${lacznyKm.toFixed(1)} <span>km</span>`;
+            document.getElementById('twoja-trasa').textContent = `${ostatni.nazwa || 'Własna trasa'} · ${ostatni.dystans} km`;
+            document.getElementById('twoje-km').innerHTML = `${lacznyKm.toFixed(1)} <span>km</span>`;
             const procent = Math.min(100, (lacznyKm / 2.2) * 100);
             document.getElementById('twoj-pasek').style.width = procent + '%';
             document.getElementById('twoj-label').textContent = lacznyKm.toFixed(1) + ' km';
