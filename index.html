@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Trasy</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -46,7 +46,7 @@
 
         .zakladka.aktywna {
             color: #111;
-            border-bottom: 3px solid #2d6a2d;
+            border-bottom: 3px solid #89AC76;
         }
 
         .zakladka-content {
@@ -107,7 +107,7 @@
 
         .btn-nawiguj {
             padding: 16px;
-            background: #2d6a2d;
+            background: #89AC76;
             color: white;
             border: none;
             border-radius: 14px;
@@ -118,6 +118,7 @@
             flex-shrink: 0;
         }
 
+        /* BLE */
         .ble-pasek {
             display: flex;
             gap: 10px;
@@ -130,18 +131,22 @@
         .btn-ble-duzy {
             flex: 1;
             padding: 14px;
-            border: none;
+            border: 2px solid #ddd;
             border-radius: 14px;
             font-size: 14px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
-            color: white;
-            background: #c0392b;
-            transition: background 0.2s;
+            color: #111;
+            background: white;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
         }
 
-        .btn-ble-duzy.polaczony { background: #2d6a2d; }
+        .btn-ble-duzy.polaczony {
+            background: #89AC76;
+            color: white;
+            border-color: #89AC76;
+        }
 
         .pusta-lista {
             flex: 1;
@@ -200,8 +205,8 @@
         }
 
         .ikona-start { background: #111; }
-        .ikona-przystanek { background: #2d6a2d; }
-        .ikona-koniec { background: #7B1F1F; }
+        .ikona-przystanek { background: #89AC76; }
+        .ikona-koniec { background: #9B3A4A; }
 
         .pole-ikona svg { width: 14px; height: 14px; }
         .pole-ikona svg path, .pole-ikona svg circle {
@@ -218,7 +223,7 @@
             outline: none;
         }
 
-        .pole-input:focus { border-color: #2d6a2d; }
+        .pole-input:focus { border-color: #89AC76; }
 
         .btn-usun-pole { background: none; border: none; cursor: pointer; flex-shrink: 0; }
 
@@ -229,13 +234,13 @@
             align-items: center;
             gap: 8px;
             background: none;
-            border: 1.5px dashed #2d6a2d;
+            border: 1.5px dashed #89AC76;
             border-radius: 10px;
             padding: 8px 14px;
             font-size: 13px;
             font-weight: 600;
             font-family: 'Montserrat', sans-serif;
-            color: #2d6a2d;
+            color: #89AC76;
             cursor: pointer;
         }
 
@@ -306,11 +311,7 @@
             text-decoration: underline;
         }
 
-        .trasa-info-row {
-            display: flex;
-            justify-content: space-around;
-        }
-
+        .trasa-info-row { display: flex; justify-content: space-around; }
         .trasa-info-stat { text-align: center; }
         .trasa-info-stat .wartosc { font-size: 20px; font-weight: 700; color: #111; }
         .trasa-info-stat .label { font-size: 11px; color: #aaa; font-weight: 500; }
@@ -324,7 +325,7 @@
             outline: none;
         }
 
-        .pole-nazwa-trasy:focus { border-color: #2d6a2d; }
+        .pole-nazwa-trasy:focus { border-color: #89AC76; }
 
         .przyciski-row { display: flex; gap: 10px; }
 
@@ -332,19 +333,19 @@
             flex: 1;
             padding: 13px;
             background: white;
-            border: 2px solid #2d6a2d;
+            border: 2px solid #89AC76;
             border-radius: 12px;
             font-size: 14px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
-            color: #2d6a2d;
+            color: #89AC76;
             cursor: pointer;
         }
 
         .btn-nawiguj-nowa {
             flex: 2;
             padding: 13px;
-            background: #2d6a2d;
+            background: #89AC76;
             border: none;
             border-radius: 12px;
             font-size: 14px;
@@ -378,7 +379,8 @@
             display: flex;
             align-items: center;
             justify-content: space-around;
-            padding: 12px 0;
+            padding: 14px 0;
+            padding-bottom: max(36px, env(safe-area-inset-bottom, 36px));
             flex-shrink: 0;
         }
 
@@ -386,7 +388,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 52px; height: 52px;
+            width: 76px; height: 76px;
             border-radius: 50%;
             border: none;
             background: none;
@@ -394,8 +396,8 @@
             text-decoration: none;
         }
 
-        .nav-btn.aktywny { background: #2d6a2d; }
-        .nav-btn svg { width: 24px; height: 24px; }
+        .nav-btn.aktywny { background: #89AC76; }
+        .nav-btn svg { width: 36px; height: 36px; }
 
         .nav-btn svg path, .nav-btn svg polyline,
         .nav-btn svg circle, .nav-btn svg line {
@@ -427,7 +429,6 @@
 
     <div class="zakladka-content" id="tab-nowa-trasa">
         <div class="nowa-trasa-wrapper">
-
             <div class="pola-adresow" id="pola-adresow">
                 <div class="pole-adres">
                     <div class="pole-ikona ikona-start">
@@ -453,7 +454,7 @@
 
                 <button class="btn-przystanek" onclick="dodajPrzystanek()">
                     <svg viewBox="0 0 24 24" width="16" height="16">
-                        <path d="M12 5v14M5 12h14" stroke="#2d6a2d" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        <path d="M12 5v14M5 12h14" stroke="#89AC76" stroke-width="2.5" fill="none" stroke-linecap="round"/>
                     </svg>
                     Dodaj przystanek
                 </button>
@@ -551,7 +552,6 @@
         function wczytajMojeTrasy() {
             const wrapper = document.getElementById('moje-trasy-wrapper');
             const zapisane = JSON.parse(localStorage.getItem('zapisaneTrasy') || '[]');
-
             if (zapisane.length === 0) {
                 wrapper.innerHTML = `
                     <div class="pusta-lista">
@@ -562,7 +562,6 @@
                     </div>`;
                 return;
             }
-
             aktualnySlide = 0;
             renderujTrase(zapisane, aktualnySlide, wrapper);
         }
@@ -570,7 +569,6 @@
         function renderujTrase(zapisane, index, wrapper) {
             const trasa = zapisane[index];
             wrapper.innerHTML = '';
-
             const nav = document.createElement('div');
             nav.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:10px 16px 0;flex-shrink:0;';
             nav.innerHTML = `
@@ -587,7 +585,6 @@
                 </button>
             `;
             wrapper.appendChild(nav);
-
             const karta = document.createElement('div');
             karta.className = 'trasa-karta';
             karta.innerHTML = `
@@ -600,7 +597,6 @@
                 <button class="btn-nawiguj" onclick="nawigujZapisana(${index})">Nawiguj tą trasą!</button>
             `;
             wrapper.appendChild(karta);
-
             setTimeout(() => {
                 if (mapkiTras[index]) { mapkiTras[index].remove(); }
                 const mapa = L.map(`mapa-saved-${index}`, {
@@ -622,10 +618,10 @@
                     const d = await (await fetch(url)).json();
                     wspolrzedne = wspolrzedne.concat(d.features[0].geometry.coordinates.map(c => [c[1], c[0]]));
                 }
-                const linia = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 4 }).addTo(mapa);
+                const linia = L.polyline(wspolrzedne, { color: '#89AC76', weight: 4 }).addTo(mapa);
                 mapa.fitBounds(linia.getBounds(), { padding: [20, 20] });
                 L.circleMarker(wspolrzedne[0], { radius: 6, fillColor: '#111', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
-                L.circleMarker(wspolrzedne[wspolrzedne.length-1], { radius: 6, fillColor: '#7B1F1F', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
+                L.circleMarker(wspolrzedne[wspolrzedne.length-1], { radius: 6, fillColor: '#9B3A4A', color: 'white', weight: 2, fillOpacity: 1 }).addTo(mapa);
             } catch(e) { console.error(e); }
         }
 
@@ -646,7 +642,6 @@
             setTimeout(() => {
                 mapaNowa = L.map('mapa-nowa').setView([51.1079, 17.0385], 13);
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapaNowa);
-
                 mapaNowa.locate({ setView: true, maxZoom: 15, enableHighAccuracy: true });
                 mapaNowa.on('locationfound', function(e) {
                     mojaPozycja = e.latlng;
@@ -664,7 +659,6 @@
                     const content = document.createElement('div');
                     content.className = 'popup-mapa';
 
-                    // KOLEJNOŚĆ: Start → Przystanek → Cel
                     const btnStart = document.createElement('button');
                     btnStart.className = 'popup-btn';
                     btnStart.style.background = '#111';
@@ -679,7 +673,7 @@
 
                     const btnPrzystanek = document.createElement('button');
                     btnPrzystanek.className = 'popup-btn';
-                    btnPrzystanek.style.background = '#2d6a2d';
+                    btnPrzystanek.style.background = '#89AC76';
                     btnPrzystanek.textContent = 'Dodaj jako przystanek';
                     btnPrzystanek.onclick = () => {
                         przystankiCount++;
@@ -687,7 +681,7 @@
                         przystankiIds.push(id);
                         const litera = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'[przystankiIds.length - 1];
                         punkty[id] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: `Przystanek ${litera}` };
-                        postawMarker(id, e.latlng, '#2d6a2d');
+                        postawMarker(id, e.latlng, '#89AC76');
                         dodajPrzystanekUI(id, litera, `Przystanek ${litera}`);
                         zamienNaAdres(e.latlng, id);
                         mapaNowa.closePopup(popupKlikniecia);
@@ -695,12 +689,12 @@
 
                     const btnCel = document.createElement('button');
                     btnCel.className = 'popup-btn';
-                    btnCel.style.background = '#7B1F1F';
+                    btnCel.style.background = '#9B3A4A';
                     btnCel.textContent = 'Ustaw jako cel';
                     btnCel.onclick = () => {
                         punkty['koniec'] = { lat: e.latlng.lat, lng: e.latlng.lng, nazwa: 'Wybrany punkt' };
                         document.getElementById('input-koniec').value = 'Wybrany punkt';
-                        postawMarker('koniec', e.latlng, '#7B1F1F');
+                        postawMarker('koniec', e.latlng, '#9B3A4A');
                         zamienNaAdres(e.latlng, 'koniec');
                         mapaNowa.closePopup(popupKlikniecia);
                     };
@@ -708,7 +702,6 @@
                     content.appendChild(btnStart);
                     content.appendChild(btnPrzystanek);
                     content.appendChild(btnCel);
-
                     popupKlikniecia = L.popup({ closeButton: true }).setLatLng(e.latlng).setContent(content).openOn(mapaNowa);
                 });
             }, 200);
@@ -770,7 +763,7 @@
             punkty[inputId] = { ...latlng, nazwa };
             const input = document.getElementById(`input-${inputId}`) || document.querySelector(`[data-id="${inputId}"]`);
             if (input) input.value = nazwa;
-            const kolor = inputId === 'start' ? '#111' : inputId === 'koniec' ? '#7B1F1F' : '#2d6a2d';
+            const kolor = inputId === 'start' ? '#111' : inputId === 'koniec' ? '#9B3A4A' : '#89AC76';
             if (mapaNowa) { postawMarker(inputId, latlng, kolor); mapaNowa.setView(latlng, 15); }
             ukryjWyniki();
         }
@@ -822,10 +815,8 @@
             if (!punkty['start'] && mojaPozycja) {
                 punkty['start'] = { lat: mojaPozycja.lat, lng: mojaPozycja.lng, nazwa: 'Moja lokalizacja' };
             }
-
             const gotowe = ['start', ...przystankiIds, 'koniec'].filter(id => punkty[id]).map(id => punkty[id]);
             if (liniaTrasy) { mapaNowa.removeLayer(liniaTrasy); liniaTrasy = null; }
-
             try {
                 let wspolrzedne = [], dystans = 0, czas = 0;
                 for (let i = 0; i < gotowe.length - 1; i++) {
@@ -835,24 +826,18 @@
                     dystans += d.features[0].properties.summary.distance;
                     czas += d.features[0].properties.summary.duration;
                 }
-
-                liniaTrasy = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 5 }).addTo(mapaNowa);
+                liniaTrasy = L.polyline(wspolrzedne, { color: '#89AC76', weight: 5 }).addTo(mapaNowa);
                 mapaNowa.fitBounds(liniaTrasy.getBounds(), { padding: [20, 80] });
-
                 document.getElementById('nowa-dystans').textContent = (dystans / 1000).toFixed(2);
                 document.getElementById('nowa-czas').textContent = Math.round(czas / 60);
-
                 aktualnaTrasa = {
                     nazwa: '',
                     dystans: (dystans / 1000).toFixed(2),
                     punkty: gotowe,
                     adresy: gotowe.map(p => p.nazwa)
                 };
-
-                // Schowaj pola adresów, pokaż panel
                 document.getElementById('pola-adresow').style.display = 'none';
                 document.getElementById('panel-wyznaczona').classList.add('widoczny');
-
             } catch(e) { alert('Błąd wyznaczania trasy'); }
         }
 
