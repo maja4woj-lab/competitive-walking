@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Nawigacja</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -47,7 +47,7 @@
             background: #f9f9f9;
             border-radius: 12px;
             padding: 10px 14px;
-            border-left: 4px solid #2d6a2d;
+            border-left: 4px solid #89AC76;
             font-size: 14px;
             font-weight: 600;
             color: #111;
@@ -89,22 +89,26 @@
         .btn-ble-duzy {
             flex: 1;
             padding: 12px 8px;
-            border: none;
+            border: 2px solid #ddd;
             border-radius: 12px;
             font-size: 13px;
             font-weight: 700;
             font-family: 'Montserrat', sans-serif;
             cursor: pointer;
-            color: white;
-            background: #c0392b;
-            transition: background 0.2s;
+            color: #111;
+            background: white;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
         }
 
-        .btn-ble-duzy.polaczony { background: #2d6a2d; }
+        .btn-ble-duzy.polaczony {
+            background: #89AC76;
+            color: white;
+            border-color: #89AC76;
+        }
 
         #btnStart {
             padding: 14px;
-            background: #2d6a2d;
+            background: #89AC76;
             color: white;
             border: none;
             border-radius: 14px;
@@ -115,7 +119,7 @@
             flex-shrink: 0;
         }
 
-        #btnStart.stop { background: #c0392b; }
+        #btnStart.stop { background: #9B3A4A; }
 
         #btnZakoncz {
             padding: 11px;
@@ -215,7 +219,6 @@
                 radius: 10, fillColor: '#111',
                 color: 'white', weight: 3, fillOpacity: 1
             }).addTo(map);
-
             if (aktywnaTrasa && aktywnaTrasa.punkty && !liniaTrasy) {
                 rysujAktywnaTrase();
             } else if (!aktywnaTrasa) {
@@ -235,7 +238,7 @@
             if (czyDziala || aktywnaTrasa) return;
             celPozycja = e.latlng;
             L.circleMarker(e.latlng, {
-                radius: 10, fillColor: '#7B1F1F',
+                radius: 10, fillColor: '#9B3A4A',
                 color: 'white', weight: 2, fillOpacity: 1
             }).addTo(map);
             pobierzTrase(mojaPozycja, celPozycja);
@@ -244,17 +247,11 @@
         async function rysujAktywnaTrase() {
             if (!aktywnaTrasa || !aktywnaTrasa.punkty) return;
             document.getElementById('instrukcja-box').textContent = '⏳ Ładowanie trasy...';
-
             const punkty = aktywnaTrasa.punkty;
-            celPozycja = L.latLng(
-                punkty[punkty.length - 1].lat,
-                punkty[punkty.length - 1].lng
-            );
-
+            celPozycja = L.latLng(punkty[punkty.length - 1].lat, punkty[punkty.length - 1].lng);
             try {
                 let wspolrzedneTrasy = [];
                 let wszystkieKroki = [];
-
                 for (let i = 0; i < punkty.length - 1; i++) {
                     const url = `https://api.openrouteservice.org/v2/directions/foot-walking?api_key=${API_KEY}&start=${punkty[i].lng},${punkty[i].lat}&end=${punkty[i+1].lng},${punkty[i+1].lat}`;
                     const response = await fetch(url);
@@ -268,22 +265,12 @@
                     }));
                     wszystkieKroki = wszystkieKroki.concat(kroki);
                 }
-
-                liniaTrasy = L.polyline(wspolrzedneTrasy, { color: '#2d6a2d', weight: 5 }).addTo(map);
+                liniaTrasy = L.polyline(wspolrzedneTrasy, { color: '#89AC76', weight: 5 }).addTo(map);
                 map.fitBounds(liniaTrasy.getBounds(), { padding: [40, 40] });
-
-                L.circleMarker(celPozycja, {
-                    radius: 10, fillColor: '#7B1F1F',
-                    color: 'white', weight: 2, fillOpacity: 1
-                }).addTo(map);
-
+                L.circleMarker(celPozycja, { radius: 10, fillColor: '#9B3A4A', color: 'white', weight: 2, fillOpacity: 1 }).addTo(map);
                 przetworzKroki(wszystkieKroki, wspolrzedneTrasy);
-
-                document.getElementById('instrukcja-box').textContent =
-                    `${aktywnaTrasa.nazwa} · ${aktywnaTrasa.dystans} km`;
-                document.getElementById('dystans-pozostal').textContent =
-                    `Pozostało: ${aktywnaTrasa.dystans} km`;
-
+                document.getElementById('instrukcja-box').textContent = `${aktywnaTrasa.nazwa} · ${aktywnaTrasa.dystans} km`;
+                document.getElementById('dystans-pozostal').textContent = `Pozostało: ${aktywnaTrasa.dystans} km`;
             } catch(err) {
                 document.getElementById('instrukcja-box').textContent = '❌ Błąd ładowania trasy';
             }
@@ -299,7 +286,7 @@
                 const wspolrzedne = data.features[0].geometry.coordinates.map(c => [c[1], c[0]]);
                 const dystans = (data.features[0].properties.summary.distance / 1000).toFixed(2);
                 const czas = Math.round(data.features[0].properties.summary.duration / 60);
-                liniaTrasy = L.polyline(wspolrzedne, { color: '#2d6a2d', weight: 5 }).addTo(map);
+                liniaTrasy = L.polyline(wspolrzedne, { color: '#89AC76', weight: 5 }).addTo(map);
                 map.fitBounds(liniaTrasy.getBounds(), { padding: [40, 40] });
                 przetworzKroki(data.features[0].properties.segments[0].steps, wspolrzedne);
                 document.getElementById('instrukcja-box').textContent = `Trasa gotowa! ${dystans} km · ok. ${czas} min`;
@@ -347,7 +334,6 @@
             if (!instrukcja || kierunkowskazAktywny) return;
             const txt = instrukcja.toLowerCase();
             kierunkowskazAktywny = true;
-
             if (txt.includes('left') || txt.includes('slight left') || txt.includes('sharp left')) {
                 await kierunkowskazLewo(true);
                 setTimeout(() => { kierunkowskazLewo(false); kierunkowskazAktywny = false; }, 4000);
@@ -369,45 +355,33 @@
         function aktualizujPozycje(e) {
             if (!czyDziala) return;
             const nowaPozycja = e.latlng;
-
             if (markerJa) map.removeLayer(markerJa);
             markerJa = L.circleMarker(nowaPozycja, {
                 radius: 10, fillColor: '#111',
                 color: 'white', weight: 3, fillOpacity: 1
             }).addTo(map);
-
             if (ostatniaPozycja) {
                 if (liniaUkonczona) {
                     const pts = liniaUkonczona.getLatLngs();
                     pts.push(nowaPozycja);
                     liniaUkonczona.setLatLngs(pts);
                 } else {
-                    liniaUkonczona = L.polyline([ostatniaPozycja, nowaPozycja], {
-                        color: '#aaa', weight: 5
-                    }).addTo(map);
+                    liniaUkonczona = L.polyline([ostatniaPozycja, nowaPozycja], { color: '#aaa', weight: 5 }).addTo(map);
                 }
                 const delta = ostatniaPozycja.distanceTo(nowaPozycja);
-                if (delta > 2) {
-                    dystansPrzebyta += delta;
-                    ostatniaPozycja = nowaPozycja;
-                }
+                if (delta > 2) { dystansPrzebyta += delta; ostatniaPozycja = nowaPozycja; }
             } else {
                 ostatniaPozycja = nowaPozycja;
             }
-
             map.setView(nowaPozycja);
             trasaWspolrzedne.push([nowaPozycja.lat, nowaPozycja.lng]);
             document.getElementById('dystans').textContent = (dystansPrzebyta / 1000).toFixed(2);
-
             if (krokiPunkty.length > 0) {
                 const krok = krokiPunkty[0];
                 const odleglosc = nowaPozycja.distanceTo(krok.latlng);
                 document.getElementById('instrukcja-box').textContent = `➡️ ${krok.instrukcja}`;
                 document.getElementById('dystans-pozostal').textContent = `Za ${Math.round(odleglosc)}m`;
-
-                if (odleglosc < 30 && !kierunkowskazAktywny) {
-                    aktualizujKierunkowskazy(krok.instrukcja);
-                }
+                if (odleglosc < 30 && !kierunkowskazAktywny) aktualizujKierunkowskazy(krok.instrukcja);
                 if (odleglosc < 15) {
                     krokiPunkty.shift();
                     kierunkowskazAktywny = false;
@@ -415,7 +389,6 @@
                         krokiPunkty.length > 0 ? `➡️ ${krokiPunkty[0].instrukcja}` : 'Idź prosto do celu';
                 }
             }
-
             if (celPozycja && nowaPozycja.distanceTo(celPozycja) < 20) zakonczTrase();
             mojaPozycja = nowaPozycja;
         }
@@ -434,12 +407,10 @@
         function zakonczTrase() {
             if (!confirm('Zakończyć trasę i zapisać wynik?')) return;
             zatrzymaj();
-
             let procent = 100;
             if (aktywnaTrasa && aktywnaTrasa.dystans) {
                 procent = Math.min(100, Math.round(((dystansPrzebyta / 1000) / parseFloat(aktywnaTrasa.dystans)) * 100));
             }
-
             const sekundy = startTime ? Math.floor((Date.now() - startTime) / 1000) : 0;
             const wynik = {
                 data: new Date().toLocaleDateString('pl-PL'),
@@ -452,7 +423,6 @@
                 nazwa: aktywnaTrasa ? aktywnaTrasa.nazwa : 'Trasa własna',
                 procent: procent
             };
-
             const wyniki = JSON.parse(localStorage.getItem('wyniki') || '[]');
             wyniki.unshift(wynik);
             localStorage.setItem('wyniki', JSON.stringify(wyniki));
@@ -464,7 +434,7 @@
             if (!mojaPozycja) return;
             L.circleMarker(mojaPozycja, {
                 radius: 10,
-                fillColor: typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
+                fillColor: typ === 'tak' ? '#89AC76' : '#9B3A4A',
                 color: 'white', weight: 2, fillOpacity: 0.9
             }).addTo(map).bindPopup(
                 `${typ === 'tak' ? 'TAK' : 'NIE'} · ${new Date().toLocaleTimeString('pl-PL', {hour: '2-digit', minute:'2-digit'})}`
