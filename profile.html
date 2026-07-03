@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Profil</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
@@ -20,20 +20,19 @@
 
         .profil-header {
             background: white;
-            padding: 36px 28px 20px;
+            padding: 24px 28px 16px;
             border-bottom: 1px solid #f0f0f0;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             flex-shrink: 0;
         }
 
         .avatar-container { position: relative; }
 
         .avatar {
-            width: 90px;
-            height: 90px;
+            width: 90px; height: 90px;
             border-radius: 50%;
             background: #f0f0f0;
             display: flex;
@@ -61,20 +60,8 @@
         .avatar-edit svg { width: 13px; height: 13px; }
         .avatar-edit svg path { stroke: white; stroke-width: 2; fill: none; stroke-linecap: round; }
 
-        .profil-imie {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111;
-            text-align: center;
-        }
-
-        .profil-miasto {
-            font-size: 13px;
-            color: #aaa;
-            font-weight: 500;
-            text-align: center;
-            margin-top: -8px;
-        }
+        .profil-imie { font-size: 20px; font-weight: 700; color: #111; text-align: center; }
+        .profil-miasto { font-size: 13px; color: #aaa; font-weight: 500; text-align: center; margin-top: -6px; }
 
         .btn-edytuj {
             background: none;
@@ -98,43 +85,22 @@
             flex-shrink: 0;
         }
 
-        .edycja-form h3 {
-            font-size: 16px;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 16px;
-        }
-
+        .edycja-form h3 { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 16px; }
         .pole { margin-bottom: 12px; }
-
-        .pole label {
-            font-size: 12px;
-            color: #aaa;
-            display: block;
-            margin-bottom: 4px;
-            font-weight: 500;
-        }
-
+        .pole label { font-size: 12px; color: #aaa; display: block; margin-bottom: 4px; font-weight: 500; }
         .pole input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1.5px solid #eee;
-            border-radius: 12px;
-            font-size: 15px;
-            font-family: 'Montserrat', sans-serif;
+            width: 100%; padding: 12px 14px;
+            border: 1.5px solid #eee; border-radius: 12px;
+            font-size: 15px; font-family: 'Montserrat', sans-serif;
         }
 
         .btn-zapisz {
-            width: 100%;
-            padding: 14px;
-            background: #111;
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 15px;
-            font-weight: 700;
+            width: 100%; padding: 14px;
+            background: #111; color: white;
+            border: none; border-radius: 14px;
+            font-size: 15px; font-weight: 700;
             font-family: 'Montserrat', sans-serif;
-            cursor: pointer;
+            cursor: pointer; margin-top: 8px;
         }
 
         .zakladki {
@@ -145,25 +111,17 @@
         }
 
         .zakladka {
-            flex: 1;
-            padding: 14px;
+            flex: 1; padding: 14px;
             text-align: center;
-            font-size: 14px;
-            font-weight: 600;
-            color: #aaa;
-            cursor: pointer;
+            font-size: 14px; font-weight: 600;
+            color: #aaa; cursor: pointer;
             border-bottom: 2px solid transparent;
             font-family: 'Montserrat', sans-serif;
             background: none;
-            border-top: none;
-            border-left: none;
-            border-right: none;
+            border-top: none; border-left: none; border-right: none;
         }
 
-        .zakladka.aktywna {
-            color: #111;
-            border-bottom: 2px solid #111;
-        }
+        .zakladka.aktywna { color: #111; border-bottom: 2px solid #89AC76; }
 
         .zakladka-content { display: none; flex: 1; overflow-y: auto; }
         .zakladka-content.aktywna { display: block; }
@@ -178,11 +136,7 @@
             margin-bottom: 12px;
         }
 
-        .kalendarz-nav h2 {
-            font-size: 15px;
-            font-weight: 700;
-            color: #111;
-        }
+        .kalendarz-nav h2 { font-size: 15px; font-weight: 700; color: #111; }
 
         .btn-miesiac {
             background: none;
@@ -198,23 +152,12 @@
         .dni-tygodnia {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
-            margin-bottom: 6px;
+            gap: 3px; margin-bottom: 6px;
         }
 
-        .dzien-tyg {
-            text-align: center;
-            font-size: 11px;
-            font-weight: 600;
-            color: #aaa;
-            padding: 3px 0;
-        }
+        .dzien-tyg { text-align: center; font-size: 11px; font-weight: 600; color: #aaa; padding: 3px 0; }
 
-        .kalendarz-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 3px;
-        }
+        .kalendarz-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; }
 
         .dzien {
             aspect-ratio: 1;
@@ -222,61 +165,35 @@
             align-items: center;
             justify-content: center;
             border-radius: 50%;
-            font-size: 13px;
-            font-weight: 500;
-            color: #111;
+            font-size: 13px; font-weight: 500; color: #111;
         }
 
-        .dzien.spacer {
-            background: #2d6a2d;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .dzien.spacer:hover { background: #245520; }
+        .dzien.spacer { background: #89AC76; color: white; font-weight: 700; cursor: pointer; }
+        .dzien.spacer:hover { background: #7a9d68; }
         .dzien.dzisiaj { border: 2px solid #111; }
 
         .legenda {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 12px;
-            font-size: 12px;
-            color: #aaa;
-            font-weight: 500;
+            display: flex; align-items: center;
+            gap: 8px; margin-top: 12px;
+            font-size: 12px; color: #aaa; font-weight: 500;
         }
 
-        .legenda-kropka {
-            width: 12px; height: 12px;
-            border-radius: 50%;
-            background: #2d6a2d;
-            flex-shrink: 0;
-        }
+        .legenda-kropka { width: 12px; height: 12px; border-radius: 50%; background: #89AC76; flex-shrink: 0; }
 
         /* MOJE MIEJSCA */
-        .miejsca-wybor {
-            padding: 24px 20px;
-            display: flex;
-            gap: 16px;
-        }
+        .miejsca-wybor { padding: 24px 20px; display: flex; gap: 16px; }
 
         .btn-miejsca {
-            flex: 1;
-            aspect-ratio: 1;
-            border-radius: 24px;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+            flex: 1; aspect-ratio: 1;
+            border-radius: 24px; border: none;
+            display: flex; align-items: center;
+            justify-content: center; cursor: pointer;
             transition: transform 0.1s;
         }
 
         .btn-miejsca:hover { transform: scale(0.97); }
-
-        .btn-miejsca-zielone { background: #2d6a2d; }
-        .btn-miejsca-czerwone { background: #7B1F1F; }
+        .btn-miejsca-zielone { background: #89AC76; }
+        .btn-miejsca-czerwone { background: #9B3A4A; }
 
         .btn-miejsca-kropka {
             width: 50px; height: 50px;
@@ -284,137 +201,58 @@
             background: rgba(255,255,255,0.35);
         }
 
-        /* LISTA MIEJSC */
         .btn-powrot-miejsca {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: none;
-            border: none;
+            display: flex; align-items: center; gap: 12px;
+            background: none; border: none;
             font-family: 'Montserrat', sans-serif;
-            font-size: 22px;
-            font-weight: 600;
-            color: #aaa;
-            cursor: pointer;
-            padding: 20px 20px;
+            font-size: 22px; font-weight: 600;
+            color: #aaa; cursor: pointer; padding: 20px 20px;
         }
 
-        .miejsca-lista {
-            padding: 0 20px 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .miejsca-lista { padding: 0 20px 20px; display: flex; flex-direction: column; gap: 10px; }
 
         .miejsce-karta {
-            background: white;
-            border-radius: 16px;
-            padding: 16px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.06);
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            cursor: pointer;
+            background: white; border-radius: 16px;
+            padding: 16px; box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+            display: flex; align-items: center; gap: 14px; cursor: pointer;
         }
 
         .miejsce-karta:hover { background: #f9f9f9; }
-
-        .miejsce-kropka {
-            width: 18px; height: 18px;
-            border-radius: 50%;
-            flex-shrink: 0;
-        }
-
+        .miejsce-kropka { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; }
         .miejsce-info { flex: 1; }
+        .miejsce-czas { font-size: 13px; font-weight: 600; color: #111; }
+        .miejsce-trasa { font-size: 12px; color: #aaa; font-weight: 500; margin-top: 2px; }
+        .miejsce-notatka { font-size: 12px; color: #555; margin-top: 4px; font-style: italic; }
 
-        .miejsce-czas {
-            font-size: 13px;
-            font-weight: 600;
-            color: #111;
-        }
-
-        .miejsce-trasa {
-            font-size: 12px;
-            color: #aaa;
-            font-weight: 500;
-            margin-top: 2px;
-        }
-
-        .miejsce-notatka {
-            font-size: 12px;
-            color: #555;
-            margin-top: 4px;
-            font-style: italic;
-        }
-
-        .pusty {
-            text-align: center;
-            color: #ccc;
-            padding: 40px 20px;
-            font-size: 14px;
-            font-weight: 500;
-        }
+        .pusty { text-align: center; color: #ccc; padding: 40px 20px; font-size: 14px; font-weight: 500; }
 
         /* MODALS */
         .modal-pelny {
-            display: none;
-            position: fixed;
+            display: none; position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            z-index: 2000;
-            background: white;
-            flex-direction: column;
+            z-index: 2000; background: white; flex-direction: column;
         }
 
         .modal-pelny.otwarty { display: flex; }
 
         .modal-naglowek {
-            background: white;
-            border-bottom: 1px solid #f0f0f0;
+            background: white; border-bottom: 1px solid #f0f0f0;
             padding: 48px 20px 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
+            display: flex; align-items: center; gap: 16px; flex-shrink: 0;
         }
 
-        .btn-cofnij {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+        .btn-cofnij { background: none; border: none; cursor: pointer; padding: 4px; display: flex; align-items: center; }
 
-        .modal-naglowek h2 {
-            font-size: 17px;
-            font-weight: 700;
-            color: #111;
-        }
-
+        .modal-naglowek h2 { font-size: 17px; font-weight: 700; color: #111; }
         .modal-mapa { flex: 1; }
 
         .modal-info {
-            padding: 16px 20px;
-            background: white;
-            border-top: 1px solid #f0f0f0;
-            flex-shrink: 0;
+            padding: 16px 20px; background: white;
+            border-top: 1px solid #f0f0f0; flex-shrink: 0;
         }
 
-        .modal-info-typ {
-            font-size: 16px;
-            font-weight: 700;
-            color: #111;
-            margin-bottom: 4px;
-        }
-
-        .modal-info-tekst {
-            font-size: 13px;
-            color: #aaa;
-            font-weight: 500;
-        }
+        .modal-info-typ { font-size: 16px; font-weight: 700; color: #111; margin-bottom: 4px; }
+        .modal-info-tekst { font-size: 13px; color: #aaa; font-weight: 500; }
 
         /* NAV */
         .nav-bar {
@@ -424,23 +262,19 @@
             align-items: center;
             justify-content: space-around;
             padding: 14px 0;
+            padding-bottom: max(36px, env(safe-area-inset-bottom, 36px));
             flex-shrink: 0;
         }
 
         .nav-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 56px; height: 56px;
-            border-radius: 50%;
-            border: none;
-            background: none;
-            cursor: pointer;
-            text-decoration: none;
+            display: flex; align-items: center; justify-content: center;
+            width: 76px; height: 76px;
+            border-radius: 50%; border: none;
+            background: none; cursor: pointer; text-decoration: none;
         }
 
-        .nav-btn.aktywny { background: #2d6a2d; }
-        .nav-btn svg { width: 26px; height: 26px; }
+        .nav-btn.aktywny { background: #89AC76; }
+        .nav-btn svg { width: 36px; height: 36px; }
 
         .nav-btn svg path, .nav-btn svg polyline,
         .nav-btn svg circle, .nav-btn svg line {
@@ -453,12 +287,7 @@
             stroke: white;
         }
 
-        .scroll-area {
-            flex: 1;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
+        .scroll-area { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
     </style>
 </head>
 <body>
@@ -483,18 +312,9 @@
 
     <div class="edycja-form" id="edycja-form">
         <h3>Edytuj profil</h3>
-        <div class="pole">
-            <label>Imię</label>
-            <input type="text" id="input-imie" placeholder="np. Anna">
-        </div>
-        <div class="pole">
-            <label>Nazwisko</label>
-            <input type="text" id="input-nazwisko" placeholder="np. Kowalska">
-        </div>
-        <div class="pole">
-            <label>Miasto</label>
-            <input type="text" id="input-miasto" placeholder="np. Wrocław">
-        </div>
+        <div class="pole"><label>Imię</label><input type="text" id="input-imie" placeholder="np. Anna"></div>
+        <div class="pole"><label>Nazwisko</label><input type="text" id="input-nazwisko" placeholder="np. Kowalska"></div>
+        <div class="pole"><label>Miasto</label><input type="text" id="input-miasto" placeholder="np. Wrocław"></div>
         <button class="btn-zapisz" onclick="zapiszProfil()">Zapisz</button>
     </div>
 
@@ -517,12 +337,9 @@
                     </button>
                 </div>
                 <div class="dni-tygodnia">
-                    <div class="dzien-tyg">Pn</div>
-                    <div class="dzien-tyg">Wt</div>
-                    <div class="dzien-tyg">Śr</div>
-                    <div class="dzien-tyg">Cz</div>
-                    <div class="dzien-tyg">Pt</div>
-                    <div class="dzien-tyg">Sb</div>
+                    <div class="dzien-tyg">Pn</div><div class="dzien-tyg">Wt</div>
+                    <div class="dzien-tyg">Śr</div><div class="dzien-tyg">Cz</div>
+                    <div class="dzien-tyg">Pt</div><div class="dzien-tyg">Sb</div>
                     <div class="dzien-tyg">Nd</div>
                 </div>
                 <div class="kalendarz-grid" id="kalendarz-grid"></div>
@@ -545,12 +362,9 @@
                     </button>
                 </div>
             </div>
-
             <div id="widok-lista" style="display:none;">
                 <button class="btn-powrot-miejsca" onclick="powrotDoWyboru()">
-                    <svg viewBox="0 0 24 24" width="48" height="48">
-                        <polygon points="15,4 5,12 15,20" fill="#ccc"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" width="48" height="48"><polygon points="15,4 5,12 15,20" fill="#ccc"/></svg>
                     Wróć
                 </button>
                 <div class="miejsca-lista" id="miejsca-lista"></div>
@@ -562,9 +376,7 @@
     <div class="modal-pelny" id="modal-trasa">
         <div class="modal-naglowek">
             <button class="btn-cofnij" onclick="zamknijModalTrasy()">
-                <svg viewBox="0 0 24 24" width="48" height="48">
-                    <polygon points="16,4 6,12 16,20" fill="#ccc"/>
-                </svg>
+                <svg viewBox="0 0 24 24" width="48" height="48"><polygon points="16,4 6,12 16,20" fill="#ccc"/></svg>
             </button>
             <h2 id="modal-trasa-tytul">Spacer</h2>
         </div>
@@ -575,9 +387,7 @@
     <div class="modal-pelny" id="modal-miejsce">
         <div class="modal-naglowek">
             <button class="btn-cofnij" onclick="zamknijModalMiejsca()">
-                <svg viewBox="0 0 24 24" width="48" height="48">
-                    <polygon points="16,4 6,12 16,20" fill="#ccc"/>
-                </svg>
+                <svg viewBox="0 0 24 24" width="48" height="48"><polygon points="16,4 6,12 16,20" fill="#ccc"/></svg>
             </button>
             <h2 id="modal-miejsce-tytul">Miejsce</h2>
         </div>
@@ -622,17 +432,9 @@
         }
 
         function wczytajProfil() {
-            if (profil.imie) {
-                document.getElementById('profil-imie').textContent =
-                    `${profil.imie} ${profil.nazwisko || ''}`.trim();
-            }
-            if (profil.miasto) {
-                document.getElementById('profil-miasto').textContent = profil.miasto;
-            }
-            if (profil.zdjecie) {
-                document.getElementById('avatar').innerHTML =
-                    `<img src="${profil.zdjecie}" alt="avatar">`;
-            }
+            if (profil.imie) document.getElementById('profil-imie').textContent = `${profil.imie} ${profil.nazwisko || ''}`.trim();
+            if (profil.miasto) document.getElementById('profil-miasto').textContent = profil.miasto;
+            if (profil.zdjecie) document.getElementById('avatar').innerHTML = `<img src="${profil.zdjecie}" alt="avatar">`;
             if (profil.imie) document.getElementById('input-imie').value = profil.imie;
             if (profil.nazwisko) document.getElementById('input-nazwisko').value = profil.nazwisko;
             if (profil.miasto) document.getElementById('input-miasto').value = profil.miasto;
@@ -659,8 +461,7 @@
             reader.onload = function(e) {
                 profil.zdjecie = e.target.result;
                 localStorage.setItem('profil', JSON.stringify(profil));
-                document.getElementById('avatar').innerHTML =
-                    `<img src="${e.target.result}" alt="avatar">`;
+                document.getElementById('avatar').innerHTML = `<img src="${e.target.result}" alt="avatar">`;
             };
             reader.readAsDataURL(file);
         }
@@ -668,18 +469,14 @@
         function renderujKalendarz() {
             const nazwyMiesiecy = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec',
                 'Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
-
-            document.getElementById('kalendarz-tytul').textContent =
-                `${nazwyMiesiecy[aktualnyMiesiac]} ${aktualnyRok}`;
+            document.getElementById('kalendarz-tytul').textContent = `${nazwyMiesiecy[aktualnyMiesiac]} ${aktualnyRok}`;
 
             const dniDoWynikow = {};
             wyniki.forEach((w, idx) => {
                 if (w.data) {
                     const czesci = w.data.split('.');
                     if (czesci.length === 3) {
-                        const d = parseInt(czesci[0]);
-                        const m = parseInt(czesci[1]) - 1;
-                        const r = parseInt(czesci[2]);
+                        const d = parseInt(czesci[0]), m = parseInt(czesci[1]) - 1, r = parseInt(czesci[2]);
                         if (m === aktualnyMiesiac && r === aktualnyRok) {
                             if (!dniDoWynikow[d]) dniDoWynikow[d] = [];
                             dniDoWynikow[d].push(idx);
@@ -691,35 +488,25 @@
             const pierwszyDzien = new Date(aktualnyRok, aktualnyMiesiac, 1);
             const ostatniDzien = new Date(aktualnyRok, aktualnyMiesiac + 1, 0);
             const dzisiaj = new Date();
-
             let poczatekTygodnia = pierwszyDzien.getDay();
             if (poczatekTygodnia === 0) poczatekTygodnia = 7;
 
             const grid = document.getElementById('kalendarz-grid');
             grid.innerHTML = '';
 
-            for (let i = 1; i < poczatekTygodnia; i++) {
-                const el = document.createElement('div');
-                grid.appendChild(el);
-            }
+            for (let i = 1; i < poczatekTygodnia; i++) grid.appendChild(document.createElement('div'));
 
             for (let d = 1; d <= ostatniDzien.getDate(); d++) {
                 const el = document.createElement('div');
                 el.className = 'dzien';
                 el.textContent = d;
-
-                const czyDzisiaj = d === dzisiaj.getDate() &&
-                    aktualnyMiesiac === dzisiaj.getMonth() &&
-                    aktualnyRok === dzisiaj.getFullYear();
-
+                const czyDzisiaj = d === dzisiaj.getDate() && aktualnyMiesiac === dzisiaj.getMonth() && aktualnyRok === dzisiaj.getFullYear();
                 if (dniDoWynikow[d]) {
                     el.classList.add('spacer');
-                    const indeksy = dniDoWynikow[d];
-                    el.onclick = () => otworzModalTrasy(indeksy[0]);
+                    el.onclick = () => otworzModalTrasy(dniDoWynikow[d][0]);
                 } else if (czyDzisiaj) {
                     el.classList.add('dzisiaj');
                 }
-
                 grid.appendChild(el);
             }
         }
@@ -739,41 +526,29 @@
         function pokazListeMiejsc(typ) {
             document.getElementById('widok-wybor').style.display = 'none';
             document.getElementById('widok-lista').style.display = 'block';
-
             const lista = document.getElementById('miejsca-lista');
             lista.innerHTML = '';
-
             const miejsca = [];
             wyniki.forEach((wynik, wynikIdx) => {
                 if (wynik.waypointy) {
                     wynik.waypointy.forEach((wp, wpIdx) => {
-                        if (wp.typ === typ) {
-                            miejsca.push({ wynik, wynikIdx, wp, wpIdx });
-                        }
+                        if (wp.typ === typ) miejsca.push({ wynik, wynikIdx, wp, wpIdx });
                     });
                 }
             });
-
-            if (miejsca.length === 0) {
-                lista.innerHTML = `<div class="pusty">Brak zaznaczonych miejsc</div>`;
-                return;
-            }
-
+            if (miejsca.length === 0) { lista.innerHTML = `<div class="pusty">Brak zaznaczonych miejsc</div>`; return; }
             miejsca.forEach(({ wynik, wynikIdx, wp, wpIdx }) => {
                 const div = document.createElement('div');
                 div.className = 'miejsce-karta';
                 div.onclick = () => otworzModalMiejsca(wynikIdx, wpIdx);
-
                 div.innerHTML = `
-                    <div class="miejsce-kropka" style="background: ${typ === 'tak' ? '#2d6a2d' : '#7B1F1F'}"></div>
+                    <div class="miejsce-kropka" style="background: ${typ === 'tak' ? '#89AC76' : '#9B3A4A'}"></div>
                     <div class="miejsce-info">
                         <div class="miejsce-czas">${wynik.data} · ${wp.czas}</div>
                         <div class="miejsce-trasa">${wynik.nazwa || 'Trasa własna'}</div>
                         ${wp.notatka ? `<div class="miejsce-notatka">"${wp.notatka}"</div>` : ''}
                     </div>
-                    <svg viewBox="0 0 24 24" width="20" height="20">
-                        <polygon points="8,4 18,12 8,20" fill="#ddd"/>
-                    </svg>
+                    <svg viewBox="0 0 24 24" width="20" height="20"><polygon points="8,4 18,12 8,20" fill="#ddd"/></svg>
                 `;
                 lista.appendChild(div);
             });
@@ -787,25 +562,20 @@
         function otworzModalTrasy(index) {
             const wynik = wyniki[index];
             if (!wynik || !wynik.trasa || wynik.trasa.length < 2) return;
-
-            document.getElementById('modal-trasa-tytul').textContent =
-                `${wynik.nazwa || 'Spacer'} · ${wynik.dystans} km`;
+            document.getElementById('modal-trasa-tytul').textContent = `${wynik.nazwa || 'Spacer'} · ${wynik.dystans} km`;
             document.getElementById('modal-trasa').classList.add('otwarty');
-
             if (modalTrasMapa) { modalTrasMapa.remove(); modalTrasMapa = null; }
-
             setTimeout(() => {
                 modalTrasMapa = L.map('modal-trasa-mapa');
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(modalTrasMapa);
-                const linia = L.polyline(wynik.trasa, { color: '#2d6a2d', weight: 5 }).addTo(modalTrasMapa);
+                const linia = L.polyline(wynik.trasa, { color: '#89AC76', weight: 5 }).addTo(modalTrasMapa);
                 modalTrasMapa.fitBounds(linia.getBounds(), { padding: [40, 40] });
-                L.circleMarker(wynik.trasa[0], { radius: 10, fillColor: '#111', color: 'white', weight: 2, fillOpacity: 1 }).addTo(modalTrasMapa).bindPopup('Start');
-                L.circleMarker(wynik.trasa[wynik.trasa.length-1], { radius: 10, fillColor: '#7B1F1F', color: 'white', weight: 2, fillOpacity: 1 }).addTo(modalTrasMapa).bindPopup('Koniec');
+                L.circleMarker(wynik.trasa[0], { radius: 10, fillColor: '#111', color: 'white', weight: 2, fillOpacity: 1 }).addTo(modalTrasMapa);
+                L.circleMarker(wynik.trasa[wynik.trasa.length-1], { radius: 10, fillColor: '#9B3A4A', color: 'white', weight: 2, fillOpacity: 1 }).addTo(modalTrasMapa);
                 if (wynik.waypointy) {
                     wynik.waypointy.forEach(wp => {
                         L.circleMarker([wp.pozycja.lat, wp.pozycja.lng], {
-                            radius: 8,
-                            fillColor: wp.typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
+                            radius: 8, fillColor: wp.typ === 'tak' ? '#89AC76' : '#9B3A4A',
                             color: 'white', weight: 2, fillOpacity: 0.9
                         }).addTo(modalTrasMapa);
                     });
@@ -821,34 +591,22 @@
         function otworzModalMiejsca(wynikIdx, wpIdx) {
             const wynik = wyniki[wynikIdx];
             const wp = wynik.waypointy[wpIdx];
-
-            document.getElementById('modal-miejsce-tytul').textContent =
-                wp.typ === 'tak' ? 'Miejsce pozytywne' : 'Miejsce negatywne';
-            document.getElementById('modal-miejsce-typ').textContent =
-                `${wynik.nazwa || 'Trasa własna'} · ${wynik.data}`;
-            document.getElementById('modal-miejsce-tekst').textContent =
-                wp.notatka || 'Brak notatki';
-
+            document.getElementById('modal-miejsce-tytul').textContent = wp.typ === 'tak' ? 'Miejsce pozytywne' : 'Miejsce negatywne';
+            document.getElementById('modal-miejsce-typ').textContent = `${wynik.nazwa || 'Trasa własna'} · ${wynik.data}`;
+            document.getElementById('modal-miejsce-tekst').textContent = wp.notatka || 'Brak notatki';
             document.getElementById('modal-miejsce').classList.add('otwarty');
-
             if (modalMiejsceMapa) { modalMiejsceMapa.remove(); modalMiejsceMapa = null; }
-
             setTimeout(() => {
                 modalMiejsceMapa = L.map('modal-miejsce-mapa');
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(modalMiejsceMapa);
-
                 const latlng = L.latLng(wp.pozycja.lat, wp.pozycja.lng);
-
                 if (wynik.trasa && wynik.trasa.length > 1) {
                     L.polyline(wynik.trasa, { color: '#ddd', weight: 4 }).addTo(modalMiejsceMapa);
                 }
-
                 L.circleMarker(latlng, {
-                    radius: 14,
-                    fillColor: wp.typ === 'tak' ? '#2d6a2d' : '#7B1F1F',
+                    radius: 14, fillColor: wp.typ === 'tak' ? '#89AC76' : '#9B3A4A',
                     color: 'white', weight: 3, fillOpacity: 1
                 }).addTo(modalMiejsceMapa);
-
                 modalMiejsceMapa.setView(latlng, 17);
             }, 100);
         }
