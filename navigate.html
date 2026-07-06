@@ -189,8 +189,6 @@
         let czyDziala = false;
         let waypointy = [];
         let trasaWspolrzedne = [];
-        let ostatniCzasGPS = null;
-        let ostatniaPozycjaGPS = null;
         let kierunkowskazAktywny = false;
 
         window.onButtonLeft  = () => dodajWaypoint('nie');
@@ -424,6 +422,9 @@
         }
 
         function dodajWaypoint(typ) {
+            // DEBUG
+            document.getElementById('instrukcja-box').textContent = `✅ Waypoint ${typ} dodany!`;
+
             if (!mojaPozycja) return;
             L.circleMarker(mojaPozycja, {
                 radius: 10,
