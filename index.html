@@ -12,10 +12,10 @@
         body {
             font-family: 'Montserrat', sans-serif;
             background: #f9f9f9;
-            height: 100vh;
+            min-height: 105vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow-y: auto;
         }
 
         .naglowek {
@@ -118,7 +118,7 @@
             flex-shrink: 0;
         }
 
-        /* BLE */
+        /* BLE – tylko w nowej trasie */
         .ble-pasek {
             display: flex;
             gap: 10px;
@@ -419,14 +419,12 @@
         </div>
     </div>
 
+    <!-- MOJE TRASY – bez BLE -->
     <div class="zakladka-content aktywna" id="tab-moje-trasy">
         <div class="moje-trasy-wrapper" id="moje-trasy-wrapper"></div>
-        <div class="ble-pasek">
-            <button id="btn-lewa-1" class="btn-ble-duzy" onclick="polaczBLE('LEFT')">lewy kierunkowskaz</button>
-            <button id="btn-prawa-1" class="btn-ble-duzy" onclick="polaczBLE('RIGHT')">prawy kierunkowskaz</button>
-        </div>
     </div>
 
+    <!-- NOWA TRASA – z BLE -->
     <div class="zakladka-content" id="tab-nowa-trasa">
         <div class="nowa-trasa-wrapper">
             <div class="pola-adresow" id="pola-adresow">
@@ -539,11 +537,11 @@
         }
 
         function aktualizujBtns() {
-            ['btn-lewa-1', 'btn-lewa-2'].forEach(id => {
+            ['btn-lewa-2'].forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) btn.classList.toggle('polaczony', czyPolaczenoLeft());
             });
-            ['btn-prawa-1', 'btn-prawa-2'].forEach(id => {
+            ['btn-prawa-2'].forEach(id => {
                 const btn = document.getElementById(id);
                 if (btn) btn.classList.toggle('polaczony', czyPolaczenoRight());
             });
