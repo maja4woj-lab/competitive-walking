@@ -118,36 +118,6 @@
             flex-shrink: 0;
         }
 
-        /* BLE – tylko w nowej trasie */
-        .ble-pasek {
-            display: flex;
-            gap: 10px;
-            padding: 8px 16px 10px;
-            background: white;
-            border-top: 1px solid #f0f0f0;
-            flex-shrink: 0;
-        }
-
-        .btn-ble-duzy {
-            flex: 1;
-            padding: 14px;
-            border: 2px solid #ddd;
-            border-radius: 14px;
-            font-size: 14px;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-            cursor: pointer;
-            color: #111;
-            background: white;
-            transition: background 0.2s, color 0.2s, border-color 0.2s;
-        }
-
-        .btn-ble-duzy.polaczony {
-            background: #89AC76;
-            color: white;
-            border-color: #89AC76;
-        }
-
         .pusta-lista {
             flex: 1;
             display: flex;
@@ -382,6 +352,7 @@
             padding: 14px 0;
             padding-bottom: max(36px, env(safe-area-inset-bottom, 36px));
             flex-shrink: 0;
+            margin-top: auto;
         }
 
         .nav-btn {
@@ -424,7 +395,7 @@
         <div class="moje-trasy-wrapper" id="moje-trasy-wrapper"></div>
     </div>
 
-    <!-- NOWA TRASA – z BLE -->
+    <!-- NOWA TRASA – bez BLE -->
     <div class="zakladka-content" id="tab-nowa-trasa">
         <div class="nowa-trasa-wrapper">
             <div class="pola-adresow" id="pola-adresow">
@@ -483,11 +454,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="ble-pasek">
-            <button id="btn-lewa-2" class="btn-ble-duzy" onclick="polaczBLE('LEFT')">lewy kierunkowskaz</button>
-            <button id="btn-prawa-2" class="btn-ble-duzy" onclick="polaczBLE('RIGHT')">prawy kierunkowskaz</button>
-        </div>
     </div>
 
     <div id="wyniki-wyszukiwania"></div>
@@ -529,22 +495,6 @@
             btn.classList.add('aktywna');
             if (nazwa === 'moje-trasy') wczytajMojeTrasy();
             if (nazwa === 'nowa-trasa') inicjujMapeNowa();
-        }
-
-        async function polaczBLE(strona) {
-            await polaczRaczke(strona);
-            aktualizujBtns();
-        }
-
-        function aktualizujBtns() {
-            ['btn-lewa-2'].forEach(id => {
-                const btn = document.getElementById(id);
-                if (btn) btn.classList.toggle('polaczony', czyPolaczenoLeft());
-            });
-            ['btn-prawa-2'].forEach(id => {
-                const btn = document.getElementById(id);
-                if (btn) btn.classList.toggle('polaczony', czyPolaczenoRight());
-            });
         }
 
         function wczytajMojeTrasy() {
