@@ -24,6 +24,11 @@ async function polaczRaczke(strona) {
         await charTx.startNotifications();
         charTx.addEventListener('characteristicvaluechanged', (e) => {
             const msg = new TextDecoder().decode(e.target.value);
+
+            // DEBUG – pokaż na ekranie co przyszło
+            const box = document.getElementById('instrukcja-box');
+            if (box) box.textContent = `BLE: "${msg}" (${strona})`;
+
             if (msg === 'BUTTON') {
                 if (strona === 'LEFT'  && window.onButtonLeft)  window.onButtonLeft();
                 if (strona === 'RIGHT' && window.onButtonRight) window.onButtonRight();
