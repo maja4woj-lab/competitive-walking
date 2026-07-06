@@ -7,8 +7,8 @@ let deviceRight = null;
 let charRxLeft  = null;
 let charRxRight = null;
 
-let onButtonLeft  = null;
-let onButtonRight = null;
+window.onButtonLeft  = null;
+window.onButtonRight = null;
 
 async function polaczRaczke(strona) {
     try {
@@ -25,8 +25,8 @@ async function polaczRaczke(strona) {
         charTx.addEventListener('characteristicvaluechanged', (e) => {
             const msg = new TextDecoder().decode(e.target.value);
             if (msg === 'BUTTON') {
-                if (strona === 'LEFT'  && onButtonLeft)  onButtonLeft();
-                if (strona === 'RIGHT' && onButtonRight) onButtonRight();
+                if (strona === 'LEFT'  && window.onButtonLeft)  window.onButtonLeft();
+                if (strona === 'RIGHT' && window.onButtonRight) window.onButtonRight();
             }
         });
 
@@ -63,7 +63,6 @@ async function wyslijKomende(strona, komenda) {
     }
 }
 
-// Kierunkowskaz lewo – LED 100%, wibracje 100%
 async function kierunkowskazLewo(wlacz) {
     if (wlacz) {
         await wyslijKomende('LEFT',  'SET:100:100');
@@ -74,7 +73,6 @@ async function kierunkowskazLewo(wlacz) {
     }
 }
 
-// Kierunkowskaz prawo – LED 100%, wibracje 100%
 async function kierunkowskazPrawo(wlacz) {
     if (wlacz) {
         await wyslijKomende('RIGHT', 'SET:100:100');
