@@ -193,8 +193,8 @@
         let ostatniaPozycjaGPS = null;
         let kierunkowskazAktywny = false;
 
-        onButtonLeft  = () => dodajWaypoint('nie');
-        onButtonRight = () => dodajWaypoint('tak');
+        window.onButtonLeft  = () => dodajWaypoint('nie');
+        window.onButtonRight = () => dodajWaypoint('tak');
 
         const map = L.map('map').setView([52.2297, 21.0122], 15);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
